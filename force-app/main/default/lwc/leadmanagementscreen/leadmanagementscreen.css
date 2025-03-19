@@ -1,0 +1,26 @@
+.styled-sidebar {
+    background-color: #f9f9f9; /* Background color for the sidebar */
+    border-radius: 10px;       /* Rounded corners */            /* Padding inside the sidebar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for a card effect */
+}
+
+.menu-list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;  
+}
+
+.menu-item {
+    padding: 8px 12px;
+    border-radius: 5px;         /* Rounded corners for menu items */
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #e0e0e0;  /* Hover effect for list items */
+}
+.sidebar{
+    background-color: #3b546c; 
+}

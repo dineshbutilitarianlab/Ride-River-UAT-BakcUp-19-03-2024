@@ -1,0 +1,28 @@
+.THIS {
+    background-color: white;
+    padding: 7px 7px 7px 7px;
+}
+
+.THIS .install-btn {
+    float: right;
+}
+
+.THIS .custom-title {
+    margin-bottom: 2em;
+    font-size: inherit;
+}
+
+.THIS .custom-text {
+    font-size: inherit;
+}
+.THIS .custom-verify {
+    margin-top: 2em;
+}
+
+.THIS .custom-btn {
+    padding-top: 12px;
+    padding-left: 8px;
+}
+.THIS.toggle {
+    display: none;
+}

@@ -1,0 +1,90 @@
+/* General Card Styling */
+.slds-card {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+}
+
+/* Datatable Styling */
+.custom-datatable {
+    border-radius: 6px;
+}
+/* Center-align the text inside the datatable */
+.center-datatable .slds-table td {
+    text-align: center; /* Horizontal alignment */
+    vertical-align: middle; /* Vertical alignment */
+}
+
+/* Tile Styling for Dynamic Rows */
+.tile {
+    border-radius: 6px;
+    background: #f9fafb;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 12px;
+}
+
+/* Icon Styling */
+.custom-icon {
+    cursor: pointer;
+    color: #005fb2;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+.custom-icon:hover {
+    color: #003e73;
+}
+
+
+
+/* Neutral Button (Cancel) Styling */
+.custom-cancel-button {
+    background-color: #f4f4f4;
+    color: #333333;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.custom-cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+
+.custom-header {
+    background-color: #f4f6f9;
+    border-bottom: 1px solid #d8dde6;
+    border-radius: 4px 4px 0 0;
+}
+
+.header-title h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #005fb2;
+}
+
+
+.colorful-icon {
+    fill: #2ECC71; /* Green color for the icon */
+    color: #2ECC71; /* Ensures the color is applied in case of SVG */
+    width: 1.5rem; /* Adjust size if needed */
+    height: 1.5rem; /* Adjust size if needed */
+}
+
+.custom-delete-icon .slds-button__icon {
+    fill: #FF5733; /* Bright red for a destructive action */
+    color: #FF5733; /* Consistent color for the icon */
+}
+.small-button .slds-button {
+    padding: 0.2rem 0.4rem; /* Adjust as needed */
+    font-size: 0.75rem; /* Smaller font size */
+    height: auto; /* Adjust the height if necessary */
+}
+
+
+/*for hiding button of delete based on status if status is approverd and pending */
+.hide-button .slds-button {
+    display: none;
+}

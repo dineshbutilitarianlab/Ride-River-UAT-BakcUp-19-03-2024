@@ -1,0 +1,163 @@
+/* Main container with flexbox layout */
+.flex-container {
+    display: flex; /* Enable flexbox */
+    height: 69vh; /* Make the container take the full viewport height */
+    width: 100%; /* Take up the full width of the screen */
+}
+
+/* Left Section (1/4 width) */
+.left-section {
+    flex: 0 0 25%; /* Takes 1/4 of the width */
+    padding: 20px;
+    background-color: #f4f6f9; /* Light background color */
+     /* Allows scrolling if content overflows */
+}
+
+/* Right Section (3/4 width) */
+.right-section {
+    flex: 1; /* Takes the remaining 3/4 of the width */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+   
+}
+
+/* Optional: Styling for content inside cards */
+.card-content {
+    padding: 15px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design for smaller screens (stack sections) */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column; /* Stack the sections vertically */
+    }
+
+    .left-section, .right-section {
+        flex: 1 0 100%; /* Each section takes full width on smaller screens */
+    }
+   
+}
+:host {
+  display: block;
+}
+
+.layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+  font-weight: bold; /* Makes the text bold */
+}
+
+
+.menu-item:hover {
+  background-color: #e0e0e0;
+}
+
+.menu-item.active {
+  background-color: #0070d2;
+  color: white;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 1rem;
+}
+.optionmenu-item {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  cursor: pointer; /* Change cursor to pointer */
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 16px;
+}
+
+.optionmenu-item:hover {
+  background-color: #e0e0e0; /* Add hover effect */
+  color: #0070d2;
+}
+/* Style the dropdown container */
+/* Menu group heading */
+/* Menu heading */
+.menu-heading {
+ cursor: pointer;
+  font-weight: bold;
+  display: block;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 5px 0;
+}
+
+/* Dropdown symbol */
+.dropdown-symbol {
+  font-size: 12px;
+  transition: transform 0.3s ease; /* Smooth rotation */
+}
+
+/* Rotate the arrow when submenu is open */
+.menu-heading.open .dropdown-symbol {
+  transform: rotate(180deg); /* Rotate arrow upward */
+}
+
+/* Submenu hidden by default */
+.submenu {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 10px;
+}
+
+/* Submenu visibility when active */
+.submenu.show {
+  display: block;
+}
+.table-container {
+    height: 400px; /* Set the desired height */
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #dcdcdc; /* Optional: Add a border */
+}
+
+::slotted(lightning-datatable) {
+    height: auto !important; /* Ensure datatable adjusts height */
+}
+.scrollable-container {
+    height:2.9in ; /* Allows it to expand to the full height of the parent container */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    padding: 1rem; /* Adds padding for aesthetics */
+    box-sizing: border-box; /* Ensures padding is included in height calculation */
+}
+.table-container {
+  width: 100%; /* Full width of the container */
+  height: 2.4in; /* Set the height to 55 inches */
+  overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+  margin: 20px 0; /* Add space above and below the container */
+  padding: 10px; /* Add padding inside the container */
+  border: 1px solid #ddd; /* Light border around the container */
+  background-color: #f9f9f9; /* Background color for the container */
+  border-radius: 8px; /* Rounded corners for the container */
+}

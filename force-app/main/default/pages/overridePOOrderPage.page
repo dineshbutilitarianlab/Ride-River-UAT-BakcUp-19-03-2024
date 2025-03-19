@@ -1,0 +1,27 @@
+<apex:page standardController="ProductRequest" standardStylesheets="true" showHeader="false">
+<apex:includeLightning />
+
+ 
+    <script>
+    document.addEventListener('lightning__showtoast', event => {
+        sforce.one.showToast(event.toastAttributes);
+    });
+        console.log('Initializing Lightning component...'); 
+        debugger;
+         var recordId = '{!ProductRequest.Id}';
+ 
+        $Lightning.use("c:overridePOOrderAppPage", function() {
+            // Creating the LWC component
+            $Lightning.createComponent("c:createPurchaseOrderForm",
+            {
+                note: 'Hello',
+                recordId: recordId 
+            },
+            "CreatePurchaseOrderForm",  
+            function(cmp) {
+                console.log('LWC Component has been loaded successfully.');
+            });
+        });
+</script>
+<div id="CreatePurchaseOrderForm"></div>
+</apex:page>

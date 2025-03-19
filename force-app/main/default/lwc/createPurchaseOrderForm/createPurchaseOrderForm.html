@@ -1,0 +1,58 @@
+<template>
+    <lightning-modal-header>
+    </lightning-modal-header>
+    <lightning-modal-body>
+            <template if:true={firstScreen}>
+ 
+            <lightning-card title="Create New Purchase Order" icon-name="standard:product_request">
+                <div class="slds-grid slds-wrap slds-p-around_medium">
+ 
+                   <div class="slds-col slds-size_6-of-12 slds-p-around_medium">
+                    <lightning-input
+                type="text"
+                label="Account"
+                value={accountName}
+                disabled>
+            </lightning-input>
+                    </div>
+ 
+                    <div class="slds-col slds-size_6-of-12 slds-p-around_medium">
+                    <lightning-combobox
+                    required
+                    name="progress"
+                    label="Shipment Type"
+                    placeholder="Select Shipment Type.."
+                    options={shipmentTypeOptions}
+                    value={shipmentType}
+                    onchange={handleShipmentChange} >
+                    </lightning-combobox>
+                    </div>
+ 
+                    <div class="slds-col slds-size_6-of-12 slds-p-around_medium">
+                 
+                    </div>
+       
+                </div>
+           
+               
+       
+                <center>
+                    <lightning-button label="Close" variant="destructive" onclick={handleExit} class="slds-m-right_medium"></lightning-button>
+                    <lightning-button label="Next" variant="brand" onclick={handleSubmitProcess}></lightning-button>
+                </center>
+       
+       
+            </lightning-card>
+ 
+        </template>
+       
+        <template if:true={secondScreen}>
+            <c-add-product-request-lite-item record-id={purchaseOrderRecordId} onclosemodal={handleChildCloseModal}></c-add-product-request-lite-item>
+        </template>
+    </lightning-modal-body>
+    <!-- <lightning-modal-footer>
+        <lightning-button label="Close" onclick={closeModal}></lightning-button>
+    </lightning-modal-footer> -->
+   
+   
+</template>

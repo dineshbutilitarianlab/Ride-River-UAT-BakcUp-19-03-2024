@@ -1,0 +1,51 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 02-14-2025
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={isVisible}>
+        <lightning-card title="Create Job Card" icon-name="standard:work_order">
+            <div class="slds-grid slds-wrap slds-var-m-around_medium">
+                <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                    <lightning-record-picker label="Account" object-api-name="Account" value={vehicleDetails.AccountIds} class="custom-input" disabled="true"></lightning-record-picker>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                    <lightning-record-picker label="Contact" object-api-name="Contact" value={vehicleDetails.ContactIds} class="custom-input" disabled="true"></lightning-record-picker>
+                </div>
+            </div>
+            
+            <div class="slds-grid slds-wrap slds-var-m-around_medium">
+                <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                    <lightning-record-picker label="Vehicle" object-api-name="Vehicle" value={vehicleDetails.VehicleId} class="custom-input" disabled="true"></lightning-record-picker>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                    <lightning-combobox
+                        name="progress"
+                        label="Job Type"
+                        placeholder="Select Job type"
+                        options={jobTypeOptions}
+                        class="custom-combobox"
+                        onchange={handleChange}>
+                    </lightning-combobox>
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap slds-var-m-around_medium">
+                <div class="slds-col slds-size_12-of-12 slds-p-around_small">
+                    <lightning-input type="number" label="Enter Odometer Reading" onchange={handleOdometerChange} step='0' value={odoMeter}></lightning-input>
+                </div>
+                
+            </div>
+            <center class="button-container">
+                <lightning-button variant="destructive" label="Close" title="Destructive action" onclick={handleCloseScreen} class="animated-button slds-m-left_x-small"></lightning-button>
+                <lightning-button variant="success" label="Submit" title="Successful action" onclick={handleSubmit} class="animated-button slds-m-left_x-small"></lightning-button>
+            </center>
+        </lightning-card>
+    </template>
+    <template if:false={isVisible}>
+        <p>You No Longer Have Access To Create Job Card</p>
+    </template>
+    
+</template>

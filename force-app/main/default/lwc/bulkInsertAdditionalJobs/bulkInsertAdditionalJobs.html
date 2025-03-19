@@ -1,0 +1,99 @@
+<template>
+    
+        <template lwc:if={showProducts}>
+        <!-- <h3 slot="title" >
+            <lightning-icon icon-name="standard:product_required"   alternative-text="Additional Jobs"
+            size="small" style="margin:10px;"></lightning-icon>
+            <span style="font-size:16px; font-weight:600;">Additional Jobs Recommended</span>
+        </h3> -->
+        <template if:true={existingAdditionalJobs}>
+            <p class="slds-p-horizontal_small">
+                <lightning-datatable
+                    key-field="Id"
+                    data={existingAdditionalJobs}
+                    columns={columns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </p>
+        </template>
+        <template if:true={showAll}>
+             <lightning-button variant="brand" class="slds-align_absolute-center" onclick={toggleTemplates} name="Add More" style="margin-top:10px;"
+                        label="Add More">
+             </lightning-button>
+        </template>
+        <template if:true={showRow}>
+            <lightning-card>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <div class="tile" key={item.id}>
+                        <lightning-record-edit-form    object-api-name="RR_Additional_Job_Recommended__c" onsuccess={handleSuccess} onerror={handleError}>
+                           
+                            <lightning-layout multiple-rows>
+                                <lightning-layout-item   size="12" large-device-size="2" class="slds-align_absolute-center">
+                                    <!-- <label class="slds-form-element__label" for={item.id}>Job Card</label> -->
+                                    <lightning-input-field   field-name="RR_Work_Order__c" variant="label-stacked" data-id={index} value={recordId} disabled id={item.id}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                                <lightning-layout-item   size="12" large-device-size="2" class="slds-align_absolute-center">
+                                    <!-- <label class="slds-form-element__label" for={item.id}>Parts</label> -->
+                                    <lightning-input-field   field-name="RR_Product__c" variant="label-stacked" data-id={index} name="product" onchange={handleProductselection}>
+                                    </lightning-input-field>
+                                    <template if:true={item.errorMessage}>
+                                        <div class="slds-text-color_error">{item.errorMessage}</div>
+                                    </template>
+                                </lightning-layout-item>
+                                <lightning-layout-item   size="12" large-device-size="1" class="slds-align_absolute-center">
+                                    <lightning-input-field   field-name="RR_Quantity__c" variant="label-stacked" data-id={index}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="12" large-device-size="2" class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="RR_Labour_Code__c" variant="label-stacked" data-id={index}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            <lightning-layout-item size="12" large-device-size="1" class="slds-align_absolute-center">
+                                <lightning-input label="Price" name="price" variant="label-stacked"
+                                value={item.price} disabled>
+                                </lightning-input>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" large-device-size="1" class="slds-align_absolute-center">
+                            <lightning-input label="Product Code" name="productName" variant="label-stacked"
+                                value={item.productCode} disabled>
+                                </lightning-input>
+                            </lightning-layout-item>
+                        
+                            <lightning-layout-item   size="12" large-device-size="2" class="slds-align_absolute-center">
+                                <lightning-input-field   field-name="RR_Description__c" variant="label-stacked" data-id={index}>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                                
+                                <lightning-layout-item  class="slds-align_absolute-center" size="12" large-device-size="1" >
+
+                                    <lightning-icon class="margin-icon"  icon-name="action:new" access-key={item.id} id={index} data-id={index}
+                                        alternative-text="Add Row" size="small" title="Add Row" onclick={addRow}>
+                                    </lightning-icon>
+                                    <lightning-icon class="margin-icon"  icon-name="action:delete" access-key={item.id} id={index} data-id={index}
+                                        alternative-text="Delete Row" size="small" title="Delete Row"
+                                        onclick={removeRow}>
+                                    </lightning-icon>
+                                
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-record-edit-form>
+                    </div>
+                </template>
+            </lightning-card>
+         <lightning-layout>
+                <div class="slds-align_absolute-center margin-top">
+                     <lightning-button variant="brand-outline" onclick={toggleTemplates} name="Cancel" style="margin:10px;"
+                        label="Cancel">
+                    </lightning-button>
+                    <lightning-button variant="brand" onclick={handleSubmit} name="Submit"
+                        label="Submit">
+                    </lightning-button>
+                </div>
+            </lightning-layout>
+        
+        </template>
+        </template>
+</template>

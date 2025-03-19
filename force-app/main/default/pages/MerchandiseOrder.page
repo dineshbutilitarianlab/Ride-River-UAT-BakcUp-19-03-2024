@@ -1,0 +1,32 @@
+<apex:page standardController="Order" recordSetVar="records" standardStylesheets="false" showHeader="true">
+    <apex:includeLightning />    
+    <script>
+    (function() {
+        // Array to hold selected record IDs
+        var selectedRecordIds = [];
+        
+        // Push record IDs into the array using Visualforce repeat
+        <apex:repeat value="{!records}" var="rec">
+            selectedRecordIds.push("{!JSENCODE(rec.Id)}");
+        </apex:repeat>;
+        
+        // Ensure the array contains records
+        if (selectedRecordIds.length === 0) {
+            console.error('No record IDs found');
+        } else {
+            // Load the LWC and pass the selected record IDs
+            $Lightning.use("c:MerchandiseOrder", function() {
+                $Lightning.createComponent(
+                    "c:orderProductLwc",
+                    { recordIds: selectedRecordIds }, // Pass selected record IDs
+                    "LwcId",
+                    function(cmp) {
+                        console.log('LWC Component Loaded with Record IDs:', selectedRecordIds);
+                    }
+                );
+            });
+        }
+    })();
+    </script>
+    
+</apex:page>

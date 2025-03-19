@@ -1,0 +1,162 @@
+<template>
+    <lightning-card footer="" title="">
+        <h1 class="slds-text-heading_medium">{welcome_text}</h1>
+
+        <div class="c-footer" >
+            <a href="/lightning/app/c__Automotive_Cloud_Inapp_Learning/n/Home">Return to Learning Home</a>
+        </div>
+
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+
+                <p class="c-description">{app_description}</p>
+                <template if:false={no_product_category}>
+                    <c-feature-child
+                    heading="Brands, Products, and Categories" 
+                    image="standard:brand" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Manage your product portfolio by grouping products into categories and creating business brands, vehicle definitions, and more." 
+                    link-in-new-tab={pass_false}
+                    object-name="ProductCategory"
+                    object-id={productCategoryId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_vehicle_definition}>
+                    <c-feature-child
+                    heading="Vehicle Definitions " 
+                    image="custom:custom40"
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Create vehicle definitions to capture key specifications of a vehicle model." 
+                    link-in-new-tab={pass_false}
+                    object-name="VehicleDefinition"
+                    object-id={vehicleDefinitionId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>
+
+                <template if:false={no_lead}>
+                    <c-feature-child
+                    heading="Leads" 
+                    image="standard:lead" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Enhance your lead management capabilities by capturing comprehensive lead information and retaining it when you convert the lead into an opportunity." 
+                    link-in-new-tab={pass_false}
+                    object-name="Lead"
+                    object-id={leadId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>
+    
+                <template if:false={no_opportunity}>
+                    <c-feature-child
+                    heading="Opportunities" 
+                    image="standard:opportunity" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Convert your leads into opportunities while retaining key information about a prospect’s preferences until a deal is finalized." 
+                    link-in-new-tab={pass_false}
+                    object-name="Opportunity"
+                    object-id={opportunityId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>
+
+                <template if:false={no_vehicle}>
+                    <c-feature-child
+                    heading="Vehicles" 
+                    image="custom:custom31" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Get a 360-degree view of all information about a vehicle on the default Vehicle record page." 
+                    link-in-new-tab={pass_false}
+                    object-name="Vehicle"
+                    object-id={vehicleId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>
+
+                <template if:false={no_product}>
+                    <c-feature-child
+                    heading="Products and Locations" 
+                    image="standard:location" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Track product availability and movement by creating locations, products, product items, and product transfers." 
+                    link-in-new-tab={pass_false}
+                    object-name="Product2"
+                    object-id={productId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_sa}>
+                    <c-feature-child
+                    heading="Sales Agreements" 
+                    image="standard:people" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Track your customers’ compliance based on planned and actual revenue and quantity metrics. Go to the Sales Agreement list view to explore." 
+                    link-in-new-tab={pass_false}
+                    object-name="SalesAgreement"
+                    object-id={saId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_aaf_partner}>
+                    <c-feature-child
+                    heading="Advanced Account Forecasting" 
+                    image="standard:forecasts" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Get holistic forecasts for your accounts' new and existing products. Advanced account forecasts are based on opportunities, orders, sales agreements, historical orders, and other custom measures that you define. Go to an account’s Advanced Forecast tab to check it out." 
+                    link-in-new-tab={pass_false}
+                    object-name="AdvAcctForecastSetUse"
+                    object-id={aafId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_account}>
+                    <c-feature-child
+                    heading="Account Manager Targets" 
+                    image="standard:sales_cadence_target" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="View and create targets for currency or non-currency measure types, and assign specific target percentages to your team members. Go to an account’s Account Manager Target tab to check it out." 
+                    link-in-new-tab={pass_false}
+                    object-name="Account"
+                    object-id={accountId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_mfg_prg}>
+                    <c-feature-child
+                    heading="Program Based Business" 
+                    image="standard:channel_programs" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Use Program Based Business to generate forecasts for products based on your customers’ programs. Go to a program to check it out." 
+                    link-in-new-tab={pass_false}
+                    object-name="ManufacturingProgram"
+                    object-id={mfgPrdId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_warranty}>
+                    <c-feature-child
+                    heading="Warranty Terms" 
+                    image="standard:product_warranty_term" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Record details of the labor, parts, expenses, and exchange options that you provide to rectify issues with your products. Go to a warranty term record to check it out." 
+                    link-in-new-tab={pass_false}
+                    object-name="WarrantyTerm"
+                    object-id={warrantyId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>    
+
+                <template if:false={no_visit}>
+                    <c-feature-child
+                    heading="Partner Visits" 
+                    image="standard:partners" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Schedule visits to dealer and distributor locations with Partner Visit Management. Complete tasks for the visit and capture critical performance metrics to help your business grow." 
+                    link-in-new-tab={pass_false}
+                    object-name="Visit"
+                    object-id={visitId}
+                    link-reference="standard__recordPage"></c-feature-child>
+                </template>                    
+
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

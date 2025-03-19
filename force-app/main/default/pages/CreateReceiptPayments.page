@@ -1,0 +1,164 @@
+<apex:page standardController="Order_Payment__c" renderAs="pdf" showheader="false" applyHtmlTag="false" readOnly="true" extensions="CreateReceiptPaymentsController" >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+                size:A4 landscape;
+                border: 1px solid black; 
+            }
+        </style>
+    </head>
+    
+    <body style="font-family: sans-serif;font-size:10pt;">
+        <div style="float:left;width:10%;">
+            <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="50px" width="90px" style=""/>
+        </div>
+        <div style="float:right;width:90%;height:70px;text-align:center;">
+            <table style="border-collapse:collapse;" width="100%" height="70px">
+                <tr>
+                    <td style="border-collapse:collapse;text-align:center;padding:3px;font-size:12pt;font-weight:bold;">
+                        {!DealerName}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse:collapse;text-align:center;padding:5px;font-size:12pt;">
+                        Payment Acknowledgement
+                    </td>
+                </tr>
+            </table>  
+        </div>
+        <div>
+            <table width="100%" style="float:left;border-collapse:collapse; border:1px solid;table-layout:fixed;" >
+                <tr>
+                    <td style="border:1px solid;padding:5px;">Date:- 
+                        <apex:outputText value="{0, date, MMMM d'th,'  yyyy}" >  
+                            <apex:param value="{!payment.Payment_Date__c}"/>  
+                        </apex:outputText>                    
+                    </td>
+                    <td style="border:1px solid;padding:5px;">Time:- 
+                        <apex:outputText value="{0, time, hh:mm a}">
+                           <apex:param value="{!payment.Payment_Date__c}"/> 
+                        </apex:outputText>
+                    </td>
+                    <td style="border:1px solid;padding:5px;">No:- {!payment.Name}</td>
+                    <td style="border:1px solid;padding:5px;">Amount:- <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!payment.Amount__c}"/>
+                        </apex:outputText></td>
+                </tr>
+            </table>
+        </div>
+        
+        <table style="float:left;  margin-top:20px;" width="100%" cellspacing="12">
+            <tr>
+                <td width="13%">Received From :- </td>
+                <td style="border-bottom : 0.5px dotted">{!op.Order__r.Account.Name}</td>
+            </tr>   
+            <tr>
+                <td width="13%">Amount In Words :- </td>
+                <td style="border-bottom : 0.5px dotted">{!amtInWords}</td>
+            </tr>
+            <tr>
+                <td width="12%">Description :- </td>
+                <td style="border-bottom : 0.5px dotted">{!payment.Description__c}</td>
+            </tr>
+            <tr style="padding-top:20px;">
+                <td width="12%" style="padding-top:30px;">Paid By :- </td>
+                <td style="border-bottom : 0.5px dotted; padding-top:30px;">{!payment.Customer_Name__c}</td>
+            </tr>
+        </table>
+        
+        <table style="float:right;padding-left:30px;" width="50%" cellspacing="12">
+            <tr>
+                <td width="24%">Total Amount :- </td>
+                <td style="border-bottom : 0.5px dotted">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!op.Order__r.Grand_Total__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td width="24%">Amount Paid :- </td>
+                <td style="border-bottom : 0.5px dotted">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!op.Order__r.Total_Amount_paid__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+        </table>
+        
+        <table style="float:left; " width="50%" cellspacing="12">
+            <tr>
+                <td width="26%">Check No:- </td>
+                <td style="border-bottom : 0.5px dotted">{!payment.Cheque_Number__c}</td>
+            </tr>
+            <tr>
+                <td width="26%">UPI Id :- </td>
+                <td style="border-bottom : 0.5px dotted">{!payment.Transaction_Id__c}</td>
+            </tr>
+            <tr>
+                <td width="26%">Cash/Other :- </td>
+                <td style="border-bottom : 0.5px dotted">{!cash}</td>
+            </tr>
+        </table>
+        
+        <!-- Note Section -->
+        <!--<table width="100%" style="margin-top:10px; float:left;">
+            <tr>
+                <td style="text-align:left; padding: 2px; font-size:10pt;" valign="Top">
+                    <ul>
+                        <apex:outputPanel rendered="{!NOT(ISNULL(op.Order__r.RTO_Charges__c)) || NOT(ISNULL(op.Order__r.Handling_Charges__c)) || NOT(ISNULL(op.Order__r.Insurance_Amount__c))}">
+                            <td style="text-align:center;"><Strong>This payment receipt is exclusive of RTO, Insurance, and Handling charges, which will be billed separately.</Strong></td>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!AND(ISNULL(op.Order__r.RTO_Charges__c), ISNULL(op.Order__r.Handling_Charges__c), ISNULL(op.Order__r.Insurance_Amount__c))}">
+                            
+                            <div style="text-align:center;">
+                                <strong>The advance payment received is exclusively towards the purchase of goods (vehicle) and does not include any services.</strong><br/>
+       							<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; As per Notification No. 66/2017 - Central Tax dated 15-11-2017, tax payment on advances received for supply of goods is exempt.</strong>
+   							</div>
+                        </apex:outputPanel>
+                    </ul>
+                </td>
+            </tr>
+        </table> -->
+        
+        
+        <!-- Received By Section -->
+        <div style="position: fixed;bottom: 0;left: 0; width: 100%; text-align: center; padding-Bottom:20px; margin-top:25px;">
+            <table style="float:left;" width="100%" cellspacing="12">
+                <td width="10%">Received By :-</td>
+                <td style="text-align:center; line-height:20px adding-top:30px;"><strong>{!DealerName}</strong><br/>
+                    {!op.Order__r.Dealer__r.BillingStreet}<br/>
+                    {!op.Order__r.Dealer__r.BillingCity}, {!op.Order__r.Dealer__r.BillingState}, {!op.Order__r.Dealer__r.BillingCountry} - {!op.Order__r.Dealer__r.BillingPostalCode}<br/>
+                    Ph Number: {!op.Order__r.Dealer__r.Phone}<br/>
+                </td>
+            </table>
+            <table  width="100%" style="margin-top:15px;float:left;">
+                <td width="10%"></td>
+                <td width="100%" style="text-decoration: solid underline purple 4px; text-align:center;margin-bottom:20px;">___________________<br/><strong>Signature</strong></td>
+            </table>
+            	
+            <!-- Note Section -->
+        <table width="100%" style="margin-top:10px; float:left;">
+            <tr>
+                <td style="text-align:left; padding: 2px; font-size:10pt;">
+                    <ul>
+                        <div style="text-align:center;">
+                            <strong>The advance payment received is exclusively towards the purchase of goods (vehicle) and does not include any services.</strong><br/>
+                            <strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; As per Notification No. 66/2017 - Central Tax dated 15-11-2017, tax payment on advances received for supply of goods is exempt.</strong><br/>
+                            <apex:outputPanel rendered="{!AND(ISNULL(op.Order__r.RTO_Charges__c), ISNULL(op.Order__r.Handling_Charges__c), ISNULL(op.Order__r.Insurance_Amount__c))}">
+                                <strong>This payment receipt is exclusive of RTO, Insurance, and Handling charges, which will be billed separately.</strong>
+                            </apex:outputPanel>
+                        </div>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+            
+            <table  width="100%" style="margin-top:10px;float:left;">
+                <td width="10%"></td>
+                <td width="100%" style="text-decoration: solid underline purple 4px; text-align:center;margin-bottom:20px;"><br/><strong>Terms and Condition : Advance received is only towards goods i.e. vehicle and not towards any services.</strong></td>
+            </table>
+        </div> 
+        
+    </body> 
+</apex:page>

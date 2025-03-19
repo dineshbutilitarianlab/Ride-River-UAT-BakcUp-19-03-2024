@@ -1,0 +1,40 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="addFileComponentController">
+    <aura:attribute name="parentId" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="isPDF" type="Boolean" default="true" />
+    <aura:attribute name="operationType" type="String" />
+    <aura:attribute name="optionList" type="String[]" />
+    <aura:attribute name="docType" type="String" default="" />
+    <aura:attribute name="showLoadingSpinner" type="Boolean" default="false" />
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="otherFileName" type="String" default="" />
+    <aura:attribute name="showFileUpload" type="Boolean" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:if isTrue="{!v.showFileUpload}">
+        <!-- Modal content -->
+        <div class="slds-m-around-large">
+            <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                        </button>
+                        <h2 id="header99" class="slds-text-heading--medium">Add Files</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <lightning:input aura:id="fileId" onchange="{!c.handleFilesChange}" type="file" name="file" label="Upload Attachment" multiple="false" />
+                        <div class="slds-text-body_small slds-text-color_error">{!v.fileName}</div>
+                        <aura:if isTrue="{!v.showLoadingSpinner}">
+                            <div class="slds-text-body_small slds-text-color_error">Uploading...
+                                <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading" />
+                            </div>
+                        </aura:if>
+                        <button class="slds-button slds-button_brand" onclick="{!c.doSave}">Upload Attachment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

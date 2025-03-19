@@ -1,0 +1,70 @@
+<!--
+ * @File Name          : DebugDPE.html
+ * @Description        : 
+ * @Author             : Swapna Deshpande
+ * @Last Modified By   : Swapna Deshpande
+ * @Last Modified On   : 
+ * @Modification Log   : 
+ * Ver       Date            Author            Modification
+ * 1.0    04/20/2022      Swapna Deshpande    Initial Version
+-->
+
+<template>
+    <lightning-card>
+    
+    <template if:true={showLoadingSpinner}>
+        <lightning-spinner alternative-text="Uploading......" size="medium"></lightning-spinner>
+    </template>
+     <template if:true={showList}>
+        <template if:true={checkDebugNode}>
+            <lightning-formatted-rich-text
+            value={richtext}></lightning-formatted-rich-text>
+            </template>
+            <template if:true={checkSize}>
+                <lightning-formatted-rich-text
+                value={richtextsize}></lightning-formatted-rich-text>
+                </template>
+        <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="3" >
+                    <div class="slds-p-around_medium slds-text-align_center"> <c-dpe-debugmulti-select-combo multi-select="true" options={msOptions} selected-values={searchActivity} label='Data Sources' name= 'datasource' onselect={handleSelect}></c-dpe-debugmulti-select-combo>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="mycustom-padding" >
+                    <div class="slds-p-around_medium slds-text-align_center">  <c-dpe-debugmulti-select-combo multi-select="true" options={msOptions} selected-values={searchActivity} label='Filters' name= 'filters'  onselect={handleSelect}></c-dpe-debugmulti-select-combo>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="mycustom-padding">
+                    <div class=" slds-p-around_medium slds-text-align_center"> <c-dpe-debugmulti-select-combo multi-select="true" options={msOptions} selected-values={searchActivity} label='Joins' name= 'joins' onselect={handleSelect}></c-dpe-debugmulti-select-combo>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="mycustom-padding" >
+                    <div class="slds-p-around_medium slds-text-align_center"><c-dpe-debugmulti-select-combo multi-select="true" options={msOptions} selected-values={searchActivity} label='Groups and Aggregates' name= 'aggregates' onselect={handleSelect}></c-dpe-debugmulti-select-combo>
+                    </div>
+                </lightning-layout-item>
+                <!--<lightning-layout-item size="3" >
+                    <div class="slds-p-around_medium slds-text-align_center"><c-multi-select-combobox multi-select="true" options={msOptions} selected-values={searchActivity} label='Writeback Objects' name= 'writes' onselect={handleSelect}></c-multi-select-combobox>
+                    </div>
+                </lightning-layout-item> -->
+            </lightning-layout>
+
+            <lightning-button variant="brand" label="Download JSON File" title="Primary action" onclick={handleJSONUpdate} class="slds-var-m-left_x-small mycustom-button"></lightning-button>
+
+        </div>
+    </template>
+    
+        <lightning-input type="checkbox" label="Show Mappings" onchange={handleChange}></lightning-input>
+        <template if:true={areMapsVisible}>
+            <div class="slds-var-m-vertical_medium">
+                <lightning-datatable
+                data={data}
+                columns={columns}
+                key-field="From"
+                >
+                </lightning-datatable>
+            </div>
+        </template>
+        
+       
+    </lightning-card> 
+    </template>

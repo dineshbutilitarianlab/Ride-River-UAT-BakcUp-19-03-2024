@@ -1,0 +1,112 @@
+<template>
+
+    <lightning-quick-action-panel header="">
+
+        <template if:true={ShowGRNDone}>
+            <lightning-card title="GRN Details Already Submited !" icon-name="standard:product_item_transaction">
+
+            </lightning-card>
+        </template>
+        <template if:false={ShowGRNDone}>
+
+            <lightning-card title="Receive GRN Details" icon-name="standard:product_item_transaction">
+
+                <template if:true={showSpinner}>
+                    <lightning-spinner></lightning-spinner>
+                </template>
+                <div class="slds-p-around_medium">
+                    <template if:true={requestLineItems.length}>
+                        <div style="max-width: 100%; overflow-x: auto;">
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-scrollable_x" style="width: 1200px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">
+                                            <lightning-input type="checkbox" label="Select All"
+                                                onchange={handleSelectAll} checked={selectAllChecked}></lightning-input>
+                                        </th>
+                                        <th scope="col" style="width: 200px;">Product Name</th>
+                                        <th scope="col" style="width: 200px;">Part Name</th>
+                                        <th scope="col" style="width: 150px;">Shipped Quantity</th>
+                                        <th scope="col" style="width: 200px;">Received Quantity</th>
+                                        <th scope="col" style="width: 150px;">Missing Quantity</th>
+                                        <th scope="col" style="width: 150px;">Damage Quantity</th>
+                                        <th scope="col" style="width: 150px;">Wrong Quantity</th>
+                                        <th scope="col" style="width: 150px;">Extra Quantity</th>
+                                        <th scope="col" style="width: 200px;">Remarks (Any)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={requestLineItems} for:item="item">
+                                        <tr key={item.Id}>
+                                            <td>
+                                                <lightning-input type="checkbox" data-id={item.Id}
+                                                    checked={item.selected} onchange={handleCheckboxChange}>
+                                                </lightning-input>
+                                            </td>
+                                            <td>{item.ProductName}</td>
+                                            <td>{item.PartName}</td>
+                                            <td>
+                                                <center>{item.QuantityRequested}</center>
+                                            </td>
+                                            <td>
+                                                <lightning-input type="number" data-id={item.Id}
+                                                    value={item.RecievedQuantity} name="recQuantity"
+                                                    onchange={handleInputChange} disabled={item.isChagesDisabled}
+                                                    class="wide-input"></lightning-input>
+                                            </td>
+                                            <td>
+                                                <lightning-input type="number" data-id={item.Id}
+                                                    onchange={handleInputChange} name="MIT"
+                                                    disabled={item.isChargesDisabled} class="wide-input">
+                                                </lightning-input>
+                                            </td>
+                                            <td>
+                                                <lightning-input type="number" data-id={item.Id}
+                                                    onchange={handleInputChange} name="DIT"
+                                                    disabled={item.isChargesDisabled} class="wide-input">
+                                                </lightning-input>
+                                            </td>
+                                            <td>
+                                                <lightning-input type="number" data-id={item.Id}
+                                                    onchange={handleInputChange} name="WP"
+                                                    disabled={item.isChargesDisabled} class="wide-input">
+                                                </lightning-input>
+                                            </td>
+                                            <td>
+                                                <lightning-input type="number" data-id={item.Id}
+                                                    onchange={handleInputChange} name="Extra"
+                                                     disabled={item.isChagesDisabled} class="wide-input">
+                                                </lightning-input>
+                                            </td>
+                                            
+                                            <!-- New Remarks Input Field -->
+                                            <td>
+                                                <lightning-input type="text" data-id={item.Id}
+                                                    value={item.Remarks} name="remarks"
+                                                    onchange={handleInputChange} disabled={item.isChagesDisabled} class="wide-input">
+                                                </lightning-input>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template if:false={requestLineItems.length}>
+                        <p>No product request line items found.</p>
+                    </template>
+                </div>
+
+                <center>
+                    <lightning-button label="Cancel" variant="destructive" onclick={closeQuickAction}>
+                    </lightning-button> &nbsp;&nbsp;
+                    <lightning-button label="Submit" variant="brand" onclick={handleUpdateProcess} disabled={isSubmitDisabled}></lightning-button>
+                </center>
+
+            </lightning-card>
+
+        </template>
+
+    </lightning-quick-action-panel>
+
+</template>

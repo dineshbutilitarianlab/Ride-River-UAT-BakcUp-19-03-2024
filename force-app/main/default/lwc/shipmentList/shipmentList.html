@@ -1,0 +1,10 @@
+<template>
+    <lightning-card title="Existing Shipments">
+        <lightning-datatable
+            data={shipments}
+            columns={columns}
+            key-field="Id"
+        ></lightning-datatable>
+        <lightning-button label="Back" onclick={handleBack}></lightning-button>
+    </lightning-card>
+</template>

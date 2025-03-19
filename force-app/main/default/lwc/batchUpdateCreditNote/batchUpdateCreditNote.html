@@ -1,0 +1,76 @@
+<template>
+    <!-- Header Section -->
+    <div class="heading" style="background-color:rgb(1,118,211); height:50px; display:flex; justify-content:center; align-items:center;">
+        <h1 style="text-align:center; font-size:x-large">Update Credit Note</h1>
+    </div>
+
+    <!-- Lightning Card -->
+    <lightning-card title="">
+        <!-- Check if claimList exists and is not empty -->
+        <template if:true={claimList}>
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr>
+                        <th scope="col">Claim Number</th>
+                        <th scope="col">Claim Amount</th>
+                        <th scope="col">Approved Amount</th>
+                        <th scope="col">Credit Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over claimList -->
+                    <template for:each={claimList} for:item="Claim">
+                        <tr key={Claim.Id}>
+                            <!-- Claim Number -->
+                            <td>{Claim.Name}</td>
+                            <!-- Claim Amount -->
+                            <td>{Claim.Total_Claim_Amount__c}</td>
+                            <!-- Approved Amount (Editable) -->
+                            <td>
+                                <lightning-input
+                                    type="number"
+                                    value={Claim.Approved_Amount__c}
+                                    data-id={Claim.Id}
+                                    data-field="Approved_Amount__c"
+                                    onchange={handleInputChange}
+                                    style="width: 80px; padding: 3px; font-size: 12px; border-radius: 4px; margin-bottom: 5px;">
+                                </lightning-input>
+                            </td>
+                            <!-- Credit Note (Editable) -->
+                            <td>
+                                <lightning-input
+                                    type="text"
+                                    value={Claim.Credit_Note_Number__c}
+                                    data-id={Claim.Id}
+                                    data-field="Credit_Note_Number__c"
+                                    onchange={handleInputChange}
+                                    style="padding: 5px; border-radius: 4px; margin-bottom: 5px;">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner></lightning-spinner>
+            </template>
+
+            <!-- Buttons -->
+            <template if:true={buttonVisibility}>
+                <center style="margin-top:20px">
+                    <lightning-button variant="destructive" label="Exit" title="Exit" onclick={handleExit} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" label="Update" title="Update" onclick={handleSubmit} class="slds-m-left_x-small"></lightning-button>
+                </center>
+            </template>
+        </template>
+
+        <!-- If claimList is empty -->
+        <template if:false={claimList}>
+            <div class="heading" style="background-color:rgb(247, 3, 3); height:50px; display:flex; justify-content:center; align-items:center;">
+                <h1 style="text-align:center; font-size:x-large; color:white">Oops!! No items found</h1>
+            </div>
+        </template>
+    </lightning-card>
+</template>

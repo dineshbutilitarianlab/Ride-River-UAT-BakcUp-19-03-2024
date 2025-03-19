@@ -1,0 +1,7 @@
+<aura:component implements="force:lightningQuickAction,forceCommunity:availableForAllPageTypes" access="global">
+    <div class="wrapper-container">    
+        <lightning:card title="Create Purchase Order">
+            <c:createPurchaseOrderForm />
+        </lightning:card>
+    </div>
+</aura:component>

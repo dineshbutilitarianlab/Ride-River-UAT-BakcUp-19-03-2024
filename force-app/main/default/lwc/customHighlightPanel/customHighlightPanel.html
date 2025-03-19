@@ -1,0 +1,108 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <template if:true={record}>
+            <div class="slds-grid slds-wrap slds-page-header" style="background-color: white;gap: 20px;">
+                <div class="slds-page-header__row" style="width: 100%;">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-grid primaryFieldRow">
+                            <div class="slds-grid slds-col slds-has-flexi-truncate">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <lightning-icon icon-name="standard:work_order" size="medium"></lightning-icon>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <p class="forceHighlightsStencilDesktop entityNameTitle">Job Card</p>
+                                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-line-clamp clip-text" title={record.WorkOrderNumber}>
+                                            <span class="uiOutputText">{record.WorkOrderNumber}</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="group" class="slds-col slds-no-flex slds-grid slds-grid_vertical-align-center actionsContainer">
+                                <ul class="branding-actions slds-button-group slds-m-left--xx-small oneActionsRibbon forceActionsContainer">
+                                    <!-- <li data-target-selection-name="sfdc:CustomButton.WorkOrder.RR_JC_Customer_Copy" class="slds-button slds-button--neutral slds-button_neutral">
+                                        <lightning-button label="Customer Copy" title="Customer Copy" onclick={handleCustomerCopy}></lightning-button>
+                                    </li> -->
+                                    <template for:each={buttons} for:item="action">
+                                        <template if:true={action.isVisible}>
+                                            <li key={action.Name} data-target-selection-name="sfdc:CustomButton.WorkOrder.RR_JC_Customer_Copy" class="slds-button slds-button--neutral slds-button_neutral">
+                                                <a title={action.MasterLabel} class="forceActionLink" data-aura-class="forceActionLink" role="button" data-type={action.Name} data-page={action.apexPageURL} onclick={handleButtonClick}>{action.MasterLabel}</a>
+                                            </li>
+                                        </template>
+                                    </template>
+                                    <li data-target-selection-name="sfdc:CustomButton.WorkOrder.RR_JC_Customer_Copy" class="slds-button slds-button--neutral slds-button_neutral">
+                                        <lightning-button-menu style="--lwc-borderWidthThin: 0px;" alternative-text="Action" menu-alignment="auto" onselect={handleMenuSelect}>
+                                            <template for:each={dropdownButtons} for:item="action">
+                                                <lightning-menu-item
+                                                    id={action.value}
+                                                    label={action.label}
+                                                    value={action.value}
+                                                    key={action.label}
+                                                >
+                                                </lightning-menu-item>
+                                            </template>
+                                        </lightning-button-menu>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="" style="width: 80%;">
+                    <lightning-record-view-form
+                        record-id={recordId}
+                        object-api-name="WorkOrder"
+                    >
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_2-of-12">
+                                <label class="slds-form-element__label" for="form-element-01">Owner</label> 
+                                <lightning-output-field variant="label-hidden" field-name="OwnerId"> </lightning-output-field>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <label class="slds-form-element__label" for="form-element-01">Case</label> 
+                                <lightning-output-field variant="label-hidden" field-name="CaseId"> </lightning-output-field>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <label class="slds-form-element__label" for="form-element-01">Status</label> 
+                                <lightning-output-field variant="label-hidden" field-name="Status"> </lightning-output-field>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <label class="slds-form-element__label" for="form-element-01">StartDate</label> 
+                                <lightning-output-field variant="label-hidden" field-name="StartDate"> </lightning-output-field>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <label class="slds-form-element__label" for="form-element-01">EndDate</label> 
+                                <lightning-output-field variant="label-hidden" field-name="EndDate"> </lightning-output-field>
+                            </div>
+                        </div>
+                    </lightning-record-view-form>
+                </div>
+            </div>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+        <template if:true={showCanelJobCard}>
+
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeCancelJobCard}>
+                        <lightning-icon icon-name='utility:close' alternative-text='close' variant='inverse' size='small' title='close'></lightning-icon>
+                        <span class="slds-assistive-text">Cancel and close</span>
+                    </button>
+                    <div class="slds-modal__header">
+                        <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">Cancel Job Card</h1>
+                    </div>
+                    <div class="slds-modal__content" id="modal-content-id-1">
+                        <lightning-flow
+                            flow-api-name='JobCard_Cancellation'
+                            flow-input-variables={inputFlowVariables}>
+                        </lightning-flow>
+                    </div>
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+    </div>
+    
+</template>

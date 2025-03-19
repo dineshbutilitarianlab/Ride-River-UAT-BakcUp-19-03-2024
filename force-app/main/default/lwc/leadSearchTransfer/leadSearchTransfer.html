@@ -1,0 +1,71 @@
+<template>
+    <lightning-card title="Lead Search">
+        <div class="slds-p-around_medium">
+
+            <!-- Search Field -->
+            <lightning-input 
+                type="tel" 
+                label="Enter Phone Number" 
+                value={phoneNumber}
+                placeholder="Search Lead by Phone Number"  
+                onchange={handleInputChange}>
+            </lightning-input>
+
+            <lightning-button 
+                label="Search Lead" 
+                variant="brand" 
+                onclick={handleSearch} 
+                class="slds-m-top_medium">
+            </lightning-button>
+        </div>
+
+        <template if:true={lead}>
+            <!-- Lead Status Path -->
+            <div class="slds-path">
+                <lightning-progress-indicator current-step={lead.Status} type="path" variant="base">
+                    <lightning-progress-step label="New" value="New"></lightning-progress-step>
+                    <lightning-progress-step label="RNR" value="RNR"></lightning-progress-step>
+                    <lightning-progress-step label="Test Ride" value="Test Ride"></lightning-progress-step>
+                    <lightning-progress-step label="Follow Up" value="Follow Up"></lightning-progress-step>
+                    <lightning-progress-step label="Ready For Booking" value="Ready For Booking"></lightning-progress-step>
+                    <lightning-progress-step label="Close Lost" value="Close Lost"></lightning-progress-step>
+                    <lightning-progress-step label="Converted" value="Converted"></lightning-progress-step>
+                </lightning-progress-indicator>
+            </div>
+        
+            <!-- Lead Details -->
+            <div class="slds-box slds-theme_default slds-p-around_medium slds-m-top_medium">
+                <div class="slds-grid slds-wrap">
+                    <!-- Left Column -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input type="text" label="Lead Name" value={lead.Name} disabled></lightning-input>
+                        <lightning-input type="tel" label="Phone" value={lead.Phone} disabled></lightning-input>
+                        <lightning-input type="text" label="Company" value={lead.Company} disabled></lightning-input>
+                    </div>
+        
+                    <!-- Right Column -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input type="text" label="Industry" value={lead.Industry} disabled></lightning-input>
+                        <lightning-input type="text" label="Owner" value={lead.Owner.Name} disabled></lightning-input>
+                        <lightning-input type="text" label="Lead Status" value={lead.Status} disabled></lightning-input>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Centered Button -->
+            <div class="slds-m-top_medium slds-text-align_center">
+                <lightning-button 
+                    label="Lead Transfer" 
+                    variant="brand" 
+                    onclick={handleTransferRequest}>
+                </lightning-button>
+            </div>
+        </template>
+        
+
+        <!-- Error Message -->
+        <template if:true={error}>
+            <p class="slds-text-color_error slds-m-around_medium">{error}</p>
+        </template>
+    </lightning-card>
+</template>

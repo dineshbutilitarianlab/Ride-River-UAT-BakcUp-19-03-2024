@@ -1,0 +1,45 @@
+<apex:page standardController="Opportunity"
+           
+           showHeader="false" 
+           sidebar="false" 
+           standardStylesheets="false" 
+           renderAs="pdf" 
+           applyBodyTag="false" 
+           applyHtmlTag="false">
+    <html>
+        <head>
+            <style type="text/css" media="print">
+                @page {
+                margin-bottom: 3cm;
+                
+                @bottom-center {
+                content: element(footer);
+                }
+                }
+                
+                div.footer {
+                display: block;
+                padding: 10px;
+                position: running(footer);
+                }
+                
+            </style>
+        </head>
+        <body>
+            <!--some elements-->
+            <div class="footer" name="footer">
+                <div  style="width: 100%; text-align: left;font-family: Helvetica, sans-serif;margin-top:5px;float:left;">
+                    
+                    <p style="width:30%;text-align:left;float:left;">
+                        Authorized Signature	<br />
+                        For River Mobility Private Limited		
+                    </p>
+                    <p style="float:right; width:60%;text-align:left; width:25%">
+                        Thank You for Choosing River  
+                    </p>         
+                </div>
+            </div>
+            <!-- Add some long text here -->
+        </body>
+    </html>
+</apex:page>

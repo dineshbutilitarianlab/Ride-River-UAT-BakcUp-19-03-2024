@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-p-around_medium lgc-bg">
+        <lightning-accordion active-section-name="A">
+            <lightning-accordion-section name="CaseInformation" label="Case Information">
+                <lightning-record-edit-form object-api-name="Case" onsubmit={handleSubmit} record-type-id={recordTypeId}>
+                    
+                        <lightning-input type="text" label="Name" onchange={handleInputChange}></lightning-input>
+                        <lightning-textarea name="Description" label="Description" value={description} onchange={handleInputChange}></lightning-textarea>
+                        <lightning-textarea name="Subject" label="Subject" value={subject} onchange={handleInputChange}></lightning-textarea>
+                        <lightning-textarea name="Comments" label="Internal Comments" value={comments} onchange={handleInputChange}></lightning-textarea>
+                    
+                </lightning-record-edit-form>
+            </lightning-accordion-section>
+        </lightning-accordion>
+    </div>    
+</template>

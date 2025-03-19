@@ -1,0 +1,153 @@
+<template>
+    <template if:true={showPayments}>
+        <!-- Existing Payments Table -->
+        <lightning-card>
+            <div class="custom-header slds-grid slds-grid_align-spread slds-p-horizontal_medium slds-p-vertical_small">
+                <!-- Header with Icon -->
+                <div class="slds-grid slds-grid_vertical-align-center header-title">
+                    <lightning-icon icon-name="utility:money" size="small" class="slds-m-right_small colorful-icon"></lightning-icon>
+                    <h1 class="slds-text-heading_small slds-m-bottom_xx-small">PO Payments</h1>
+                </div>
+                <div class="header-actions">
+                    <!-- Conditionally Rendered Submit Button -->
+                    <template if:true={showSubmit}>
+                        <template if:false={existingPayments.length}>
+                        <lightning-button 
+                            variant="brand" 
+                            onclick={handleSubmit} 
+                            name="Submit" 
+                            type="Submit" 
+                            label="Submit" 
+                            class="custom-submit-button slds-m-right_medium">
+                        </lightning-button>
+                    </template>
+                    </template>
+                <template if:false={existingPayments.length}>
+                    <lightning-button 
+                        variant="brand" 
+                        onclick={toggleTemplates} 
+                        name="Add More" 
+                        label="Add More" 
+                        class="custom-add-button">
+                    </lightning-button>
+                </template>
+                </div>
+            </div>            
+            <template if:true={existingPayments}>
+                <div class="slds-p-around_medium slds-scrollable_y">
+                    <lightning-datatable 
+                        key-field="Id" 
+                        data={existingPayments} 
+                        columns={columns} 
+                        onrowaction={handleRowAction} 
+                        hide-checkbox-column 
+                        class="custom-datatable center-datatable">
+                    </lightning-datatable>
+                </div>
+            </template>
+            <template if:false={existingPayments}>
+                <div class="slds-p-around_medium slds-text-align_center">
+                    <p class="slds-text-heading_small slds-text-color_error">No Payments Found</p>
+                </div>
+            </template>
+
+            <!-- Add More Button
+            <div class="slds-p-around_medium slds-text-align_center">
+                <lightning-button 
+                    variant="brand" 
+                    onclick={toggleTemplates} 
+                    name="Add More" 
+                    label="Add More" 
+                    class="custom-add-button">
+                </lightning-button>
+            </div> -->
+        </lightning-card>
+    </template>
+
+    <!-- Add PO Payments Form -->
+    <template if:true={showRow}>
+        <!-- <lightning-card title="Add New PO Payment" class="slds-card slds-m-around_medium"> -->
+            <template for:each={itemList} for:item="item">
+                <div class="tile slds-p-around_medium slds-m-bottom_medium slds-box slds-theme_default" key={item.id}>
+                    <lightning-record-edit-form 
+                        object-api-name="PO_Payments__c" 
+                        onsuccess={handleSuccess} 
+                        onerror={handleError}>
+                        <lightning-messages></lightning-messages>
+                        <lightning-layout multiple-rows class="slds-grid slds-wrap slds-gutters">
+                            <lightning-layout-item size="2" large-device-size="3" class="slds-p-horizontal_small">
+                                <lightning-input-field 
+                                    field-name="Purchase_Order__c" 
+                                    variant="label-stacked" 
+                                    value={purchaseOrderId} 
+                                    disabled>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" large-device-size="3" class="slds-p-horizontal_small">
+                                <lightning-input-field 
+                                    field-name="Payment_reference__c" 
+                                    variant="label-stacked" 
+                                    required>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" large-device-size="3" class="slds-p-horizontal_small">
+                                <lightning-input-field 
+                                    field-name="Order__c"
+                                    variant="label-stacked" 
+                                    value={recordId}  
+                                    disabled>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" large-device-size="3" class="slds-p-horizontal_small">
+                                <lightning-input-field 
+                                    field-name="Amount_Paid__c" 
+                                    variant="label-stacked" 
+                                    required>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+
+                            <!-- Add and Remove Row Buttons -->
+                            <!-- <lightning-layout-item size="2" large-device-size="2" class="slds-text-align_center slds-p-top_small">
+                                <lightning-icon 
+                                    class="custom-icon" 
+                                    icon-name="action:new" 
+                                    alternative-text="Add Row" 
+                                    size="small" 
+                                    title="Add Row" 
+                                    onclick={addRow}>
+                                </lightning-icon>
+                                <lightning-icon 
+                                    class="custom-icon slds-m-left_small" 
+                                    icon-name="action:delete" 
+                                    alternative-text="Delete Row" 
+                                    size="small" 
+                                    title="Delete Row" 
+                                    onclick={removeRow}>
+                                </lightning-icon>
+                            </lightning-layout-item> -->
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </div>
+            </template>
+
+            <!-- Cancel and Submit Buttons -->
+            <div class="slds-p-around_medium slds-text-align_center">
+                <lightning-button 
+                    variant="neutral" 
+                    onclick={toggleTemplates} 
+                    name="Cancel" 
+                    label="Cancel" 
+                    class="slds-m-right_small">
+                </lightning-button>
+                <!-- <lightning-button 
+                    variant="brand" 
+                    onclick={handleSubmit} 
+                    name="Submit" 
+                    type="Submit" 
+                    label="Submit" 
+                    class="custom-submit-button">
+                </lightning-button> -->
+            </div>
+        <!-- </lightning-card> -->
+    </template>
+</template>

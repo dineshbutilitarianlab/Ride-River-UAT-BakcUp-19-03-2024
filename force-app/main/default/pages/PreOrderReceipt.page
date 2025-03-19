@@ -1,0 +1,186 @@
+<apex:page standardController="Order" renderAs="pdf" showheader="false" applyHtmlTag="false" readOnly="true" extensions="PreOrderReceiptController">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+            size: B4; 
+            }
+            .data_Table{
+            border: 1px solid black;
+            margin-top:300px;
+            text-align: center; 
+            border-top: 0;
+            border-right: 0;
+            }
+            .totals{
+            border: 1px solid black;
+            color: grey !important;
+            border-top: 0;
+            border-right: 0;
+            }
+            .page-break {
+            page-break-before: always;
+            }
+            .table-header {
+            background-color: #D3D3D3;
+            font-weight: bold;
+            }
+            
+        </style>
+    </head>
+    <body style="font-family: Arial, Helvetica, sans-serif;">
+        
+        <div style="float:left;width:60%;">
+            <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="100px" width="140px" style=""/>
+        </div>
+        <div style="float:right;width:40%;height:70px;">
+            <table style="border-collapse:collapse;" width="100%" height="70px">
+                <tr>
+                    <td style="border-collapse:collapse;text-align:left; font-size:15px;">
+                        {!DealerName}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse:collapse;text-align:left;">
+                        {!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse:collapse;text-align:left;">
+                        email - {!order.Dealer__r.Email__c}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse:collapse;text-align:left;">
+                        CIN - {!order.Dealer__r.CIN__c}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-collapse:collapse;text-align:left;">
+                        GST - {!order.Dealer__r.GSTIN_Number__c}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <p style="margin-top:80px;float:left;width:100%;text-align:left;">
+            Submitted on :- <apex:outputText value="{0,date,MM/dd/yyyy, hh:mm:ss a}">
+                        <apex:param value="{! currentDate}" />
+                    </apex:outputText>
+        </p>
+        <table style="border-collapse:true;float:right; text-align:left;" width="40%">
+            <tr>
+                <th>Booking Id</th>                            
+            </tr>
+            <tr>
+                <th style="font-weight:Normal;">{!order.OrderNumber}</th>                            
+            </tr>
+            <tr>
+                 <th style="padding-top:15px;">Date of Payment</th>
+             </tr>
+            <tr>
+                <th style="font-weight:Normal;">
+                    <apex:outputText value="{0,date,MM/dd/yyyy, hh:mm:ss a}">
+                        <apex:param value="{!currentDate}" />
+                    </apex:outputText>
+                </th>                
+            </tr>
+        </table>
+        <table width="50%" style=" display:inline-table;float: left;width: 60%; margin-top:10px;">
+            <tr>
+                <td>{!DealerName}</td> 
+            </tr>
+            <tr>
+                <td>
+                	{!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}
+                </td>
+            </tr> 
+        </table>
+        
+        <table width="100%" style="float:left; width:100%;text-align:left;margin-top:10px;">
+            <tr>
+                <td width="30%">Email: {!order.Dealer__r.Email__c}</td>  
+                <td width="30%">Phone Number: {!order.Dealer__r.Phone}</td> 
+                <td width="40%">Transaction Id: {!order.Booking_Payment_Id__c}</td> 
+            </tr>
+            
+        </table>
+        <table width="50%" style=" display:inline-table;float: left;width: 60%; margin-top:10px;">
+            <tr>
+                <td><strong>Customer Details</strong></td>                   
+            </tr>
+            <tr>
+                <td>Customer Name: {!contact.Name}</td>
+            </tr> 
+            <tr>
+                <td>Address: {!order.BillingCity}, {!order.BillingState} - {!order.BillingPostalCode}</td> 
+            </tr>
+            <tr>
+                <td>Contact Details: {!contact.Phone}</td>
+            </tr>
+        </table>
+        <div style="float:left; width:100%;text-align:left;margin-top:10px;">
+            <hr/>
+        </div>
+        
+        
+        <table style="border-collapse:collapse;margin-top:10px; border:1px solid;float:left;text-align:left;font-weight:100; padding:5px;" width="100%" border="1px">
+            <tr>
+                <th style="border:1px solid;font-weight:bold; padding:8px;">Vehicle Info</th>
+                 <th style="border:1px solid; font-weight:Normal;padding:8px;"></th>
+            </tr>   
+            <tr>
+                <th style="border:1px solid; font-weight:Normal;padding:8px;">Model Name</th>
+                <th style="border:1px solid; font-weight:Normal;padding:8px;">{!orderItem.Product2.ModelName}</th>
+            </tr>
+            <tr>
+                <th style="border:1px solid;font-weight:Normal;padding:8px;">Color</th>
+                <th style="border:1px solid;font-weight:Normal;padding:8px;">{!orderItem.Product2.Colour__c}</th>
+            </tr>
+            <tr>
+                <th style="border:1px solid;font-weight:Normal;padding:8px;">Booking Amount</th>
+                <th style="border:1px solid;font-weight:Normal;padding:8px;">Rs. 
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!order.Booking_Amount__c}"/>
+                    </apex:outputText>
+                    </th>
+            </tr>               
+        </table>
+        
+        <div style="float:left; width:100%;text-align:left;margin-top:10px;">
+            <hr/>
+        </div>
+        
+       <h3 style="float:left;width:100%;">
+           <strong>Remarks</strong>
+        </h3>
+        <div style="float:left;width:100%;text-align: justify;">            
+            This advance receipt is issued against the pre-booking amount and does not require payment of GST in accordance with Notification No. 66/2017-Central Tax dated 15th Nov. 2017. The invoice of full value with application HSN i.e. 87116020 attracting GST @ 5%(not required to be paid under Reverse charge) will be duly issued at te time of dispatch of goods and reservatio  amount will be adjusted accordingly.
+        </div>
+        
+        <h1 style="float:left;width:100%; font-weight:normal;">
+           Terms and Conditions
+        </h1>    
+        <div style="float:left;width:100%;text-align: left;">
+            
+            1. Reservation of Vehicle is not an offer for sale and does not guarantee delivery of vehicle.<br/>
+            2. On case of non-delivery od vehicle/cancellation of booking complete bvooking amount shall be refunded to your account.<br/>
+            3. In case of vehicle delivery the booking shall be adjusted against payments of the final Vehicle price<br/>
+            4. Booking is cancelled by you (with zero cancellation charges) any time prior to your making full payment for Vehicle purchase. The refund will be processed within 3-2 days of cancellation of booking.<br/>
+            5. Any dispute shall be subjected to Bengaluru jurisdiction<br/>
+        </div>
+        <div style="float:left; text-align: justify; padding-top:20px;" width="60%">
+            I give River Mobility Pvt Ltd and its agents/partners consent to contact me for any marketing or promotional communications through any medium and enable WhatsApp assistance. I understand the privacy policy as mentioned on <a><href url="www.rideriver.com">www.rideriver.com</href></a>
+        </div>
+        <div style="float:left; text-align: justify;padding-top:20px;" width="60%">
+            I hereby confirm having read the vehicle reservation Terms and Conditions as available on <a><href url="www.rideriver.com">www.rideriver.com.</href></a> For any queries you can write to us at support@rideriver.com
+        </div>
+        
+    </body>
+</apex:page>

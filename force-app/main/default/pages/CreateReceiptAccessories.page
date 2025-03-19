@@ -1,0 +1,386 @@
+<!---------------------------------------------------------------------------------------------
+
+* Class Name: CreateReceiptAccessories
+* Created by : Sudarshan N B - 1/10/23
+* Last Modified By : Sudarshan N B - 28/1/24
+* Description : To generate a receipt for Accessories
+
+/******************************************************************************
+* Class Name: CreateReceiptOChargesController
+* Last Modified By : Prathap KR - 06/10/24
+* Description : Annual offer 6000 on Accessories
+***************************************************************************/
+
+-------------------------------------------------------------------------------------------------> 
+
+
+<apex:page standardController="Order" renderAs="pdf" showheader="false" applyHtmlTag="false" readOnly="false" extensions="CreateReceiptAccessoriesController">
+    <head>
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+            margin-left: 20mm;
+            margin-right: 12mm;
+            margin-top: 12mm;
+            margin-bottom: 12mm;
+            }
+            .data_Table{
+            border: 1px solid black;
+            margin-top:300px;
+            text-align: center; 
+            border-top: 0;
+            border-right: 0;
+            }
+            .totals{
+            border: 1px solid black;
+            color: grey !important;
+            border-top: 0;
+            border-right: 0; 
+            }
+            .rectangle {
+            width: 10px;
+            height: 10px;
+            border: 1px solid #000;
+            display: inline-block;
+            margin-right: 30px;
+            margin-left: 5px;
+            }
+            .page-break {
+            page-break-after: always;
+            }
+        </style>
+        
+        
+    </head>
+    <body style="font-family: sans-serif;font-size:10pt;">
+        
+        <table style="border-collapse:true;float:left;text-align:left; font-family: Arial, Helvetica, sans-serif;vertical-align: top;" width="30%">
+            <tr>
+                <td style="padding:0px;font-weight:bold;font-size:12px;" width="30%">
+                    <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="40px" width="100px"/>
+                    
+                    <p>
+                        <br/>CIN : {!order.Dealer__r.CIN__c}<br/>
+                        Contact : {!order.Dealer__r.Phone}<br/>
+                        Email : {!order.Dealer__r.Email__c}<br/>
+                    </p>
+                    
+                </td>   
+            </tr>
+        </table>
+        
+        <div style="padding:0px;vertical-align: top; text-align:left; font-weight:bold;float:right;width:69%; font-family: Arial, Helvetica, sans-serif; font-size:15px;">
+            {!DealerName}
+        </div>
+        
+        <table style="vertical-align: top;border-collapse:true;float:right; text-align:left; width:70%; font-family: Arial, Helvetica, sans-serif;">
+            <tr>
+                <td width="30%" style="padding:5px;vertical-align: top;">
+                    <strong>Address:</strong><br/>
+                    {!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}
+                </td>  
+                <td width="40%" style="padding:5px;vertical-align: top;">
+                    <strong>Dealer Bank details:</strong><br/>
+                    Beneficiary Name: {!order.Dealer__r.Beneficiary_Name__c}<br/>
+                    Bank Name: {!order.Dealer__r.Bank_Name__c}<br/>
+                    Account Number: {!order.Dealer__r.Account_Number__c}<br/>
+                    Swift Code: {!order.Dealer__r.Swift_Code__c}<br/>
+                    IFSC: {!order.Dealer__r.IFSC__c}<br/>
+                </td> 
+            </tr>
+        </table>
+        
+        <table style="vertical-align: top;border-collapse:true;float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;" width="100%">
+            <tr>
+                <td width="30%" style="padding:5px;vertical-align: top;">
+                    <div style="font-size:13pt;margin-bottom:0px;padding-bottom:0px;font-weight:bold;">
+                        TAX INVOICE<br/><br/>
+                    </div>
+                    <div>
+                        Invoice Number: {!invoiceId}<br/>
+                        Invoice Date: <apex:outputText value=" {0,date,dd/MM/yyyy}"><apex:param value="{!currentDate}" /></apex:outputText><br/>
+                        Order Id: {!order.Website_Order_Id__c}<br/>
+                        Hypothecation: <apex:outputText value=" {!IF(order.Approval_Status__c, 'Yes', 'No')}"/><br/> 
+                        <apex:outputText value="{!IF(order.Approval_Status__c, 'Bank Name : order.Finance__r.Name', '')}"/><br/>
+                    </div>
+                    
+                </td>  
+                <td width="30%" style="padding:5px;vertical-align: top;">
+                    Billed From:<br/><br/>
+                    {!order.Dealer__r.Name}<br/>
+                    {!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry}-{!order.Dealer__r.BillingPostalCode}<br/>
+                    
+                    <div style="padding-top:5px;">
+                        GST:{!order.Dealer__r.GSTIN_Number__c}
+                        PAN:{!order.Dealer__r.PAN_Number__c	}
+                        CIN:{!order.Dealer__r.CIN__c}
+                    </div>
+                </td> 
+                <td width="40%" style="vertical-align: top;padding:5px;">
+                    Billed To:<br/><br/>
+                    Name: {!order.Account.Name}<br/>
+                    Address: {!order.BillingStreet} {!order.BillingCity}<br/>
+                    {!order.BillingState} {!order.BillingCountry} {!order.BillingPostalCode}<br/>               
+                    Email: {!IF(AND(NOT(ISNULL(contact)), NOT(ISNULL(contact.Email))), contact.Email, '')}<br/>
+                    Ph No: {!order.Account.Phone}<br/>
+                    Place of Supply: {!order.Dealer__r.BillingState}<br/>
+                </td>
+            </tr>
+            
+        </table>
+        
+        <table style="vertical-align: top;display:inline-table;margin-top:10px; float:left;text-align:center; font-family: Helvetica, sans-serif; border-top:1px solid; border-bottom:1px solid; border-collapse:collapse;" width="100%" >
+            <tr>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse; font-weight: normal;" width="">No</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Item description</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">HSN Code</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Quantity</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Unit Price</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="7%">Tax Rate</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="10%">Tax</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="15%">Taxable Amount</th>
+            </tr>        
+            
+            <apex:variable value="{!1}" var="rowNumber" />
+            
+            <apex:repeat value="{!orderItemList}" var="OrderItem">            
+                <tr style="border-collapse: collapse; border: 1px solid; {!IF(rowCount == rowNumber, 'height: '+height+';', 'height: auto;')}">
+                    <td style="border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;padding-top:10px;padding-right:5px;padding-left:8px;"><apex:outputText value="{!rowNumber}." escape="false"/></td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;">{!OrderItem.Product2.Name}</td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;;border-collapse:collapse;vertical-align: top;"><apex:outputText value="{!OrderItem.Product2.HSN_Code__c}"/></td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;">
+                        <apex:outputText value="{0, number, #,##,###.00}">
+                            <apex:param value="{!OrderItem.Quantity}"/>
+                        </apex:outputText>
+                    </td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;">
+                        <apex:outputText value="{0, number, #,##,###.00}">
+                            <apex:param value="{!OrderItem.UnitPrice}"/>
+                        </apex:outputText> 
+                    </td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="{!IF(NOT(order.Internal_Purchase__c), TEXT(OrderItem.Product2.IGST_Percentage__c) + '%', '0%')}"/></td>
+
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="{0, number, #,##,###.00}"><apex:param value="{!IF(NOT(order.Internal_Purchase__c), OrderItem.UnitPrice*OrderItem.Quantity *(OrderItem.Product2.IGST_Percentage__c/100), 0.00)}" /></apex:outputText></td>
+                    
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="{0, number, #,##,###.00}"><apex:param value="{!OrderItem.UnitPrice*OrderItem.Quantity}"/></apex:outputText></td>
+                </tr>                    
+                
+                <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
+            </apex:repeat>
+            
+            
+        </table>
+        
+        <table style="display:inline-table;border:1px solid;border-collapse:collapse; float:left;text-align:center; font-family: Arial, Helvetica, sans-serif;" width="100%">
+            
+            <tr>            
+                <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Gross Amount</td>
+                <td style="border-bottom:1px solid;border-top:1px solid;border-collapse:collapse;;" width="17%"></td><td width="15%" style="border-bottom:1px solid;border-top:1px solid;border-right:1px solid;border-collapse:collapse;">
+                <apex:outputText value="{0, number, #,##,###.00}">
+                    <apex:param value="{!taxableAmount}"/>
+                </apex:outputText> 
+                </td>
+            </tr>
+            
+            <apex:panelGroup rendered="{!sameState}">
+                <tr>
+                    <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;"><apex:outputText value="{!IF(NOT(order.Internal_Purchase__c), 'CGST', 'CGST (0%)')}"/></td>
+                    <td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td><td width="15%" style="border-bottom:1px solid;border-right:1px solid;border-collapse:collapse;">
+                    <apex:outputText value="{0, number, #,##,###.00}">
+                        <apex:param value="{!IF(NOT(order.Internal_Purchase__c), Gst, 0.00)}"/>
+                    </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;"><apex:outputText value="{!IF(NOT(order.Internal_Purchase__c), 'SGST', 'SGST (0%)')}"/></td>
+                    <td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td><td width="15%" style="border-bottom:1px solid;border-right:1px solid;border-collapse:collapse;">
+                    <apex:outputText value="{0, number, #,##,###.00}">
+                        <apex:param value="{!IF(NOT(order.Internal_Purchase__c), Gst, 0.00)}"/>
+                    </apex:outputText>
+                    </td>
+                </tr>
+            </apex:panelGroup>
+            
+            <apex:panelGroup rendered="{!NOT(sameState)}">
+                <tr >
+                    <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;"><apex:outputText value="{!IF(NOT(order.Internal_Purchase__c), 'IGST', 'IGST (0%)')}"/></td>
+                    <td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td><td width="15%" style="border-bottom:1px solid;border-right:1px solid;border-collapse:collapse;">
+                    <apex:outputText value="{0, number, #,##,###.00}">
+                        <apex:param value="{!IF(NOT(order.Internal_Purchase__c), Gst*2, 0.00)}"/>
+                    </apex:outputText></td>
+                </tr>
+            </apex:panelGroup>
+            
+            <tr>          
+                <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;">Less: Anniversary Discount on Accessories</td>
+                <td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td><td width="15%" style="border-collapse: collapse;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;font-size:14px;">
+                
+                <apex:outputPanel rendered="{!OR(ISNULL(order.Accessories_Discount_Amount__c), order.Accessories_Discount_Amount__c == 0)}">
+                    <apex:outputText value="0"/>
+                </apex:outputPanel>
+                
+               <!-- <apex:outputPanel rendered="{!AND(NOT(ISNULL(order.Accessories_Discount_Amount__c)), order.Accessories_Discount_Amount__c != 0)}">
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!order.Accessories_Discount_Amount__c}"/>
+                      
+                    </apex:outputText>
+                </apex:outputPanel>-->
+                <apex:outputPanel rendered="{!AND(NOT(ISNULL(order.Accessories_Discount_Amount__c)), order.Accessories_Discount_Amount__c != 0)}"> 
+    			<apex:outputText value="0"/>
+				</apex:outputPanel>
+        
+                
+                
+                </td>
+            </tr>
+            
+            <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;">Discounted Amount</td>
+			<td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td>
+			<td width="15%" style="border-collapse: collapse;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;font-size:14px;">
+    		<apex:outputText value="{0, number, #,##,##0.00}">
+           <apex:param value="{!IF(discountAmount >0, -discountAmount, discountAmount)}"/>
+            </apex:outputText>
+</td>
+            
+            <tr>          
+                <td width="68%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;">Net Payable Amount</td>
+                <td style="border-bottom:1px solid;border-collapse:collapse;" width="17%"></td><td width="15%" style="border-collapse: collapse;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;font-size:14px;">
+                <apex:outputText value=" {0, number, #,##,##0.00}">
+                    <apex:param value="{!TotalAmount}"/>
+                </apex:outputText>
+                </td>
+            </tr>
+        </table>
+        
+        <p style="margin-top:10px;float:left;width:100%;font-family: Helvetica, sans-serif; ">
+            Amount In Words: {!inWords}<br/>
+            Whether tax is payable on reverse charge basis - No
+        </p>
+        
+        
+        
+        <apex:panelGroup rendered="{!sameState}">
+            <div style="width: 100%; text-align: left;font-family: Helvetica, sans-serif;margin-top:40px;float:left;">
+                <p style="width:30%;text-align:left;float:left;">
+                    Authorized Signature		
+                </p>
+                <p style="float:right; width:60%;text-align:left;">
+                    Thank You for Choosing River
+                </p>               
+                
+            </div>
+        </apex:panelGroup>
+        
+        <apex:panelGroup rendered="{!NOT(sameState)}">
+            <div style="width: 100%; text-align: left;font-family: Helvetica, sans-serif;margin-top:60px;float:left;">
+                <p style="width:30%;text-align:left;float:left;">
+                    Authorized Signature			
+                </p>
+                <p style="float:right; width:60%;text-align:left;">
+                    Thank You for Choosing River
+                </p>               
+                
+            </div>
+        </apex:panelGroup>        
+        <!--next page <div class="page-break"></div> -->
+        
+        <div class="page-break"><span>&nbsp;</span>
+        </div>
+        
+        
+        <div style="float:left;width:27%; font-family: Arial, Helvetica, sans-serif;">
+            <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="70px" width="170px"/>
+        </div>
+        <div style="float:right;width:70%; font-family: Arial, Helvetica, sans-serif; font-style:bold;padding-top:10px;font-size:15px;">
+            <strong>{!DealerName}</strong>
+        </div>
+        <div style="float:right;width:70%; font-family: Arial, Helvetica, sans-serif;margin-top:10px;">
+            <strong>Address:</strong><br/>
+            {!order.Dealer__r.BillingStreet}<br/>
+            {!order.Dealer__r.BillingCity}<br/>
+            {!order.Dealer__r.BillingState}<br/>
+            {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}<br/>
+        </div>
+        
+        
+        <table style="float:right;margin-Top:50px;text-align:left; font-family: Arial, Helvetica, sans-serif;font-style:Bold;" width="70%">
+            <td><strong>TERMS AND CONDITIONS:</strong></td>
+        </table>
+        <table style="display:inline-table; float:right;text-align:left; margin-top:5px; font-family: Arial, Helvetica, sans-serif;" width="70%">
+            
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">1. </td>
+                <td width="68%">Goods (Vehicles, Chargers, Accessories and others) once invoiced will not be
+                    returned or exchanged under any circumstances.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">2. </td>
+                <td width="68%">The vehicle/documents has been thoroughly inspected, tested and is free of
+                    any kind of defect and is up to my satisfaction.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">3. </td>
+                <td width="68%">I have also read the warranty terms and conditions as explained in the
+                    owner's manual and understand that my warranty claims if any, will be
+                    considered by the manufacturer only in accordance with the scope and limit
+                    of warranty as laid down in the warranty certificate.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">4. </td>
+                <td width="68%">All disputes are subjected to the jurisdiction of courts of law at respective
+                    point of sale.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">5. </td>
+                <td width="68%">I have checked my particulars and are correct to best of my knowledge.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">6. </td>
+                <td width="68%">I have received the vehicle in good condition along with tools and first aid kit
+                    and other compulsory accessories.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">7. </td>
+                <td width="68%">Registration and insurance will be done at the owner's risk and liability.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">8. </td>
+                <td width="68%"> I have understood all the conditions about Colour, Model and Manufacturing
+                    Date.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">9. </td>
+                <td width="68%">Subsidies applicable (at the time of invoicing), if any, are subject to approval
+                    from respective Government departments. Terms and conditions apply.</td>
+            </tr>
+            <tr>          
+                <td width="2%" style="vertical-align: top; text-align: left;">10. </td>
+                <td width="68%">E and O.E.</td>
+            </tr>
+        </table>
+        
+        <table style="float:right;margin-Top:20px;text-align:left; font-family: Arial, Helvetica, sans-serif;" width="70%">
+            <td>“I give River Mobility Private Limited. (RMPL) and its agents/partners consent to contact me for any marketing or promotional communications through any medium and enable WhatsApp assistance. I understand RMPL privacy policy as mentioned on www.rideriver.com”.</td>
+        </table>
+          
+        <div style="margin-left: 2mm;position: fixed;bottom: 0; width: 100%; text-align: left;font-size: 12px;font-family: Arial, Helvetica, sans-serif;">
+            Customer Copy <div class="rectangle"></div>    Duplicate Copy <div class="rectangle"></div>   Triplicate Copy <div class="rectangle"></div>
+            
+        </div> 
+     
+         
+    </body>
+    
+</apex:page>

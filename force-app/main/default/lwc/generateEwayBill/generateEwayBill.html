@@ -1,0 +1,42 @@
+<template>
+    <div class="container">
+
+        <template if:true={hideScrren}>
+
+      
+        <h1 class="title">Generate E-Way Bill</h1>
+
+        <!-- Spinner Overlay (Visible during processing) -->
+        <template if:true={isProcessing}>
+            <div class="spinner-overlay">
+                <lightning-spinner alternative-text="Processing..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Button to Generate E-Way Bill -->
+        <lightning-button 
+            label="Generate E-Way Bill" 
+            variant="brand"
+            onclick={generateEWayBill} 
+            disabled={isProcessing}
+            class="btn-generate">
+        </lightning-button>
+
+    </template>
+
+        <!-- Success Message -->
+        <template if:true={ewaybill}>
+            <div class="success-box">
+                <p class="success-text">🚀 E-Way Bill Generated Successfully! 🎉</p>
+                <p class="ewaybill-number">E-Way Bill No: {ewaybill}</p>
+            </div>
+        </template>
+
+        <!-- Error Message -->
+        <template if:true={errorMessage}>
+            <div class="error-box">
+                <p class="error-text">⚠️ {errorMessage}</p>
+            </div>
+        </template>
+    </div>
+</template>

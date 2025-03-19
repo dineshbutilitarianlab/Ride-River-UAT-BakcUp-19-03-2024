@@ -1,0 +1,554 @@
+<template>
+     <div class="flex-container">
+        <!-- Left Section (1/4 width) -->
+        <div class="left-section">
+          
+        <ul class="menu-list">
+  <li data-section="home" onclick={handleMenuClick} class={homeClass}>Home</li>
+  <li data-section="createNewLead" onclick={handleMenuClick} class={createNewLeadClass}>Create New Lead</li>
+  
+  <!-- Leads Group -->
+  <li class="menu-group">
+    <span class="menu-heading" onclick={toggleSubmenu}><span class="dropdown-symbol">&#x25BC;</span>Leads
+    </span>
+    <ul class="submenu">
+      <li data-section="newLeadList" onclick={handleMenuClick} class={newLeadListClass}>New Lead List</li>
+      <li data-section="notAttendedLeads" onclick={handleMenuClick} class={notAttendedLeadsClass}>Not Attended Leads</li>
+    </ul>
+  </li>
+
+  <!-- Test Rides Group -->
+  <li class="menu-group">
+    <span class="menu-heading" onclick={toggleSubmenu}><span class="dropdown-symbol">&#x25BC;</span>Test Rides
+    </span>
+    <ul class="submenu">
+      <li data-section="todaysTestRideList" onclick={handleMenuClick} class={todaysTestRideListClass}>Today's Test Ride List</li>
+      <li data-section="notAttendedTestRides" onclick={handleMenuClick} class={notAttendedTestRidesClass}>Not Attended Test Rides</li>
+    </ul>
+  </li>
+
+  <!-- Followups Group -->
+  <li class="menu-group">
+    <span class="menu-heading" onclick={toggleSubmenu}><span class="dropdown-symbol">&#x25BC;</span>Followups
+
+    </span>
+    <ul class="submenu">
+      <li data-section="todaysFollowUpList" onclick={handleMenuClick} class={todaysFollowUpListClass}>Today's Follow Up List</li>
+      <li data-section="notAttendedFollowups" onclick={handleMenuClick} class={notAttendedFollowupsClass}>Not Attended Followups</li>
+    </ul>
+  </li>
+</ul>
+
+        </div>
+
+               
+                
+  
+
+        <!-- Right Section (3/4 width) -->
+        <div class="right-section">
+            
+               <div class="main-content">
+      <template if:true={isHome}>
+        <p>Welcome to the Home Screen</p>
+      </template>
+      <template if:true={isCreateNewLead}>
+        <p>Here you can create a new lead.</p>
+      </template>
+      <template if:true={isNewLeadList}>
+      
+                        <div class=" slds-p-around_medium"> 
+                            <lightning-input type="text" placeholder="Search by Lead Name/Phone Number"
+                                value={Searchkey} onkeydown={handleKeydown}></lightning-input>
+                        </div>
+
+                        <div class=" slds-p-around_medium">
+                            <lightning-datatable key-field="id" data={records} columns={columns} show-row-number-column
+                                hide-checkbox-column onrowaction={handleRowAction} class="slds-table">
+                            </lightning-datatable>
+                        </div>
+      </template>
+      <template if:true={isNotAttendedLeads}>
+                <div if:true={Notattendentleadlisttable}>
+                
+        <h1 class="slds-text-heading_medium">Not Attended Lead's</h1>
+               
+                            <lightning-input type="text" placeholder="Search by Lead Name/Phone Number"
+                                value={NotattendedleadsSearchkey} onkeydown={NotattendedleadshandleKeydown}></lightning-input>
+
+                        <div class="table-container">
+                            <lightning-datatable key-field="id" data={Notattendedleadrecords} columns={columns} show-row-number-column
+                                hide-checkbox-column onrowaction={handleRowAction} class="slds-table">
+                            </lightning-datatable>
+                        </div>
+                </div>
+                <div if:true={Notattendentleaddetails}>
+        <h1 class="slds-text-heading_medium">Lead Deatails</h1>
+                
+    <div class="scrollable-container">
+      <lightning-card>
+        <lightning-progress-indicator current-step={LeadStatus} type="path" variant="non-linear">
+            <template for:each={steps} for:item="step">
+                <lightning-progress-step label={step.label} value={step.value} key={step.label}
+                    data-value={step.value} onclick={handleStepClick}>
+                </lightning-progress-step>
+            </template>
+        </lightning-progress-indicator>
+
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="text" label="LeadName" value={LeadName} required disabled>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-combobox name="Lead Status" label="Lead Source" value={source}
+                    placeholder="Select Progress" options={leadSourceOptions}
+                    onchange={handleChangeleadsource} disabled></lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-combobox name="Lead Status" label="Lead Status" value={LeadStatus}
+                    options={steps} onchange={handleChangeleadstatus} disabled></lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="phone" label="Mobile" value={MobilePhone}
+                    onchange={handleleadmoblie} required disabled></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="Email" label="Email" value={leademail}
+                    onchange={handleleadeamil} disabled>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="number" label="Lead Age (In Days)" value={LeadAge} disabled>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="text" label="Lead Owner" value={leadowner}
+                    onchange={handleleadowner} disabled>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input type="text" label="PS Name" value={psname} onchange={handlepsname}
+                    disabled>
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <div class="slds-p-around_medium">
+            <lightning-textarea type="text" label="Street" value={street}
+                onchange={handlestreet} disabled>
+            </lightning-textarea>
+            <lightning-layout>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-input type="text" label="City" value={city} onchange={handlecity}
+                        disabled>
+                    </lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-combobox name="progress" label="Country" value={country}
+                        options={countryoptions} onchange={handlecountry} disabled>
+                    </lightning-combobox>
+                </lightning-layout-item>
+            </lightning-layout>
+            <lightning-layout>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-input type="text" label="Postal Code" value={postalCode}
+                        onchange={handlepostalcode} disabled>
+                    </lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-combobox name="progress" label="State" value={state}
+                        options={stateoptions} onchange={handlestate} disabled>
+                    </lightning-combobox>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+      </lightning-card>
+    </div>
+     <div class="slds-p-around_medium footer-container">
+  <div class="slds-text-align_center">
+                     <div class="slds-p-horizontal_large">
+                          <lightning-button 
+                label="Edit" 
+                onclick={Handleedit} 
+                variant="neutral" class="slds-m-left_x-small">
+            </lightning-button>
+                     
+            <lightning-button 
+                label="Convert" 
+                onclick={handleLeadConvert} 
+                variant="brand" class="slds-m-left_x-small">
+            </lightning-button>
+                     </div>
+                      </div>
+    </div>
+                
+</div>
+<div if:true={Notattendentleaddetailsedit}>
+        <h1 class="slds-text-heading_medium">Lead Deatails</h1>
+                
+    <div class="scrollable-container">
+        <lightning-card>
+                                <lightning-progress-indicator current-step={LeadStatus} type="path"
+                                    variant="non-linear">
+                                    <template for:each={steps} for:item="step">
+                                        <lightning-progress-step label={step.label} value={step.value} key={step.label}
+                                            data-value={step.value} onclick={handleStepClick}>
+                                        </lightning-progress-step>
+                                    </template>
+                                </lightning-progress-indicator>
+                                <lightning-layout multiple-rows="true">
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="text" label="LeadName" value={LeadName} required
+                                            disabled>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-combobox name="Lead Status" label=" LeadSource" value={source}
+                                            placeholder="Select Progress" options={leadSourceOptions}
+                                            onchange={handleChangeleadsource} disabled></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-combobox name="Lead Status" label=" Lead Status" value={LeadStatus}
+                                            options={steps} onchange={handleChangeleadstatus}></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="phone" label="Mobile" value={MobilePhone}
+                                            onchange={handleleadmoblie} required disabled></lightning-input>
+                                    </lightning-layout-item>
+                                    <!--  <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="number" label="Customer Age" value={CustomerAge}
+                                onchange={handleleadcoustmerage} disabled>
+                            </lightning-input>
+                        </lightning-layout-item>-->
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="Email" label="Email" value={leademail}
+                                            onchange={handleleadeamil}>
+                                        </lightning-input>
+
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="number" label="Lead Age(In Days)" value={LeadAge}
+                                            disabled>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="text" label="Lead Owner" value={leadowner}
+                                            onchange={handleleadowner} disabled>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="6">
+                                        <lightning-input type="text" label="PS Name" value={psname}
+                                            onchange={handlepsname}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                                <lightning-card title="Address">
+                                    <div class="slds-p-around_medium">
+
+
+                                        <lightning-textarea type="text" label="Street" value={street}
+                                            onchange={handlestreet}>
+                                        </lightning-textarea>
+                                        <lightning-layout>
+                                            <lightning-layout-item padding="around-small" size="6">
+                                                <lightning-input type="text" label="City" value={city}
+                                                    onchange={handlecity}>
+                                                </lightning-input>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item padding="around-small" size="6">
+                                                <lightning-combobox name="progress" label="Country" value={country}
+                                                    options={countryoptions} onchange={handlecountry}>
+                                                </lightning-combobox>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                        <lightning-layout>
+                                            <lightning-layout-item padding="around-small" size="6">
+                                                <lightning-input type="text" label="Postal Code" value={postalCode}
+                                                    onchange={handlepostalcode}>
+                                                </lightning-input>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item padding="around-small" size="6">
+                                                <lightning-combobox name="progress" label="State" value={state}
+                                                    options={stateoptions} onchange={handlestate}>
+                                                </lightning-combobox>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </div>
+                                </lightning-card>
+                                <div class="slds-modal__content slds-p-around_medium">
+                                    <lightning-radio-group name="radioGroup" label="Choose Any Action"
+                                        options={chooseactionoptions} value={chooseoption}
+                                        onchange={ChooseAnyactionchange} type="button"></lightning-radio-group>
+
+                                </div>
+                                <div if:true={Ridetypetrue}>
+
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-radio-group name="radioGroup" label="Select Test Ride Type"
+                                            options={Ridetypeoptions} value={Ridetypevale}
+                                            onchange={Ridetypeoptionschange} required type="radio">
+                                        </lightning-radio-group>
+                                    </div>
+
+
+                                </div>
+        </lightning-card>
+
+    </div>
+    <div class="slds-p-around_medium footer-container">
+  <div class="slds-text-align_center">
+                     <lightning-button variant="brand" label="Save" onclick={Notattendentleaddetailshandlesave}
+                                        class="slds-m-left_x-small">
+                                    </lightning-button>
+                                    <lightning-button variant="brand" label="Cancel" onclick={Notattendentleaddetailseditcancelclick}
+                                        class="slds-m-left_x-small">
+                                    </lightning-button>
+                            <lightning-button variant="sucess" label="Convert" onclick={handleLeadConvert}
+                                            class="slds-m-left_x-small">
+                                        </lightning-button>
+                     </div>
+                      </div>
+    </div>
+
+                
+
+
+      </template>
+      <template if:true={isNotAttendedTestRides}>
+        <p>Displaying Test Ride List3...</p>
+      </template>
+      <template if:true={isTodaysTestRideList}>
+        <p>Displaying Test Ride List4...</p>
+      </template>
+      <template if:true={isNotAttendedFollowups}>
+        <p>Displaying Test Ride List5...</p>
+      </template>
+      <template if:true={isTodaysFollowUpList}>
+        <p>Displaying Test Ride List6...</p>
+      </template>
+    </div>
+  </div>
+
+           
+    </div>
+    <template if:true={lostleadtrue}>
+                                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                    <div class="slds-modal__container">
+                                        <header class="slds-modal__header">
+                                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={lostleadcancel}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                            <h2 class="slds-text-heading_medium">Lead Lost</h2>
+                                        </header>
+                                        <div class="slds-modal__content slds-p-around_medium">
+                                            <lightning-combobox name="progress" label="Reason" value={reasonvalue}
+                                                options={reasonoptions} onchange={reasonhandleChange}>
+                                            </lightning-combobox>
+
+                                            <lightning-input type="text" label="Cancel For Reason"
+                                                value={leadcancelreason} onchange={handleleadcancelreason} required
+                                                minlength="6"></lightning-input>
+                                        </div>
+
+                                        <footer class="slds-modal__footer slds-text-align_center">
+                                            <lightning-button variant="success" label="Save" title="Successful action"
+                                                onclick={lostleadsuccess}
+                                                class="slds-m-left_x-small">
+                                            </lightning-button>
+                                            <lightning-button variant="destructive" label="Cancel"
+                                                onclick={lostleadcancel}
+                                                class="slds-m-left_x-small">
+                                            </lightning-button>
+
+                                        </footer>
+
+                                    </div>
+                                </section>
+                                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                            </template>
+                            <template if:true={Homeridetrue}>
+                                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open ">
+                                        <div class="slds-modal__container">
+                                            <header class="slds-modal__header">
+                                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRidehome}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                                <h2 class="slds-text-heading_medium">New TestRide</h2>
+                                            </header>
+                                            <div class="slds-modal__content slds-p-around_medium">
+                                                <lightning-input type="text" label="Lead Name" disabled value={LeadName}
+                                                    minlength="3">
+                                                </lightning-input>
+                                               
+                                                <lightning-input type="datetime" name="input2" label="Test Ride Date"
+                                                    value={testridehomevaluedate} onchange={testridehomevaluedatehandle}
+                                                    minlength={todaysDate}>
+                                                </lightning-input>
+                                                <template if:true={errordateMessage}>
+                                                    <p class="slds-text-color_error">{errordateMessage}</p>
+                                                </template>
+
+
+                                                <lightning-card title="Address">
+                                                    <div class="slds-p-around_medium">
+
+
+                                                        <lightning-textarea type="text" label="Street" value={street}
+                                                            onchange={handlestreet}>
+                                                        </lightning-textarea>
+                                                        <lightning-layout>
+                                                            <lightning-layout-item padding="around-small" size="6">
+                                                                <lightning-input type="text" label="City" value={city}
+                                                                    onchange={handlecity}>
+                                                                </lightning-input>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item padding="around-small" size="6">
+                                                                <lightning-combobox name="progress" label="Country"
+                                                                    value={country} options={countryoptions}
+                                                                    onchange={handlecountry}>
+                                                                </lightning-combobox>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                        <lightning-layout>
+                                                            <lightning-layout-item padding="around-small" size="6">
+                                                                <lightning-input type="text" label="Postal Code"
+                                                                    value={postalCode} onchange={handlepostalcode}>
+                                                                </lightning-input>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item padding="around-small" size="6">
+                                                                <lightning-combobox name="progress" label="State"
+                                                                    value={state} options={stateoptions}
+                                                                    onchange={handlestate}>
+                                                                </lightning-combobox>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </div>
+                                                </lightning-card>
+
+                                                <footer class="slds-modal__footer slds-text-align_center">
+                                                    <lightning-button variant="success" label="Save"
+                                                        title="Successful action" onclick={handlehomesaveClick}
+                                                        class="slds-m-left_x-small">
+                                                    </lightning-button>
+                                                    <lightning-button variant="destructive" label="Cancel"
+                                                        title="Successful action" onclick={cancelNewTestRidehome}
+                                                        class="slds-m-left_x-small">
+                                                    </lightning-button>
+
+                                                </footer>
+                                            </div>
+
+                                        </div>
+                                    </section>
+                                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                                </template>
+                                
+                                <template if:true={storeridetrue}>
+                                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                        <div class="slds-modal__container">
+                                            <header class="slds-modal__header">
+                                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRidestrore}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                                <h2 class="slds-text-heading_medium">New TestRide</h2>
+                                            </header>
+                                            <div class="slds-modal__content slds-p-around_medium">
+                                                <lightning-input type="text" label="Lead Name" disabled value={LeadName}
+                                                    minlength="3"></lightning-input>
+                                                <div class="custom-datetime">
+                                                    <lightning-input type="datetime" label="Test Ride Date"
+                                                        value={testridestorevaluedate}
+                                                        onchange={testridestorevaluedatehandle}>
+
+                                                    </lightning-input>
+                                                    <template if:true={errordateMessage}>
+                                                        <p class="slds-text-color_error">{errordateMessage}</p>
+                                                    </template>
+                                                </div>
+
+                                            </div>
+                                            <footer class="slds-modal__footer slds-text-align_center">
+                                                <lightning-button variant="success" label="Save"
+                                                    title="Successful action" onclick={handlestoresaveClick}
+                                                    class="slds-m-left_x-small">
+                                                </lightning-button>
+                                                <lightning-button variant="destructive" label="Cancel"
+                                                    title="Successful action" onclick={cancelNewTestRidestrore}
+                                                    class="slds-m-left_x-small">
+                                                </lightning-button>
+
+                                            </footer>
+                                        </div>
+                                    </section>
+                                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                                </template>
+                                <template if:true={followoptionchoose}>
+                                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                        <div class="slds-modal__container">
+                                            <header class="slds-modal__header">
+                                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelfollowoptionchoose}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                                <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                            </header>
+                                            <div class="slds-modal__content slds-p-around_medium">
+                                                <lightning-radio-group name="radioGroup" label="Follow Up Subject"
+                                                    options={followoptionchooseoptions} value={followoptionchoosevalue}
+                                                    onchange={followoptionchoosechange} required type="radio">
+                                                </lightning-radio-group>
+                                            </div>
+                                            <footer class="slds-modal__footer slds-text-align_center">
+
+                                            </footer>
+                                        </div>
+                                    </section>
+                                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                                </template>
+                                 <template if:true={newfollowuptrue}>
+                                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                        <div class="slds-modal__container">
+                                            <header class="slds-modal__header">
+                                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handlenewfollowupcancelClick}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                                <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                            </header>
+                                            <div class="slds-modal__content slds-p-around_medium">
+                                                <!--  <lightning-input type="text" label="Enter Followup" value={newfollowupname}
+                                            onchange={followupnamehandler}></lightning-input>-->
+                                                <lightning-input type="datetime" name="input2" label="Followup Date"
+                                                    value={newfollowupdate} onchange={followupdatehandle}>
+                                                </lightning-input>
+                                                <template if:true={errordateMessage}>
+                                                    <p class="slds-text-color_error">{errordateMessage}</p>
+                                                </template>
+                                                <lightning-input type="text" label="Follow up Feedback"
+                                                    value={newFollowupfeedbck} onchange={followupfeedbackHandler}
+                                                    min={todaysDate}>
+                                                </lightning-input>
+
+                                            </div>
+                                            <footer class="slds-modal__footer slds-text-align_center">
+                                                <lightning-button variant="success" label="Save"
+                                                    title="Successful action" onclick={handlenewfollowupsaveClick}
+                                                    class="slds-m-left_x-small">
+                                                </lightning-button>
+                                                <lightning-button variant="destructive" label="Cancel"
+                                                    title="Successful action" onclick={handlenewfollowupcancelClick}
+                                                    class="slds-m-left_x-small">
+                                                </lightning-button>
+
+                                            </footer>
+                                        </div>
+                                    </section>
+                                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                                </template>
+
+
+</template>

@@ -1,0 +1,248 @@
+<!--
+@description       : 
+@author            : ChangeMeIn@UserSettingsUnder.SFDoc
+@group             : 
+@last modified on  : 09-18-2024
+@last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+
+<template>
+    <template if:true={showProducts}>
+        <!-- <h3 slot="title" >
+    <lightning-icon icon-name="standard:product_required"   alternative-text="Products"
+    size="small" style="margin:10px;"></lightning-icon>
+    <strong>Parts</strong>
+</h3> -->
+
+        <template if:true={existingWorkOrderLineItems}>
+            <p class="slds-p-horizontal_small">
+                <lightning-datatable key-field="id" data={existingWorkOrderLineItems} columns={columns}
+                    hide-checkbox-column onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </p>
+        </template>
+
+        <template if:true={showAll}>
+            <lightning-button variant="brand" class="slds-align_absolute-center" onclick={toggleTemplates}
+                name="Add More" style="margin-top:10px;" label="Add More">
+            </lightning-button>
+        </template>
+        <template if:true={showRow}>
+
+            <lightning-card>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <div class="tile" key={item.id}>
+                        <lightning-record-edit-form object-api-name="WorkOrderLineItem" onsuccess={handleSuccess} onerror={handleError}>
+                            <lightning-messages> </lightning-messages>
+                            <lightning-layout multiple-rows>
+                                <!-- <lightning-layout-item size="12" large-device-size="2" style="display: none;" >
+                                    <lightning-input-field field-name="WorkOrderId" variant="label-stacked" disabled
+                                        value={recordId}>
+                                    </lightning-input-field>
+                                </lightning-layout-item> -->
+
+                                <lightning-layout-item size="12" large-device-size="2" style="display: none;">
+                                    <lightning-input-field field-name="WorkOrderId" variant="label-stacked" disabled
+                                        value={recordId}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="12" large-device-size="2"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="RR_Parts_Category__c" variant="label-stacked"
+                                        onchange={handlepicklistchange} access-key={item.id} id={index} data-id={index}
+                                        data-fieldname="RR_Parts_Category__c" required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="12" large-device-size="2" class="slds-align_absolute-center">
+                                    <div class="slds-form-element">
+                                        <lightning-input-field 
+                                            field-name="RR_Product__c" 
+                                            variant="label-stacked"
+                                            data-id={index} 
+                                            name="product" 
+                                            onchange={handleProductselection}
+                                            access-key={item.id} 
+                                            id={index} 
+                                            required>
+                                        </lightning-input-field>
+
+                                        <!-- Error message displayed below -->
+                                        <template if:true={item.errorMessage}>
+                                            <div class="slds-form-element__help slds-text-color_error">
+                                                {item.errorMessage}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </lightning-layout-item>
+
+
+                                <!-- Product Name (Auto-populated)
+                                    <lightning-layout-item size="12" large-device-size="2"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input label="Product Name"
+                                        value={item.productName} 
+                                        disabled>
+                                    </lightning-input>
+                                    </lightning-layout-item> -->
+                                <!-- Product Code (Auto-populated) -->
+                            <lightning-layout-item size="12" large-device-size="2" class="slds-align_absolute-center">
+                            <lightning-input label="Product Code" value={item.productCode} 
+                                disabled>
+                            </lightning-input>
+                            </lightning-layout-item>
+
+                            <template if:true={item.showAdditionalFields}>
+
+                                    <lightning-layout-item size="12" large-device-size="2"
+                                        class="slds-align_absolute-center">
+                                        <lightning-input-field field-name="Replacement_Type__c" variant="label-stacked"
+                                            onchange={handlepicklistchange} access-key={item.id} id={index}
+                                            data-id={index} data-fieldname="Replacement_Type__c" required = {item.isElectricalValueRequired}>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+                                    </template>
+
+
+
+                                <!-- <lightning-layout-item size="12" large-device-size="2"
+                                    class="slds-align_absolute-center"> -->
+                                    <!-- <label class="slds-form-element__label" for={item.id}><span style="color: rgb(151, 7, 7);">*</span> Parts</label> -->
+                                    <!-- <lightning-input-field field-name="Labour_Code__c" variant="label-stacked"
+                                        data-id={index} name="product" onchange={handleLabourSelection}
+                                        access-key={item.id} id={index} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>  -->
+
+                                <!-- <lightning-layout-item size="12" large-device-size="1"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="Failure_Q__c" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item> -->
+
+                                <!-- <lightning-layout-item size="12" large-device-size="1"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="Hours__c" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item> -->
+
+                                <lightning-layout-item size="12" large-device-size="1"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="Electrical_Value__c" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} data-fieldname="Electrical_Value__c"
+                                         required={item.isElectricalValueRequired}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="12" large-device-size="1"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="Part_Description__c" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} required={item.isPartDescriptionRequired}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <!-- <lightning-layout-item size="12" large-device-size="1"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input-field field-name="Consequential_Parts__c" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="6" large-device-size="2"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input label="Price" name="price" variant="label-stacked"
+                                        access-key={item.id} id={index} data-id={index} value={item.price} disabled>
+                                    </lightning-input>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="6" large-device-size="2"
+                                    class="slds-align_absolute-center">
+                                    <lightning-input label="Product Code" name="productCode" data-id={index}
+                                        data-name="productCode" variant="label-stacked" access-key={item.id} id={index}
+                                        value={item.productCode} disabled>
+                                    </lightning-input>
+                                </lightning-layout-item> -->
+
+                                <!-- <template if:true={item.showAdditionalFields}> -->
+                                    <!-- <lightning-layout-item size="12" large-device-size="2"
+                                        class="slds-align_absolute-center">
+                                        <lightning-input-field field-name="FFIR_Number__c" variant="label-stacked"
+                                            access-key={item.id} id={index} data-id={index} required>
+                                        </lightning-input-field>
+                                    </lightning-layout-item> -->
+
+
+
+                                    <lightning-layout-item size="12" large-device-size="1"
+                                        class="slds-align_absolute-center">
+                                        <lightning-input-field field-name="Quantity" variant="label-stacked"
+                                            access-key={item.id} id={index} data-id={index} required
+                                            value={item.Quantity} onchange={handleQuantityChange}>
+                                        </lightning-input-field>
+                                       
+                                    </lightning-layout-item>
+
+                                    
+
+                                    <!-- <lightning-layout-item size="12" large-device-size="2"
+                                        class="slds-align_absolute-center">
+                                        <lightning-input-field field-name="Photos__c" variant="label-stacked"
+                                            access-key={item.id} id={index} data-id={index} required>
+                                        </lightning-input-field>
+                                    </lightning-layout-item> -->
+
+                                    <!-- <template if:true={item.showVideofield}>
+                                        <lightning-layout-item size="12" large-device-size="2"
+                                            class="slds-align_absolute-center">
+                                            <lightning-input-field field-name="Videos__c" variant="label-stacked"
+                                                access-key={item.id} id={index} data-id={index} required>
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </template> -->
+
+                                
+
+
+
+
+                                <!-- <lightning-layout-item   size="12" large-device-size="1" >
+                            <lightning-input-field   field-name="Status" vsariant="label-stacked"
+                            required>
+                            </lightning-input-field>
+                        </lightning-layout-item> -->
+                                <lightning-layout-item class="slds-align_absolute-center" size="12"
+                                    large-device-size="1">
+                                    <lightning-icon class="margin-icon" icon-name="action:new" access-key={item.id}
+                                        id={index} data-id={index} alternative-text="Add Row" size="small"
+                                        title="Add Row" onclick={addRow}>
+                                    </lightning-icon>
+                                    <lightning-icon class="margin-icon" icon-name="action:delete" access-key={item.id}
+                                        id={index} data-id={index} alternative-text="Delete Row" size="small"
+                                        title="Delete Row" onclick={removeRow}>
+                                    </lightning-icon>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-record-edit-form>
+                    </div>
+                </template>
+
+                <lightning-layout style="margin-top: 15px;">
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="brand-outline" onclick={toggleTemplates} name="Cancel"
+                            style="margin:10px;" label="Cancel">
+                        </lightning-button>
+                        <lightning-button variant="brand" onclick={handleSubmit} name="Submit" type="Submit"
+                            label="Submit" disabled={isSubmitDisabled}>
+                        </lightning-button>
+
+                    </div>
+                </lightning-layout>
+                
+            </lightning-card>
+        </template>
+    </template>
+
+</template>

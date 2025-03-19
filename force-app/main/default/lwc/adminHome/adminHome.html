@@ -1,0 +1,134 @@
+<template>
+    <lightning-card footer="" title="">
+       <h1 class="slds-text-heading_medium">{welcome_text}</h1>
+
+        <div class="c-footer" >
+            <a href="/lightning/app/c__Automotive_Cloud_Inapp_Learning/n/Home">Return to Learning Home</a>
+        </div>
+
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+
+                    <p class="c-description">{app_description}</p>
+                    <c-feature-child
+                    heading="Events and Milestones" 
+                    image="standard:event" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Manage your asset milestones, life events, or business milestones for a vehicle, contact, or account. Use this information for follow-up actions, business processes, and reports." 
+                    url="/lightning/setup/ObjectManager/PersonLifeEvent/Details/view"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Timelines" 
+                    image="standard:timeslot"
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Track key events and activities related to a vehicle by setting up Timelines." 
+                    url="/lightning/setup/Timeline/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Relationship Cards" 
+                    image="standard:relationship" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Use Relationship Cards to show key stakeholder information related to a vehicle." 
+                    url="/lightning/setup/RelationshipCardTypeManager/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Record Alerts" 
+                    image="standard:record_create" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Get alerted to record changes with timely notifications." 
+                    url="/lightning/setup/RecordAlertSetup/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+                    
+                    <c-feature-child
+                    heading="Interest Tags" 
+                    image="standard:stage" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Capture stakeholder interests and preferences by adding the Interest Tags component on the Lead, Opportunity, and Vehicle record pages." 
+                    url="/lightning/setup/InterestTagsSetup/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Service Console for Automotive" 
+                    image="custom:custom59" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Help your customer service representatives provide meaningful and personalized interactions from a unified console. Enable the Service Console for Manufacturing in Setup." 
+                    url="/lightning/setup/AutomotiveServiceExcellenceSettings/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Sales Agreements" 
+                    image="standard:people" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Make your business transactions, profits, and revenue margins more predictable with Sales Agreements. Set up and configure Sales Agreements in Setup." 
+                    url="/lightning/setup/SalesAgreementSettings/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+                    <c-feature-child
+                    heading="Advanced Account Forecasting" 
+                    image="standard:forecasts" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Generate forecasts for your entire account book of business. You can generate forecasts for opportunities, sales agreements, orders, program-based business, and more for a specified time horizon and grouped by product, region, and other dimensions. Set up Advanced Account Forecasting in Setup." 
+                    url="/lightning/setup/AdvancedAccountForecastSettings/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Account Manager Targets" 
+                    image="standard:activation_target" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Convert your growth plans into measurable targets with Account Manager Targets. Configure Account Manager Targets in Setup." 
+                    url="/lightning/setup/AcctMgrTargetSettings/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Data Processing Engine" 
+                    image="standard:data_streams" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Advanced Account Forecasting uses the Data Processing Engine to filter and aggregate data from Order, Opportunity, Sales Agreement, Location, Product Category, or any custom object. Use the provided Data Processing Engine jobs or create your own using a template. Configure and customize jobs in Setup." 
+                    url="/lightning/setup/DataProcessingEngine/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Program Based Business" 
+                    image="standard:channel_programs" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Run your program-based business more efficiently by generating forecasts for your products and components based on your customer’s forecast. Configure Program Based Business in Setup." 
+                    url="/lightning/setup/MfgProgramTemplates/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Warranty Lifecycle Management" 
+                    image="standard:warranty_term" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Record warranty term details and assign them to products or product families. Enable Warranty Administration in Setup." 
+                    url="/lightning/setup/MfgServiceSettings/home"
+                    link-in-new-tab={pass_true}
+                    link-reference="standard__webPage"></c-feature-child>
+                    
+                    <c-feature-child
+                    heading="Pre-Built Apps" 
+                    image="standard:app" 
+                    app="c__Automotive_Cloud_Inapp_Learning"
+                    app-text="Extend your Automotive Cloud implementation with unmanaged packages, sample apps, metadata, and other configurations." 
+                    url="/lightning/n/Prebuilt_Apps_Home"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

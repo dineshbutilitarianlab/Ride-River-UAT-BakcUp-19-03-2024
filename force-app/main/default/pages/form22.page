@@ -1,0 +1,184 @@
+<apex:page showHeader="false" renderAs="pdf" applyHtmlTag="false" standardController="Vehicle">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style type="text/css">
+            @page {
+                size: A4 portrait;
+                margin: 20mm;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 10pt;
+                color: #000;
+            }
+            .form-title {
+                font-size: 14pt;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+             .sub-text, .certify-text {
+                font-size: 10pt;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            .section-title {
+                font-size: 12pt;
+                font-weight: bold;
+                margin-top: 10px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+            td, th {
+                border: 1px solid #000;
+                padding: 5px;
+                text-align: left;
+            }
+            .no-border {
+                border: none;
+            }
+            .signature {
+                margin-top: 30px;
+                text-align: right;
+                font-size: 10pt;
+                font-weight: bold;
+            }
+            .note {
+                font-size: 9pt;
+                margin-top: 20px;
+            }
+            .bold {
+                font-weight: bold;
+            }
+            .center {
+                text-align: center;
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 9pt;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-title">
+            FORM 22<br/>
+            [See Rules 47(1)(g), 115, 124(2) and 127]<br/>
+            INITIAL CERTIFICATE OF COMPLIANCE WITH POLLUTION STANDARDS,<br/>
+            SAFETY STANDARDS OF COMPONENTS AND ROAD-WORTHINESS
+        </div>
+        <div class="sub-text">
+            (To be issued by the manufacturer or registered E-rickshaw<br/>
+            or E-cart Association (in case of E-rickshaw or E-cart))
+        </div>
+         <div class="certify-text">
+            It is certified that the following vehicle complies with the emission values, including mass<br/>
+            emission norms and noise standard including noise level under the provisions of the Motor<br/>
+            Vehicles Act,1988, and the rules made thereunder as specified below:
+        </div>
+
+        <div class="section-title">
+            Vehicle Details:
+            </div>
+            <div>
+        <strong>1. Brand name of the vehicle:</strong> {!Vehicle.Name}<br/>
+        <strong>2. Chassis number:</strong> {!Vehicle.ChassisNumber}<br/>
+        <strong>3. Engine number/ motor number:</strong> {!Vehicle.Name}<br/>
+        <strong>4. Emission norms applicable:</strong> {!Vehicle.Name}<br/>
+    </div>
+
+        <div class="section-title">
+            Emission Values:
+        </div>
+        <table>
+            <tr>
+                <th class="center">Sl. No</th>
+                <th class="center">Pollutant</th>
+                <th class="center">Mass in Gram / Kilometer or gram / kilowatt per hour</th>
+            </tr>
+            <tr>
+                <td class="center">1</td>
+                <td>Carbon Monoxide</td>
+                <td>0.5</td>
+            </tr>
+            <tr>
+                <td class="center">2</td>
+                <td>Hydro Carbon</td>
+                <td>0.3</td>
+            </tr>
+            <tr>
+                <td class="center">3</td>
+                <td>Non-Methane HC</td>
+                <td>0.2</td>
+            </tr>
+            <tr>
+                <td class="center">4</td>
+                <td>NOx</td>
+                <td>0.15</td>
+            </tr>
+            <tr>
+                <td class="center">5</td>
+                <td>HC + NOx</td>
+                <td>0.35</td>
+            </tr>
+            <tr>
+                <td class="center">6</td>
+                <td>PM</td>
+                <td>0.025</td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Noise Level:
+        </div>
+        <table>
+            <tr>
+                <td class="bold">Horn</td>
+                <td>85 dB(A)</td>
+            </tr>
+            <tr>
+                <td class="bold">Bystander’s position</td>
+                <td>78 dB(A)</td>
+            </tr>
+            <tr>
+                <td class="bold">Operator’s ear level</td>
+                <td>80 dB(A)</td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Safety and Performance Compliance:
+        </div>
+        <table>
+            <tr>
+                <td>Braking System</td>
+                <td>Compliant as per IS:11852</td>
+            </tr>
+            <tr>
+                <td>Steering System</td>
+                <td>Compliant as per IS:12222</td>
+            </tr>
+            <tr>
+                <td>Lighting System</td>
+                <td>Compliant as per IS:12510</td>
+            </tr>
+        </table>
+
+        <div class="signature">
+            ___________________________<br/>
+            (Signature of Manufacturer or Authorised Signatory)<br/>
+        </div>
+
+        <div class="note">
+            <strong>Note 1:</strong> This form shall be issued with the signature of the manufacturer duly printed in the Form itself by affixing facsimile signature in ink under the hand and the seal of the manufacturer.<br/>
+            <strong>Note 2:</strong> In the case of E-rickshaw or E-cart, this Form shall be issued with the signature of an authorized signatory of registered E-rickshaw or E-cart Association duly printed in the Form itself by affixing facsimile signature in ink under the hand and seal of such signatory.
+        </div>
+
+        <div class="footer">
+            <strong>Terms and Conditions:</strong> This certificate is issued as per the applicable rules and regulations.
+        </div>
+    </body>
+</apex:page>

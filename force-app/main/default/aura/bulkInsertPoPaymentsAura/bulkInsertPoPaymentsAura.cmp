@@ -1,0 +1,5 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:attribute name="orderid" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:bulkInsertPoPayments orderid="{!v.orderid}"/>
+</aura:component>

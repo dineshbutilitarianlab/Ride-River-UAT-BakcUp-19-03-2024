@@ -1,0 +1,147 @@
+<template>
+    <lightning-card title="Add Supporting Media" icon-name="standard:record">
+        <div class="slds-m-around_medium">
+
+            <template if:true={lineItems}>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr>
+                            <th>Discrepancy Line Item</th>
+                            <th>Add Supporting Media URL</th>
+                            <template if:true={SpareUser}>
+                                <th>Approve</th>
+                                <th>Reject</th>
+                                <th>Feedback</th>
+                            </template>
+                            <template if:true={Warehouse}>
+                                <th>Approve</th>
+                                <th>Reject</th>
+                                <th>Feedback</th>
+                            </template>
+                            <template if:true={isSalesManager}>
+                                <th>Spare Approve</th>
+                                <th>Spare Reject</th>
+                                <th>Spare Feedback</th>
+                                <th>Warehouse Approve</th>
+                                <th>Warehouse Reject</th>
+                                <th>Warehouse Feedback</th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={lineItems} for:item="item">
+                            <tr key={item.Id}>
+                                <td>{item.Name}</td>
+                                <td>
+                                    <lightning-input 
+                                        type="url" 
+                                        data-id={item.Id} 
+                                        value={item.Supporting_Media__c}
+                                        placeholder="Add URL Only"
+                                        onchange={handleInputChange}>
+                                    </lightning-input>
+                                </td>
+
+                                <!-- Spare User Actions -->
+                                <template if:true={SpareUser}>
+                                    <td>
+                                        <template if:true={item.SpareOnApprove}>
+                                            <lightning-icon icon-name="action:approval" class="approved-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SpareOnApprove}>
+                                            <lightning-icon icon-name="utility:check" data-id={item.Id} name="spareApprove" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SpareOnReject}>
+                                            <lightning-icon icon-name="action:reject" class="rejected-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SpareOnReject}>
+                                            <lightning-icon icon-name="utility:close" data-id={item.Id} name="spareReject" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SpareOnReject}>
+                                            <lightning-input type="text" placeholder="Enter feedback" data-id={item.Id} value={item.feedback} onchange={handleFeedbackChange}></lightning-input>
+                                        </template>
+                                    </td>
+                                </template>
+
+                                <!-- Warehouse Actions -->
+                                <template if:true={Warehouse}>
+                                    <td>
+                                        <template if:true={item.WarehouseOnApprove}>
+                                            <lightning-icon icon-name="action:approval" class="approved-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.WarehouseOnApprove}>
+                                            <lightning-icon icon-name="utility:check" data-id={item.Id} name="warehouseApprove" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.WarehouseOnReject}>
+                                            <lightning-icon icon-name="action:reject" class="rejected-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.WarehouseOnReject}>
+                                            <lightning-icon icon-name="utility:close" data-id={item.Id} name="warehouseReject" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.WarehouseOnReject}>
+                                            <lightning-input type="text" placeholder="Enter feedback" data-id={item.Id} value={item.feedback} onchange={handleFeedbackChange}></lightning-input>
+                                        </template>
+                                    </td>
+                                </template>
+
+                                <!-- Sales Manager Actions (Combined Spare & Warehouse) -->
+                                <template if:true={isSalesManager}>
+                                    <td>
+                                        <template if:true={item.SalesMgrSpareOnApprove}>
+                                            <lightning-icon icon-name="action:approval" class="approved-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SalesMgrSpareOnApprove}>
+                                            <lightning-icon icon-name="utility:check" data-id={item.Id} name="spareApprove" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SalesMgrSpareOnReject}>
+                                            <lightning-icon icon-name="action:reject" class="rejected-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SalesMgrSpareOnReject}>
+                                            <lightning-icon icon-name="utility:close" data-id={item.Id} name="spareReject" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SalesMgrSpareFeedback}>
+                                            <lightning-input type="text" placeholder="Enter feedback" data-id={item.Id} value={item.SalesMgrSpareFeedback} onchange={handleFeedbackChange}></lightning-input>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SalesMgrWarehouseOnApprove}>
+                                            <lightning-icon icon-name="action:approval" class="approved-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SalesMgrWarehouseOnApprove}>
+                                            <lightning-icon icon-name="utility:check" data-id={item.Id} name="warehouseApprove" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SalesMgrWarehouseOnReject}>
+                                            <lightning-icon icon-name="action:reject" class="rejected-icon"></lightning-icon>
+                                        </template>
+                                        <template if:false={item.SalesMgrWarehouseOnReject}>
+                                            <lightning-icon icon-name="utility:close" data-id={item.Id} name="warehouseReject" onclick={iconClicked} class="clickable-icon"></lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.SalesMgrWarehouseFeedback}>
+                                            <lightning-input type="text" placeholder="Enter feedback" data-id={item.Id} value={item.SalesMgrWarehouseFeedback} onchange={handleFeedbackChange}></lightning-input>
+                                        </template>
+                                    </td>
+                                </template>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+        </div>
+    </lightning-card>
+</template>

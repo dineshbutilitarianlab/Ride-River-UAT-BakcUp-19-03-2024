@@ -1,0 +1,1333 @@
+{
+    "FullName": "Acme_Partners_Aggregate_by_Member",
+    "Metadata": {
+        "aggregates": [
+            {
+                "fields": [
+                    {
+                        "aggregateFunction": "Count",
+                        "alias": "GroupbyDebugDummy",
+                        "sourceFieldName": "DummyValue"
+                    }
+                ],
+                "groupBy": [
+                    "DummyName",
+                    "DummyValue"
+                ],
+                "label": "Debug AggregateCompute Transaction Journals With Activity Dates",
+                "name": "Debug_AggregateCompute_Transaction_Journals_With_Activity_Dates",
+                "sourceName": "Debug_Formula_Compute_Transaction_Journals_With_Activity_Dates"
+            },
+            {
+                "fields": [
+                    {
+                        "aggregateFunction": "Count",
+                        "alias": "GroupbyDebugDummy",
+                        "sourceFieldName": "DummyValue"
+                    }
+                ],
+                "groupBy": [
+                    "DummyValue",
+                    "DummyName"
+                ],
+                "label": "Debug AggregateRebateProgram",
+                "name": "Debug_AggregateRebateProgram",
+                "sourceName": "Debug_Formula_RebateProgram"
+            },
+            {
+                "fields": [
+                    {
+                        "aggregateFunction": "Count",
+                        "alias": "GroupbyDebugDummy",
+                        "sourceFieldName": "DummyValue"
+                    }
+                ],
+                "groupBy": [
+                    "DummyValue",
+                    "DummyName"
+                ],
+                "label": "Debug AggregateTotalTransactionAmountAndTotalQuantity",
+                "name": "Debug_AggregateTotalTransactionAmountAndTotalQuantity",
+                "sourceName": "Debug_Formula_TotalTransactionAmountAndTotalQuantity"
+            },
+            {
+                "description": "Calculates the total transaction amount and total quantity on the FilterTransactionJournalsWithValidActivityDates node. The results are grouped by each member, rebate type, and payout period.",
+                "fields": [
+                    {
+                        "aggregateFunction": "Sum",
+                        "alias": "TotalAggAmount",
+                        "sourceFieldName": "TransactionAmount"
+                    },
+                    {
+                        "aggregateFunction": "Sum",
+                        "alias": "TotalAggQuanity",
+                        "sourceFieldName": "Quantity"
+                    }
+                ],
+                "groupBy": [
+                    "MemberId",
+                    "RebateTypeId",
+                    "PayoutPeriodId"
+                ],
+                "label": "Total Transaction Amount and Total Quantity",
+                "name": "TotalTransactionAmountAndTotalQuantity",
+                "sourceName": "FilterValidTransactionJournalsForRebateTypes"
+            },
+            {
+                "fields": [
+                    {
+                        "aggregateFunction": "Count",
+                        "alias": "GroupbyDebugDummy",
+                        "sourceFieldName": "DummyValue"
+                    }
+                ],
+                "groupBy": [
+                    "DummyValue",
+                    "DummyName"
+                ],
+                "label": "Debug Aggregate ProgramRebateType",
+                "name": "Debug_Aggregate_ProgramRebateType",
+                "sourceName": "Debug_Formula_ProgramRebateType"
+            }
+        ],
+        "appends": [
+            {
+                "isDisjointedSchema": true,
+                "label": "Debug Append All Node",
+                "name": "Debug_Append_All_Node",
+                "sources": [
+                    "Debug_AggregateRebateProgram",
+                    "Debug_AggregateTotalTransactionAmountAndTotalQuantity",
+                    "Debug_AggregateCompute_Transaction_Journals_With_Activity_Dates",
+                    "Debug_Aggregate_ProgramRebateType"
+                ]
+            }
+        ],
+        "datasources": [
+            {
+                "description": "The Program Rebate Type object as the data source.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "RebateProgramId"
+                    },
+                    {
+                        "alias": "Status",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Status"
+                    },
+                    {
+                        "alias": "CalcObjectId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "CalcObjectId"
+                    },
+                    {
+                        "alias": "FilterCriteria",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "FilterCriteria"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProductFilterType"
+                    }
+                ],
+                "label": "Program Rebate Type",
+                "name": "ProgramRebateType",
+                "sourceName": "ProgramRebateType",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Program Rebate Type Product object as the data source.",
+                "fields": [
+                    {
+                        "alias": "ProductId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProductId"
+                    },
+                    {
+                        "alias": "ProgramRebateTypeId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProgramRebateTypeId"
+                    },
+                    {
+                        "alias": "ProgramRebateTypeProductId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    }
+                ],
+                "label": "Program Rebate Type Product",
+                "name": "ProgramRebateTypeProduct",
+                "sourceName": "ProgramRebateTypeProduct",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Rebate Member Product Aggregate object as the data source.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    },
+                    {
+                        "alias": "ProgramRebateTypeId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProgramRebateTypeId"
+                    },
+                    {
+                        "alias": "RebateProgramMemberId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "RebateProgramMemberId"
+                    },
+                    {
+                        "alias": "RebateProgramPayoutPeriodId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "RebateProgramPayoutPeriodId"
+                    },
+                    {
+                        "alias": "TotalQuantity",
+                        "dataType": "Numeric",
+                        "displaySequence": 1,
+                        "name": "TotalQuantity"
+                    },
+                    {
+                        "alias": "TotalTransactionAmount",
+                        "dataType": "Numeric",
+                        "displaySequence": 1,
+                        "name": "TotalTransactionAmount"
+                    }
+                ],
+                "label": "Rebate Member Product Aggregate",
+                "name": "RebateMemberProductAggregate",
+                "sourceName": "RebateMemberProductAggregate",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Rebate Program object as the data source.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    },
+                    {
+                        "alias": "Status",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Status"
+                    }
+                ],
+                "label": "Rebate Program",
+                "name": "RebateProgram",
+                "sourceName": "RebateProgram",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Rebate Program Member object as the data source.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "RebateProgramId"
+                    },
+                    {
+                        "alias": "MemberStatus",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "MemberStatus"
+                    }
+                ],
+                "label": "Rebate Program Member",
+                "name": "RebateProgramMember",
+                "sourceName": "RebateProgramMember",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Rebate Program Payout Period object as the data source.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Id"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "RebateProgramId"
+                    },
+                    {
+                        "alias": "StartDate",
+                        "dataType": "Date",
+                        "displaySequence": 1,
+                        "name": "StartDate"
+                    },
+                    {
+                        "alias": "EndDate",
+                        "dataType": "Date",
+                        "displaySequence": 1,
+                        "name": "EndDate"
+                    },
+                    {
+                        "alias": "Status",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "Status"
+                    }
+                ],
+                "label": "Rebate Program Payout Period",
+                "name": "RebateProgramPayoutPeriod",
+                "sourceName": "RebateProgramPayoutPeriod",
+                "type": "StandardObject"
+            },
+            {
+                "description": "The Transaction Journal object as the data source.",
+                "fields": [
+                    {
+                        "alias": "MemberId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "MemberId"
+                    },
+                    {
+                        "alias": "ProductId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProductId"
+                    },
+                    {
+                        "alias": "TransactionAmount",
+                        "dataType": "Numeric",
+                        "displaySequence": 1,
+                        "name": "TransactionAmount"
+                    },
+                    {
+                        "alias": "Quantity",
+                        "dataType": "Numeric",
+                        "displaySequence": 1,
+                        "name": "Quantity"
+                    },
+                    {
+                        "alias": "ActivityDate",
+                        "dataType": "DateTime",
+                        "displaySequence": 1,
+                        "name": "ActivityDate"
+                    },
+                    {
+                        "alias": "CreatedById",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "CreatedById"
+                    },
+                    {
+                        "alias": "CreatedDate",
+                        "dataType": "DateTime",
+                        "displaySequence": 1,
+                        "name": "CreatedDate"
+                    },
+                    {
+                        "alias": "ExternalTransactionNumber",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ExternalTransactionNumber"
+                    },
+                    {
+                        "alias": "JournalDate",
+                        "dataType": "DateTime",
+                        "displaySequence": 1,
+                        "name": "JournalDate"
+                    },
+                    {
+                        "alias": "LastModifiedDate",
+                        "dataType": "DateTime",
+                        "displaySequence": 1,
+                        "name": "LastModifiedDate"
+                    },
+                    {
+                        "alias": "OrderId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "OrderId"
+                    },
+                    {
+                        "alias": "OrderItemId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "OrderItemId"
+                    },
+                    {
+                        "alias": "ProductCategoryId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "ProductCategoryId"
+                    },
+                    {
+                        "alias": "QuantityUnitOfMeasureId",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "QuantityUnitOfMeasureId"
+                    },
+                    {
+                        "alias": "UsageType",
+                        "dataType": "Text",
+                        "displaySequence": 1,
+                        "name": "UsageType"
+                    }
+                ],
+                "label": "Transaction Journal",
+                "name": "TransactionJournal",
+                "sourceName": "TransactionJournal",
+                "type": "StandardObject"
+            }
+        ],
+        "description": "Uses the Member field on the Transaction Journal to filter and aggregate the transaction journal records. Upserts the aggregated records in the Rebate Member Product Aggregate object.",
+        "filters": [
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "MemberStatus",
+                        "value": "Active"
+                    }
+                ],
+                "description": "Filters records by active rebate program members.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Active Rebate Program Members",
+                "name": "FilterActiveRebateProgramMembers",
+                "sourceName": "FilterRebateProgramMember"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "Status",
+                        "value": "Active"
+                    }
+                ],
+                "description": "Filters records by active rebate program payout periods.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Active Rebate Program Payout Periods",
+                "name": "FilterActiveRebateProgramPayoutPeriods",
+                "sourceName": "FilterRebateProgramPayoutPeriod"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "Status",
+                        "value": "Active"
+                    }
+                ],
+                "description": "Filters records by active rebate programs.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Active Rebate Programs",
+                "name": "FilterActiveRebatePrograms",
+                "sourceName": "FilterRebatePrograms"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "Status",
+                        "value": "Active"
+                    },
+                    {
+                        "inputVariable": "BatchCalcJobDefinitionId",
+                        "operator": "Equals",
+                        "sequence": 2,
+                        "sourceFieldName": "CalcObjectId"
+                    }
+                ],
+                "description": "Filters records by active rebate types.",
+                "filterCondition": "1 AND 2",
+                "isDynamicFilter": false,
+                "label": "Filter Active Rebate Types",
+                "name": "FilterActiveRebateTypes",
+                "sourceName": "FilterProgramRebateType"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "UsageType",
+                        "value": "Rebates"
+                    }
+                ],
+                "description": "Filters the transaction journal records by usage type.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Journals By Usage Type",
+                "name": "FilterJournalsByUsageType",
+                "sourceName": "TransactionJournal"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "IsNull",
+                        "sequence": 1,
+                        "sourceFieldName": "ProductFilterType"
+                    },
+                    {
+                        "operator": "Equals",
+                        "sequence": 2,
+                        "sourceFieldName": "ProductFilterType",
+                        "value": "IncludeProducts"
+                    },
+                    {
+                        "operator": "IsNotNull",
+                        "sequence": 3,
+                        "sourceFieldName": "ProgramRebateTypeProductId"
+                    },
+                    {
+                        "operator": "Equals",
+                        "sequence": 4,
+                        "sourceFieldName": "ProductFilterType",
+                        "value": "ExcludeProducts"
+                    },
+                    {
+                        "operator": "IsNull",
+                        "sequence": 5,
+                        "sourceFieldName": "ProgramRebateTypeProductId"
+                    }
+                ],
+                "filterCondition": "1 OR ( 2 AND 3) OR ( 4 AND 5)",
+                "isDynamicFilter": false,
+                "label": "Filter Journals For Valid Products",
+                "name": "FilterJournalsForValidProducts",
+                "sourceName": "ValidActivityDatedJournalsWithProgramRebateTypeProduct"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "IsUpdateOrNew",
+                        "value": "1"
+                    }
+                ],
+                "description": "Filters valid new or updated records to be upserted into the Rebate Program Member Aggregate object.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter New or Updated Aggregate Records",
+                "name": "FilterNewOrUpdatedAggregateRecords",
+                "sourceName": "ComputeNewOrUpdatedAggregateRecords"
+            },
+            {
+                "criteria": [],
+                "description": "Filters records by the specified program rebate type.",
+                "filterParameterName": "ProgramRebateTypeFilter",
+                "isDynamicFilter": true,
+                "label": "Filter Program Rebate Type",
+                "name": "FilterProgramRebateType",
+                "sourceName": "ProgramRebateType"
+            },
+            {
+                "criteria": [],
+                "description": "Filters records by the specified rebate program member.",
+                "filterParameterName": "RebateProgramMemberFilter",
+                "isDynamicFilter": true,
+                "label": "Filter Rebate Program Member",
+                "name": "FilterRebateProgramMember",
+                "sourceName": "RebateProgramMember"
+            },
+            {
+                "criteria": [],
+                "description": "Filters records by the specified rebate program payout period.",
+                "filterParameterName": "RebateProgramPayoutPeriodFilter",
+                "isDynamicFilter": true,
+                "label": "Filter Rebate Program Payout Period",
+                "name": "FilterRebateProgramPayoutPeriod",
+                "sourceName": "RebateProgramPayoutPeriod"
+            },
+            {
+                "criteria": [],
+                "description": "Filters records by the specified rebate program.",
+                "filterParameterName": "RebateProgramFilter",
+                "isDynamicFilter": true,
+                "label": "Filter Rebate Programs",
+                "name": "FilterRebatePrograms",
+                "sourceName": "RebateProgram"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "IsValid",
+                        "value": "1"
+                    }
+                ],
+                "description": "Filters the valid records in the Transaction Journals for the valid activity dates.",
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Transaction Journals With Valid Activity Dates",
+                "name": "FilterTransactionJournalsWithValidActivityDates",
+                "sourceName": "ComputeTransactionJournalsWithActivityDates"
+            },
+            {
+                "criteria": [
+                    {
+                        "operator": "Equals",
+                        "sequence": 1,
+                        "sourceFieldName": "IsValidForFilter",
+                        "value": "true"
+                    }
+                ],
+                "filterCondition": "1",
+                "isDynamicFilter": false,
+                "label": "Filter Valid Transaction Journals For Rebate Types",
+                "name": "FilterValidTransactionJournalsForRebateTypes",
+                "sourceName": "ComputeValidTransactionJournalsPerRebateType"
+            }
+        ],
+        "hierarchyPaths": [],
+        "isTemplate": false,
+        "joins": [
+            {
+                "description": "Provides active program rebate types of active rebate programs.",
+                "fields": [
+                    {
+                        "alias": "FilterCriteria",
+                        "sourceFieldName": "FilterCriteria",
+                        "sourceName": "FilterActiveRebateTypes"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "sourceFieldName": "ProductFilterType",
+                        "sourceName": "FilterActiveRebateTypes"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "sourceFieldName": "RebateProgramId",
+                        "sourceName": "FilterActiveRebateTypes"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "Id",
+                        "sourceName": "FilterActiveRebateTypes"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "Id",
+                        "secondarySourceFieldName": "RebateProgramId"
+                    }
+                ],
+                "label": "Active Program Rebate Type for Rebate Programs",
+                "name": "ActiveProgramRebateTypeForRebatePrograms",
+                "primarySourceName": "FilterActiveRebatePrograms",
+                "secondarySourceName": "FilterActiveRebateTypes",
+                "type": "Inner"
+            },
+            {
+                "description": "Adds rebate type and payout period information to the transaction journal data.",
+                "fields": [
+                    {
+                        "alias": "ActivityDate",
+                        "sourceFieldName": "ActivityDate",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "CreatedById",
+                        "sourceFieldName": "CreatedById",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "CreatedDate",
+                        "sourceFieldName": "CreatedDate",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "EndDate",
+                        "sourceFieldName": "EndDate",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "ExternalTransactionNumber",
+                        "sourceFieldName": "ExternalTransactionNumber",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "FilterCriteria",
+                        "sourceFieldName": "FilterCriteria",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "JournalDate",
+                        "sourceFieldName": "JournalDate",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "LastModifiedDate",
+                        "sourceFieldName": "LastModifiedDate",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "MemberId",
+                        "sourceFieldName": "MemberId",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "OrderId",
+                        "sourceFieldName": "OrderId",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "OrderItemId",
+                        "sourceFieldName": "OrderItemId",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "PayoutPeriodId",
+                        "sourceFieldName": "PayoutPeriodId",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "ProductCategoryId",
+                        "sourceFieldName": "ProductCategoryId",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "sourceFieldName": "ProductFilterType",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "ProductId",
+                        "sourceFieldName": "ProductId",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "Quantity",
+                        "sourceFieldName": "Quantity",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "QuantityUnitOfMeasureId",
+                        "sourceFieldName": "QuantityUnitOfMeasureId",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "sourceFieldName": "RebateProgramId",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "RebateTypeId",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "StartDate",
+                        "sourceFieldName": "StartDate",
+                        "sourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods"
+                    },
+                    {
+                        "alias": "TransactionAmount",
+                        "sourceFieldName": "TransactionAmount",
+                        "sourceName": "FilterJournalsByUsageType"
+                    },
+                    {
+                        "alias": "UsageType",
+                        "sourceFieldName": "UsageType",
+                        "sourceName": "FilterJournalsByUsageType"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "MemberId",
+                        "secondarySourceFieldName": "MemberId"
+                    }
+                ],
+                "label": "Add Rebate Type and Payout Period to Transaction Journals",
+                "name": "AddRebateTypeAndPayoutPeriodToTransactionJournal",
+                "primarySourceName": "FilterJournalsByUsageType",
+                "secondarySourceName": "ProgramMembersForActiveRebateTypeAndPayoutPeriods",
+                "type": "Inner"
+            },
+            {
+                "description": "Looks up any previously computed aggregate data for the newly aggregated record.",
+                "fields": [
+                    {
+                        "alias": "Id",
+                        "sourceFieldName": "Id",
+                        "sourceName": "RebateMemberProductAggregate"
+                    },
+                    {
+                        "alias": "MemberId",
+                        "sourceFieldName": "MemberId",
+                        "sourceName": "TotalTransactionAmountAndTotalQuantity"
+                    },
+                    {
+                        "alias": "PayoutPeriodId",
+                        "sourceFieldName": "PayoutPeriodId",
+                        "sourceName": "TotalTransactionAmountAndTotalQuantity"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "RebateTypeId",
+                        "sourceName": "TotalTransactionAmountAndTotalQuantity"
+                    },
+                    {
+                        "alias": "TotalAggAmount",
+                        "sourceFieldName": "TotalAggAmount",
+                        "sourceName": "TotalTransactionAmountAndTotalQuantity"
+                    },
+                    {
+                        "alias": "TotalAggQuanity",
+                        "sourceFieldName": "TotalAggQuanity",
+                        "sourceName": "TotalTransactionAmountAndTotalQuantity"
+                    },
+                    {
+                        "alias": "TotalQuantity",
+                        "sourceFieldName": "TotalQuantity",
+                        "sourceName": "RebateMemberProductAggregate"
+                    },
+                    {
+                        "alias": "TotalTransactionAmount",
+                        "sourceFieldName": "TotalTransactionAmount",
+                        "sourceName": "RebateMemberProductAggregate"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "RebateTypeId",
+                        "secondarySourceFieldName": "ProgramRebateTypeId"
+                    },
+                    {
+                        "primarySourceFieldName": "MemberId",
+                        "secondarySourceFieldName": "RebateProgramMemberId"
+                    },
+                    {
+                        "primarySourceFieldName": "PayoutPeriodId",
+                        "secondarySourceFieldName": "RebateProgramPayoutPeriodId"
+                    }
+                ],
+                "label": "Look Up Existing Aggregate Data",
+                "name": "LookUpExistingAggregateData",
+                "primarySourceName": "TotalTransactionAmountAndTotalQuantity",
+                "secondarySourceName": "RebateMemberProductAggregate",
+                "type": "LeftOuter"
+            },
+            {
+                "description": "Provides the valid program members for the selected active rebate types and payout periods.",
+                "fields": [
+                    {
+                        "alias": "EndDate",
+                        "sourceFieldName": "EndDate",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "FilterCriteria",
+                        "sourceFieldName": "FilterCriteria",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "MemberId",
+                        "sourceFieldName": "Id",
+                        "sourceName": "FilterActiveRebateProgramMembers"
+                    },
+                    {
+                        "alias": "PayoutPeriodId",
+                        "sourceFieldName": "PayoutPeriodId",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "sourceFieldName": "ProductFilterType",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "sourceFieldName": "RebateProgramId",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "RebateTypeId",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    },
+                    {
+                        "alias": "StartDate",
+                        "sourceFieldName": "StartDate",
+                        "sourceName": "ValidPayoutPeriodForActiveRebateTypes"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "RebateProgramId",
+                        "secondarySourceFieldName": "RebateProgramId"
+                    }
+                ],
+                "label": "Program Members for Active Rebate Type and Payout Periods",
+                "name": "ProgramMembersForActiveRebateTypeAndPayoutPeriods",
+                "primarySourceName": "ValidPayoutPeriodForActiveRebateTypes",
+                "secondarySourceName": "FilterActiveRebateProgramMembers",
+                "type": "Inner"
+            },
+            {
+                "fields": [
+                    {
+                        "alias": "ActivityDate",
+                        "sourceFieldName": "ActivityDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "CreatedById",
+                        "sourceFieldName": "CreatedById",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "CreatedDate",
+                        "sourceFieldName": "CreatedDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "EndDate",
+                        "sourceFieldName": "EndDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "ExternalTransactionNumber",
+                        "sourceFieldName": "ExternalTransactionNumber",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "FilterCriteria",
+                        "sourceFieldName": "FilterCriteria",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "IsValid",
+                        "sourceFieldName": "IsValid",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "JournalDate",
+                        "sourceFieldName": "JournalDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "LastModifiedDate",
+                        "sourceFieldName": "LastModifiedDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "MemberId",
+                        "sourceFieldName": "MemberId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "OrderId",
+                        "sourceFieldName": "OrderId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "OrderItemId",
+                        "sourceFieldName": "OrderItemId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "PayoutPeriodId",
+                        "sourceFieldName": "PayoutPeriodId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "ProductCategoryId",
+                        "sourceFieldName": "ProductCategoryId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "sourceFieldName": "ProductFilterType",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "ProductId",
+                        "sourceFieldName": "ProductId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "ProgramRebateTypeProductId",
+                        "sourceFieldName": "ProgramRebateTypeProductId",
+                        "sourceName": "ProgramRebateTypeProduct"
+                    },
+                    {
+                        "alias": "Quantity",
+                        "sourceFieldName": "Quantity",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "QuantityUnitOfMeasureId",
+                        "sourceFieldName": "QuantityUnitOfMeasureId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "sourceFieldName": "RebateProgramId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "RebateTypeId",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "StartDate",
+                        "sourceFieldName": "StartDate",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "TransactionAmount",
+                        "sourceFieldName": "TransactionAmount",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    },
+                    {
+                        "alias": "UsageType",
+                        "sourceFieldName": "UsageType",
+                        "sourceName": "FilterTransactionJournalsWithValidActivityDates"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "ProductId",
+                        "secondarySourceFieldName": "ProductId"
+                    },
+                    {
+                        "primarySourceFieldName": "RebateTypeId",
+                        "secondarySourceFieldName": "ProgramRebateTypeId"
+                    }
+                ],
+                "label": "Valid Activity Dated Journals with Program Rebate Type Product",
+                "name": "ValidActivityDatedJournalsWithProgramRebateTypeProduct",
+                "primarySourceName": "FilterTransactionJournalsWithValidActivityDates",
+                "secondarySourceName": "ProgramRebateTypeProduct",
+                "type": "LeftOuter"
+            },
+            {
+                "description": "Provides valid payout periods for the selected active rebate types.",
+                "fields": [
+                    {
+                        "alias": "EndDate",
+                        "sourceFieldName": "EndDate",
+                        "sourceName": "FilterActiveRebateProgramPayoutPeriods"
+                    },
+                    {
+                        "alias": "FilterCriteria",
+                        "sourceFieldName": "FilterCriteria",
+                        "sourceName": "ActiveProgramRebateTypeForRebatePrograms"
+                    },
+                    {
+                        "alias": "PayoutPeriodId",
+                        "sourceFieldName": "Id",
+                        "sourceName": "FilterActiveRebateProgramPayoutPeriods"
+                    },
+                    {
+                        "alias": "ProductFilterType",
+                        "sourceFieldName": "ProductFilterType",
+                        "sourceName": "ActiveProgramRebateTypeForRebatePrograms"
+                    },
+                    {
+                        "alias": "RebateProgramId",
+                        "sourceFieldName": "RebateProgramId",
+                        "sourceName": "ActiveProgramRebateTypeForRebatePrograms"
+                    },
+                    {
+                        "alias": "RebateTypeId",
+                        "sourceFieldName": "RebateTypeId",
+                        "sourceName": "ActiveProgramRebateTypeForRebatePrograms"
+                    },
+                    {
+                        "alias": "StartDate",
+                        "sourceFieldName": "StartDate",
+                        "sourceName": "FilterActiveRebateProgramPayoutPeriods"
+                    }
+                ],
+                "joinKeys": [
+                    {
+                        "primarySourceFieldName": "RebateProgramId",
+                        "secondarySourceFieldName": "RebateProgramId"
+                    }
+                ],
+                "label": "Valid Payout Period for Active Rebate Types",
+                "name": "ValidPayoutPeriodForActiveRebateTypes",
+                "primarySourceName": "ActiveProgramRebateTypeForRebatePrograms",
+                "secondarySourceName": "FilterActiveRebateProgramPayoutPeriods",
+                "type": "Inner"
+            }
+        ],
+        "label": "Acme Partners Aggregate by Member",
+        "parameters": [
+            {
+                "dataType": "Text",
+                "description": "ID of the Data Processing Engine Definition that’s  provided as a parameter.",
+                "label": "Data Processing Engine Definition Id",
+                "name": "BatchCalcJobDefinitionId"
+            },
+            {
+                "dataType": "Filter",
+                "defaultValue": "{\"filterCondition\": \"1\",\"criteria\": [{\"sourceFieldName\": \"Id\",\"operator\": \"NotEquals\",\"value\": \"0\",\"sequence\": 1}]}",
+                "description": "The Program Rebate Type Filter that’s provided as a parameter.",
+                "label": "Program Rebate Type Filter",
+                "name": "ProgramRebateTypeFilter"
+            },
+            {
+                "dataType": "Filter",
+                "defaultValue": "{\"filterCondition\": \"1\",\"criteria\": [{\"sourceFieldName\": \"Id\",\"operator\": \"NotEquals\",\"value\": \"0\",\"sequence\": 1}]}",
+                "description": "The Rebate Program Filter that’s provided as a parameter.",
+                "label": "Rebate Program Filter",
+                "name": "RebateProgramFilter"
+            },
+            {
+                "dataType": "Filter",
+                "defaultValue": "{\"filterCondition\": \"1\",\"criteria\": [{\"sourceFieldName\": \"Id\",\"operator\": \"NotEquals\",\"value\": \"0\",\"sequence\": 1}]}",
+                "description": "The rebate program member filter that’s provided as a parameter.",
+                "label": "Rebate Program Member Filter",
+                "name": "RebateProgramMemberFilter"
+            },
+            {
+                "dataType": "Filter",
+                "defaultValue": "{\"filterCondition\": \"1\",\"criteria\": [{\"sourceFieldName\": \"Id\",\"operator\": \"NotEquals\",\"value\": \"0\",\"sequence\": 1}]}",
+                "description": "The Rebate Program Payout Period Filter that’s provided as a parameter.",
+                "label": "Rebate Program Payout Period Filter",
+                "name": "RebateProgramPayoutPeriodFilter"
+            }
+        ],
+        "processType": "Rebates",
+        "status": "Inactive",
+        "transforms": [
+            {
+                "description": "Identifies new or updated records to be upserted into the Rebate Program Member Aggregate object.",
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "IsUpdateOrNew",
+                        "dataType": "Numeric",
+                        "decimalPlaces": 1,
+                        "expression": "IF(({TotalAggQuanity} == {TotalQuantity}) && ({TotalAggAmount} == {TotalTransactionAmount}), 0,1)",
+                        "length": 2
+                    }
+                ],
+                "label": "Compute New Or Updated Aggregate Records",
+                "name": "ComputeNewOrUpdatedAggregateRecords",
+                "partitionBy": [],
+                "sourceName": "LookUpExistingAggregateData",
+                "transformationType": "Expression"
+            },
+            {
+                "description": "Identifies the transaction journal records that have an activity date greater than or equal to the start date, and less than the or equal to the end date of the payout period.",
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "IsValid",
+                        "dataType": "Numeric",
+                        "decimalPlaces": 1,
+                        "expression": "IF((DATEVALUE({ActivityDate}) >= DATEVALUE({StartDate})) && (DATEVALUE({ActivityDate}) <= DATEVALUE({EndDate})), 1,0)",
+                        "length": 2
+                    }
+                ],
+                "label": "Compute Transaction Journals With Activity Dates",
+                "name": "ComputeTransactionJournalsWithActivityDates",
+                "partitionBy": [],
+                "sourceName": "AddRebateTypeAndPayoutPeriodToTransactionJournal",
+                "transformationType": "Expression"
+            },
+            {
+                "description": "Identifies valid transaction journals by applying rebate type filters.",
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "IsValidForFilter",
+                        "dataType": "Text",
+                        "expression": "eval({FilterCriteria})",
+                        "length": 8
+                    }
+                ],
+                "label": "Compute Valid Transaction Journals Per Rebate Type",
+                "name": "ComputeValidTransactionJournalsPerRebateType",
+                "partitionBy": [],
+                "sourceName": "FilterJournalsForValidProducts",
+                "transformationType": "Expression"
+            },
+            {
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "DummyName",
+                        "dataType": "Text",
+                        "expression": "\"Compute Transaction Journals With Activity Dates-Acme_Partners_Aggregate_by_Member\"",
+                        "length": 255
+                    },
+                    {
+                        "alias": "DummyValue",
+                        "dataType": "Text",
+                        "expression": "\"Test\"",
+                        "length": 8
+                    }
+                ],
+                "label": "Debug Formula Compute Transaction Journals With Activity Dates",
+                "name": "Debug_Formula_Compute_Transaction_Journals_With_Activity_Dates",
+                "partitionBy": [],
+                "sourceName": "ComputeTransactionJournalsWithActivityDates",
+                "transformationType": "Expression"
+            },
+            {
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "DummyName",
+                        "dataType": "Text",
+                        "expression": "\"RebateProgram-Acme_Partners_Aggregate_by_Member\"",
+                        "length": 255
+                    },
+                    {
+                        "alias": "DummyValue",
+                        "dataType": "Text",
+                        "expression": "\"Test\"",
+                        "length": 8
+                    }
+                ],
+                "label": "Debug Formula RebateProgram",
+                "name": "Debug_Formula_RebateProgram",
+                "partitionBy": [],
+                "sourceName": "RebateProgram",
+                "transformationType": "Expression"
+            },
+            {
+                "droppedFields": [],
+                "expressionFields": [
+                    {
+                        "alias": "DummyName",
+                        "dataType": "Text",
+                        "expression": "\"TotalTransactionAmountAndTotalQuantity-Acme_Partners_Aggregate_by_Member\"",
+                        "length": 255
+                    },
+                    {
+                        "alias": "DummyValue",
+                        "dataType": "Text",
+                        "expression": "\"Test\"",
+                        "length": 8
+                    }
+                ],
+                "label": "Debug Formula TotalTransactionAmountAndTotalQuantity",
+                "name": "Debug_Formula_TotalTransactionAmountAndTotalQuantity",
+                "partitionBy": [],
+                "sourceName": "TotalTransactionAmountAndTotalQuantity",
+                "transformationType": "Expression"
+            },
+            {
+                "expressionFields": [
+                    {
+                        "alias": "DummyValue",
+                        "dataType": "Text",
+                        "expression": "\"Test\"",
+                        "length": 8
+                    },
+                    {
+                        "alias": "DummyName",
+                        "dataType": "Text",
+                        "expression": "\"ProgramRebateType-Acme_Partners_Aggregate_by_Member\"",
+                        "length": 255
+                    }
+                ],
+                "label": "Debug Formula ProgramRebateType",
+                "name": "Debug_Formula_ProgramRebateType",
+                "sourceName": "ProgramRebateType",
+                "transformationType": "Expression"
+            }
+        ],
+        "writebacks": [
+            {
+                "fields": [
+                    {
+                        "sourceFieldName": "GroupbyDebugDummy",
+                        "targetFieldName": "mfcdpe2022__Data_Count__c"
+                    },
+                    {
+                        "sourceFieldName": "DummyName",
+                        "targetFieldName": "Name"
+                    }
+                ],
+                "label": "Insert DPE Debug Object",
+                "name": "Insert_DPE_Debug_Object",
+                "operationType": "Insert",
+                "sourceName": "Debug_Append_All_Node",
+                "targetObjectName": "mfcdpe2022__Debug_DPE__c",
+                "writebackSequence": 1,
+                "writebackUser": "0055i000001X32VAAS"
+            },
+            {
+                "description": "Upserts the total transaction amount and total quantity from the TotalTransactionAmountAndTotalQuantity node to Rebate Member Product Aggregate.",
+                "fields": [
+                    {
+                        "sourceFieldName": "Id",
+                        "targetFieldName": "Id"
+                    },
+                    {
+                        "sourceFieldName": "TotalAggAmount",
+                        "targetFieldName": "TotalTransactionAmount"
+                    },
+                    {
+                        "sourceFieldName": "TotalAggQuanity",
+                        "targetFieldName": "TotalQuantity"
+                    },
+                    {
+                        "sourceFieldName": "PayoutPeriodId",
+                        "targetFieldName": "RebateProgramPayoutPeriodId"
+                    },
+                    {
+                        "sourceFieldName": "MemberId",
+                        "targetFieldName": "RebateProgramMemberId"
+                    },
+                    {
+                        "sourceFieldName": "RebateTypeId",
+                        "targetFieldName": "ProgramRebateTypeId"
+                    }
+                ],
+                "label": "Upsert Total Transaction Amount and Total Quantity",
+                "name": "UpsertTotalTransactionAmountAndQuantity",
+                "operationType": "Upsert",
+                "sourceName": "FilterNewOrUpdatedAggregateRecords",
+                "targetObjectName": "RebateMemberProductAggregate",
+                "writebackSequence": 1,
+                "writebackUser": "0055i000001X32VAAS"
+            }
+        ]
+    }
+}

@@ -1,0 +1,164 @@
+{
+  "attributes" : {
+    "type" : "BatchCalcJobDefinition",
+    "url" : "/services/data/v54.0/tooling/sobjects/BatchCalcJobDefinition/9N15i000000k9rdCAA"
+  },
+  "Id" : "9N15i000000k9rdCAA",
+  "IsDeleted" : false,
+  "DeveloperName" : "Test",
+  "Language" : "en_US",
+  "MasterLabel" : "Test",
+  "NamespacePrefix" : "mfcdpe2022",
+  "ManageableState" : "unmanaged",
+  "CreatedDate" : "2022-05-13T09:36:04.000+0000",
+  "CreatedById" : "0055i000001X32VAAS",
+  "LastModifiedDate" : "2022-05-17T03:18:14.000+0000",
+  "LastModifiedById" : "0055i000001X32VAAS",
+  "SystemModstamp" : "2022-05-17T03:18:14.000+0000",
+  "BatchJobDefinitionId" : "0ma5i000000k9kYAAQ",
+  "Metadata" : {
+    "aggregates" : [ {
+      "description" : null,
+      "fields" : [ {
+        "aggregateFunction" : "Count",
+        "alias" : "GroupbyDebugDummy",
+        "sourceFieldName" : "DummyValue"
+      } ],
+      "groupBy" : [ "DummyValue", "DummyName" ],
+      "label" : "Debug AggregateRebate Program",
+      "name" : "Debug_AggregateRebate_Program",
+      "sourceName" : "Debug_Formula_Rebate_Program"
+    } ],
+    "appends" : [ {
+      "description" : null,
+      "isDisjointedSchema" : true,
+      "label" : "Append Test",
+      "name" : "Append_Test",
+      "sources" : [ "Rebate_Type", "Rebate_Program" ]
+    } ],
+    "datasources" : [ {
+      "description" : null,
+      "fields" : [ {
+        "alias" : "OwnerId",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "OwnerId"
+      }, {
+        "alias" : "Name",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "Name"
+      }, {
+        "alias" : "Id",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "Id"
+      } ],
+      "label" : "Rebate Program",
+      "name" : "Rebate_Program",
+      "sourceName" : "RebateProgram",
+      "type" : "StandardObject"
+    }, {
+      "description" : null,
+      "fields" : [ {
+        "alias" : "Status",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "Status"
+      }, {
+        "alias" : "RebateProgramId",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "RebateProgramId"
+      }, {
+        "alias" : "ProductFilterType",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "ProductFilterType"
+      }, {
+        "alias" : "Id",
+        "dataType" : "Text",
+        "displaySequence" : 1,
+        "name" : "Id"
+      } ],
+      "label" : "Rebate Type",
+      "name" : "Rebate_Type",
+      "sourceName" : "ProgramRebateType",
+      "type" : "StandardObject"
+    } ],
+    "description" : null,
+    "filters" : [ ],
+    "hierarchyPaths" : [ ],
+    "isTemplate" : false,
+    "joins" : [ ],
+    "label" : "Test",
+    "parameters" : [ ],
+    "processType" : "DataProcessingEngine",
+    "status" : "Inactive",
+    "transforms" : [ {
+      "description" : null,
+      "droppedFields" : [ ],
+      "expressionFields" : [ {
+        "alias" : "DummyName",
+        "dataType" : "Text",
+        "decimalPlaces" : null,
+        "expression" : "\"Rebate Program\"",
+        "length" : 255
+      }, {
+        "alias" : "DummyValue",
+        "dataType" : "Text",
+        "decimalPlaces" : null,
+        "expression" : "\"Test\"",
+        "length" : 8
+      } ],
+      "label" : "Debug Formula Rebate Program",
+      "name" : "Debug_Formula_Rebate_Program",
+      "orderBy" : [ ],
+      "partitionBy" : [ ],
+      "sourceName" : "Rebate_Program",
+      "transformationType" : "Expression"
+    } ],
+    "urls" : null,
+    "writebacks" : [ {
+      "description" : null,
+      "fields" : [ {
+        "parentName" : null,
+        "relationshipName" : null,
+        "sourceFieldName" : "GroupbyDebugDummy",
+        "targetFieldName" : "mfcdpe2022__Data_Count__c"
+      }, {
+        "parentName" : null,
+        "relationshipName" : null,
+        "sourceFieldName" : "DummyName",
+        "targetFieldName" : "Name"
+      } ],
+      "isChangedRow" : false,
+      "label" : "Insert DPE Debug Object Test",
+      "name" : "Insert_DPE_Debug_Object_Test",
+      "operationType" : "Insert",
+      "sourceName" : "Debug_AggregateRebate_Program",
+      "targetObjectName" : "mfcdpe2022__Debug_DPE__c",
+      "writebackSequence" : 1,
+      "writebackUser" : "0055i000001X32VAAS"
+    }, {
+      "description" : null,
+      "fields" : [ {
+        "parentName" : null,
+        "relationshipName" : null,
+        "sourceFieldName" : "Name",
+        "targetFieldName" : "Name"
+      } ],
+      "isChangedRow" : false,
+      "label" : "WriteBack Test",
+      "name" : "WriteBack_Test",
+      "operationType" : "Insert",
+      "sourceName" : "Append_Test",
+      "targetObjectName" : "mfcdpe2022__Debug_DPE__c",
+      "writebackSequence" : 1,
+      "writebackUser" : "0055i000001X32VAAS"
+    } ]
+  },
+  "FullName" : "mfcdpe2022__Test",
+  "IsTemplate" : false,
+  "ProcessType" : "DataProcessingEngine"
+}

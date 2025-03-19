@@ -1,0 +1,12 @@
+<template>
+    <lightning-card title="Order Products">
+        <lightning-datatable
+            data={orderProducts}
+            columns={columns}
+            key-field="Id"
+            onrowselection={handleRowSelection}
+        ></lightning-datatable>
+        <lightning-button label="Back" onclick={handleBack}></lightning-button>
+        <lightning-button label="Save" onclick={handleSave}></lightning-button>
+    </lightning-card>
+</template>

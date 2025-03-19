@@ -1,0 +1,130 @@
+<template>
+    <template if:true={showPaymentGateWay}>
+        <lightning-card title="Log Payment" class="animated-fade-in">
+            
+            <div class="card-header">
+                <span class="amount-label">Amount to be Paid:</span>
+                <span class="amount-value">{orderAmount}</span>
+            </div>
+
+            <template for:each={rows} for:item="row">
+                <div key={row.id} class="row animated-slide-in">
+                    <lightning-combobox 
+                        name="paymentMode"
+                        required
+                        label="Payment Mode"
+                        value={row.paymentMode}
+                        placeholder="Select Mode"
+                        options={row.availablePaymentModeOptions}
+                        data-id={row.id}
+                        onchange={handlePaymentModeChange}
+                        class="combobox">
+                    </lightning-combobox>
+
+                    <lightning-input 
+                        type="number"
+                        required
+                        name="amount"
+                        label="Amount"
+                        value={row.amount}
+                        data-id={row.id}
+                        onchange={handleAmountChange}
+                        class="input"
+                        step="any">
+                    </lightning-input>
+
+                    <lightning-input 
+                        type="text"
+                        name="remark"
+                        label="Remarks"
+                        value={row.remark}
+                        data-id={row.id}
+                        onchange={handleRemarkChange}
+                        class="input">
+                    </lightning-input>
+
+                    <lightning-button 
+                        icon-name="utility:delete" 
+                        alternative-text="Remove" 
+                        onclick={removeRow} 
+                        data-id={row.id} 
+                        class="delete-button"> 
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template if:true={isAmountExceedsLimit}>
+                <div class="error-container animated-shake">
+                    <lightning-spinner if:true={isLoading} alternative-text="Loading" size="large"></lightning-spinner>
+                    <template if:true={errorMessage}>
+                        <div class="error-text">{errorMessage}</div>
+                    </template>
+                    <template if:true={isCashExceedsOpportunity}>
+                        <div class="error-text">Cash amount exceeds opportunity amount!</div>
+                    </template>
+                </div>
+            </template>
+
+            <div class="button-container">
+                <button class="custom-button save-button" onclick={saveRecords}>Save</button>
+                <button class="custom-button reset-button" onclick={resetForm}>Reset</button>
+                <button class="custom-button cancel-button" onclick={handleCancel}>Cancel</button>
+
+                <template if:true={showPinelabsButton}>
+                    <button class="custom-button pinelabs-button" onclick={handlePinelabsInfoClick}>
+                        <span class="icon">🔍</span> Pinelabs Machine Info
+                    </button>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Pinelabs Modal -->
+    <template if:true={isPinelabsInfoModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open animated-modal">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                        onclick={closePinelabsModal} title="Close">
+                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                    </button>
+                    <h2>Select Pinelabs Machine Info</h2>
+                </header>
+                <div class="slds-modal__content">
+                    <table class="slds-table slds-table_bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Machine Name</th>
+                                <th>Device S/N</th>
+                                <th>Store Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={pinelabsRecordsWithSelection} for:item="record">
+                                <tr key={record.Id}>
+                                    <td>
+                                        <lightning-input type="radio" name="pinelabsInfo" value={record.Id} onchange={handlePinelabsRadioChange} checked={record.isChecked}></lightning-input>
+                                    </td>
+                                    <td>{record.Name}</td>
+                                    <td>{record.Device_No__c}</td>
+                                    <td>{record.Store_Name__c}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="destructive" label="Cancel" onclick={closePinelabsModal} class="slds-m-right_medium"></lightning-button>
+                    <lightning-button variant="brand" label="Select" onclick={handlePinelabsSelection}></lightning-button>
+                </footer>
+                
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showSpinner}>
+        <lightning-spinner></lightning-spinner>
+    </template>
+</template>

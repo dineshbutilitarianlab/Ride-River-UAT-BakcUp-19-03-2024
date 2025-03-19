@@ -1,0 +1,231 @@
+<apex:page standardController="Create_Batch__c" extensions="BatchRecordControllerPDF" renderAs="pdf" docType="html-5.0" standardStylesheets="true" sidebar="false">
+    <style>
+        @page {
+        size: 15.5in 11.5in;
+        margin: 0cm;
+        }
+        
+        td, th {
+        border: 1px solid black;
+        padding: 1px; /* Reduced padding */
+        font-family: sans-serif;
+        font-size: 7px; /* Reduced font size */
+        text-align: center;
+        }
+        
+        table {
+        page-break-inside: avoid;
+        width: 100%;
+        border-collapse: collapse;
+        }
+        
+        .section {
+        page-break-inside: avoid;
+        padding: 1px; /* Reduced padding */
+        margin-bottom: 1px; /* Reduced margin */
+        }
+        
+        .header, .sub-header {
+        font-size: 8px; /* Reduced font size */
+        }
+        
+        .section p {
+        margin: 1px 0; /* Reduced margin */
+        }
+    </style>
+    
+    <table style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+        <tr>
+            <td style="border: 1px solid black; padding: 2px;"> <!-- Reduced padding -->
+                <!-- Company Details -->
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td colspan="2" style="text-align: left; font-size: 20px; font-weight: bold; border-bottom: 1px solid black;">
+                            {!dcPdf.CompanyName__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left;font-size: 15px; font-weight: bold;">
+                            {!dcPdf.Former_Address__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; border-bottom: 1px solid black;"><strong>CIN:</strong> {!dcPdf.CIN__c}</td>
+                        <td style="text-align: center; border-bottom: 1px solid black;"><strong>GST:</strong> {!dcPdf.GST__c}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left; border-bottom: 1px solid black;">
+                            <strong>Registered Office:</strong> {!dcPdf.Registered_Office__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left;">
+                            <strong>Factory Address:</strong> {!dcPdf.Factory_Address__c}
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Contact & Website Details -->
+                <table style="width: 100%; border-collapse: collapse; background-color: #d3d3d3; border: 1px solid black; text-align: center; margin-top: 2px;">
+                    <tr>
+                        <td style="border-right: 1px solid black;">{!dcPdf.Company_Website__c}</td>
+                        <td style="border-right: 1px solid black;">{!dcPdf.Company_Email__c}</td>
+                        <td>{!dcPdf.Company_Phone__c}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <div class="sub-header" style="border: 1px solid black; margin: 0; text-align: center; padding: 0; line-height: 1;">
+        <p style="margin: 0; padding: 0;"><strong>{!dcPdf.PartA__c}</strong></p>
+    </div>
+    <div class="section" style="border: 1px solid black; padding: 5px;">
+        <table style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+            <tr> 
+                <td colspan="2" style="border: 1px solid black; padding: 2px;"> <strong>{!dcPdf.Bill_From__c}</strong></td>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Delivery Challan No</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Name}</td>
+            </tr>
+            
+            <tr>
+                <td rowspan="5" colspan="2" style="border: 1px solid black; padding: 2px;">{!nameAddress}</td>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Challan Date</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchCreatedDate}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>E-Way Bill No</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.E_Way_Bill_No__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Mode of Transport</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Mode_of_Transport__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Transporter Name</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Transport_Name__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Transporter ID</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Transporter_ID__c}</td>
+            </tr>
+            <tr> 
+                <td colspan="2" style="border: 1px solid black; padding: 2px;"> <strong>{!dcPdf.Bill_To__c}</strong></td>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Vehicle No</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Vehicle_No__c}</td>
+            </tr>
+            <tr>
+                <td rowspan="6" colspan="2" style="border: 1px solid black; padding: 2px;">
+                    <apex:outputText value="{!batchRecord.Name_and_Adress_of_Consignee__c}" escape="false" />
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Terms of Delivery</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Terms_of_Delivery__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Requestor Name</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Requestor_Name__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Phone Number</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Phone__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Purpose</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Purpose__c}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 2px;"><strong>Handover Person/Store</strong></td>
+                <td style="border: 1px solid black; padding: 2px;">{!batchRecord.Handover_Person_Store__c}</td>
+            </tr>
+            
+        </table>
+    </div>
+    
+        <apex:form >
+        <div class="section" style="border: 1px solid black; margin-bottom: 5px; padding: 2px;">
+            <table style="border-collapse: collapse; width: 100%; border-collapse: collapse; border: 1px solid black; ">
+                <thead>
+                    <tr>
+                        <td colspan="5" style="border: 1px solid black;" ><strong>State Code:</strong></td>
+                        <td style="border: 1px solid black;">{!batchRecord.State_Code__c}</td>
+                        <td colspan="4" rowspan="2" style="border: 1px solid black; background-color: yellow;">NON RETURNABLE DC</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="border: 1px solid black;" ><strong>GSTIN:</strong></td>
+                        <td style="border: 1px solid black;">{!batchRecord.River_GST__c}</td>
+                    </tr>
+                    <tr>
+                        <th style="border: 1px solid black;">Sl. No.</th>
+                        <th style="border: 1px solid black;">PART NUMBER</th>
+                        <th style="border: 1px solid black;">Product Name</th>
+                        <th style="border: 1px solid black;">HSN Code</th>
+                        <th style="border: 1px solid black;">Quantity</th>
+                        <th style="border: 1px solid black;">UOM</th>
+                        <th style="border: 1px solid black;">NDP</th>
+                        <th style="border: 1px solid black;">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:variable var="partIndex" value="{!0}" />
+                    <apex:repeat value="{!parts}" var="part">
+                        <apex:variable var="partIndex" value="{!partIndex +1}" />
+                        <tr>
+                            <td style="border: 1px solid black; text-align: center; vertical-align: middle;">{!FLOOR(partIndex)}</td>
+                            <td style="border: 1px solid black;">{!part.LineItemNumber}</td>
+                            <td style="border: 1px solid black;">{!part.pricebookEntryId}</td>
+                            <td style="border: 1px solid black;">{!part.HSN_Code}</td>
+                            <td style="border: 1px solid black;">{!part.Quantity}</td>
+                            <td style="border: 1px solid black;">{!part.Unit_of_Measurement}</td>
+                            <!-- <td style="border: 1px solid black;">{!part.ListPrice}</td>
+                            <td style="border: 1px solid black;">{!part.TotalAmount}</td> -->
+                            <td style="border: 1px solid black;">{!part.NDP}</td>
+                            <td style="border: 1px solid black;">{!part.Total_NDP}</td>
+                        </tr>
+                    </apex:repeat>
+                    <tr>
+                        <td colspan="4" style="border: 1px solid black;"><strong>TOTAL</strong></td>
+                        <td colspan="4" style="border: 1px solid black;">₹{!totalAmount}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border: 1px solid black; overflow: hidden; word-wrap: break-word;"><strong>Value in Rupees(Words):</strong></td>
+                        <td colspan="4" style="border: 1px solid black; overflow: hidden;">{!amountInWords}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border: 1px solid black;"><strong>Purpose of Sending</strong></td>
+                        <td colspan="4" style="border: 1px solid black;">{!batchRecord.Purpose_of_Sending__c}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border: 1px solid black;"><strong>Expected Duration of Processing/Manufacturing:</strong></td>
+                        <td colspan="4" style="border: 1px solid black;">Two Weeek</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border: 1px solid black;"><strong>CREATED BY</strong></td>
+                        <td colspan="4" style="border: 1px solid black;">{!batchRecord.Contact__r.Name}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </apex:form>
+    
+    <div class="section" style="border: 1px solid black; margin-bottom: 5px; padding: 2px;">
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 5px; font-weight: bold;">{!dcPdf.Small_CName__c}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; border: 1px solid black; padding: 2px;">Stores Incharge Signatory</td>
+                <td style="text-align: center; border: 1px solid black; padding: 2px;">Department - Authorised Signatory</td>
+                <td style="text-align: center; border: 1px solid black; padding: 2px;">Finance Signatory</td>
+                <td style="text-align: center; border: 1px solid black; padding: 2px;">Receiver Signatory</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; height: 20px;"></td>
+                <td style="border: 1px solid black; height: 20px;"></td>
+                <td style="border: 1px solid black; height: 20px;"></td>
+                <td style="border: 1px solid black; height: 20px;"></td>
+            </tr>
+        </table>
+    </div>
+</apex:page>

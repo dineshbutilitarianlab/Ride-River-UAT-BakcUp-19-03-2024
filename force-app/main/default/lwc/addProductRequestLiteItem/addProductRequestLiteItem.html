@@ -1,0 +1,138 @@
+<template>
+    <lightning-quick-action-panel header="">
+        <lightning-card title="Add Product Request Line Item" icon-name="standard:product_request">
+            <template if:true={showSpinner}>
+                <lightning-spinner></lightning-spinner>
+            </template>
+            <div class="slds-p-around_medium">
+                <lightning-input
+                    type="text"
+                    placeholder="Search by Product Name..."
+                    onchange={handleSearchInput}
+                    class="slds-m-bottom_medium">
+                </lightning-input>
+                <!-- Main Table -->
+                <template if:true={currentPageData.length}>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr>
+                                <th>Sr No</th>
+                                <th><lightning-input type="checkbox" onchange={handleSelectAll} checked={selectAllChecked}></lightning-input></th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Product Code</th>
+                                <th scope="col">Quantity</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={currentPageData} for:item="item" for:index="Index" >
+                                <tr key={item.Id}>
+                                    <td>{item.index}</td>
+                                    <td>
+                                        <lightning-input type="checkbox" data-id={item.Id} checked={item.selected} onchange={handleCheckboxChange}></lightning-input>
+                                    </td>
+                                    <td>{item.ProductName}</td>
+                                    <td>{item.ProductCode}</td>
+                                    <td>
+                                        <lightning-input type="number" data-id={item.Id} value={item.AllocatedQuantity} disabled={item.isChargesDisabled} style="margin-bottom:14px"></lightning-input>
+                                    </td>
+                                   
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={currentPageData.length}>
+                    <p>Search By Product Name</p>
+                </template>
+                <!---Pagination Button-->
+                <template if:true={currentPageData.length}>
+                    <div class="slds-p-top_medium slds-text-align_center">
+                        <lightning-button-icon icon-name="utility:left" alternative-text="Previous" 
+                                               onclick={handlePreviousPage} 
+                                               disabled={isPreviousDisabled}
+                                               class="slds-m-right_small">
+                        </lightning-button-icon>
+                        <lightning-button 
+                                               label="First Page"
+                                               variant="brand"
+                                               alternative-text="First Page" 
+                                               onclick={handleFirstPage} 
+                                               disabled={isFirstDisabled}
+                                               class="slds-m-right_small">
+                        </lightning-button>
+                        <span class="slds-p-horizontal_small">Page {currentPage} of {totalPages}</span>
+                        <lightning-button 
+                                              label="Last Page"
+                                              variant="brand"
+                                              alternative-text="Last Page" 
+                                              onclick={handleLastPage} 
+                                              disabled={isLastDisabled}
+                                              class="slds-m-left_small">
+                        </lightning-button>
+                        <lightning-button-icon icon-name="utility:right" alternative-text="Next" 
+                                               onclick={handleNextPage} 
+                                               disabled={isNextDisabled}
+                                               class="slds-m-left_small">
+                        </lightning-button-icon>
+                    </div>
+                </template>
+                
+                <!-- Selected Items Table -->
+                <template if:true={selectedItems.length}>
+                    <h3 class="slds-text-align_center slds-text-title_large" style="font-size:large;margin-top:7px">Selected Items</h3>
+                    <div class="slds-m-top_medium">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Product Code</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={selectedItems} for:item="item" for:index="index">
+                                    <tr key={item.Id}>
+                                        <td>{item.index}</td>
+                                        
+                                        <td>{item.ProductName}</td>
+                                        <td>{item.ProductCode}</td>
+                                        <td><lightning-input
+                                            type="number"
+                                            data-id={item.Id}
+                                            value={item.AllocatedQuantity}
+                                            onchange={handleQuantityChange}
+                                            style="margin-bottom:14px">
+                                        </lightning-input></td>
+                                        <td> <lightning-button
+                                            icon-name="utility:delete"
+                                            alternative-text="Delete"
+                                            onclick={handleDeleteSelectedItem}
+                                            data-id={item.Id}
+                                            size="small"
+                                            variant="destructive"
+                                            class="slds-m-left_x-small"
+                                            >
+                                        </lightning-button></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+ 
+                    </div>
+                   
+                </template>
+            </div>
+            <center>
+                <template if:true={buttonVisible}>
+                    <lightning-button label="Cancel" variant="destructive" onclick={closeModal} class="slds-m-right_medium"></lightning-button>
+                    <lightning-button label="Submit" variant="brand" onclick={methodToCreatePORecords}></lightning-button>
+                </template>
+                
+            </center>
+        </lightning-card>
+    </lightning-quick-action-panel>
+   
+</template>

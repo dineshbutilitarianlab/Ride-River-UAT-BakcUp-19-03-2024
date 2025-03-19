@@ -1,0 +1,28 @@
+<template>
+    <lightning-card class="custom-card">
+        <div class="custom-header slds-p-horizontal_medium slds-p-vertical_small slds-theme_shade slds-text-heading_medium">
+            <lightning-icon icon-name="standard:invoice" size="small" class="slds-m-right_small"></lightning-icon>
+            E-Invoice Generator
+        </div>
+        <div class="slds-p-around_medium custom-container">
+            <!-- Show Spinner when loading is true -->
+            <template if:true={loading}>
+                <c-custom-spinner></c-custom-spinner>
+                <div class="loading-text">Generating E-invoice, please wait...</div>
+            </template>
+
+            <!-- Display PDF if not loading -->
+            <template if:false={loading}>
+                <div class="iframe-container">
+                    <!-- <iframe src={pdfUrl} class="custom-iframe"></iframe> -->
+                    <img src={Successinvoice}></img>
+                </div>
+                <!-- <div class="slds-m-top_medium slds-text-align_center button-group">
+                    <lightning-button label="Cancel" variant="destructive" onclick={handleCancel} class="slds-m-left_small" icon-name="utility:close"></lightning-button>
+                    <lightning-button label="Submit" variant="brand"  disabled={isSubmitDisabled} onclick={handleSave} icon-name="utility:save"></lightning-button>
+                </div> -->
+            </template>
+            
+        </div>
+    </lightning-card>
+</template>

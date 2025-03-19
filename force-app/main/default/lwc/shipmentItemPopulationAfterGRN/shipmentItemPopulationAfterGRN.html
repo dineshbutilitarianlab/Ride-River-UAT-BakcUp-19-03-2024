@@ -1,0 +1,78 @@
+<template>
+
+    <lightning-quick-action-panel header="">
+        
+        
+
+            <lightning-card title="Shipment Item Details" icon-name="standard:product_item_transaction">
+     
+               
+                <div class="slds-p-around_medium">
+                    <template if:true={shipmentItemList.length}>
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Shipment Item Number</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Shipped Quantity</th>
+                                    <th scope="col">Quantity Received</th>
+                                    <th scope="col">Missing/Damaged Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={shipmentItemList} for:item="item" for:index="index">
+                                    <tr key={item.Id}>
+                                        <td>{item.ShipmentItemNumber}</td>
+                                        <td>{item.Product2.Name}</td>
+                                        <td>{item.Quantity}</td>
+                                        <td><lightning-input type="text" data-id={item.Id} data-field='Quantity_Received__c' value={item.Quantity_Received__c} onchange={handleInputChange} ></lightning-input></td>
+                                        <td>
+                                          <lightning-input type="text" data-id={item.Id} data-field='Missing_Damaged_Quantity__c' value={item.Missing_Damaged_Quantity__c} onchange={handleInputChange} ></lightning-input>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template if:false={shipmentItemList.length}>
+                        <p>No Shipment line items found.</p>
+                    </template>
+                </div>
+                  
+                <template if:true={isLoading}>
+                    
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+                
+                    <template if:true={showButtons}>
+                        <center>
+
+                            <lightning-button label="Cancel" variant="destructive" onclick={closeQuickAction}></lightning-button> &nbsp;&nbsp;
+                            <lightning-button label="Submit" variant="brand" onclick={handleUpdateProcess}></lightning-button>
+                        </center>
+
+
+                    </template>
+                    <template if:false={showButtons}>
+                        <center>Details already Added</center>
+                    </template>
+                       
+                        
+
+                    
+                   
+                
+    
+                
+            </lightning-card>
+
+
+        
+  
+      
+      
+   
+          
+     
+       </lightning-quick-action-panel>
+  </template>

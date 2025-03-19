@@ -1,0 +1,24 @@
+<template>
+
+    <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none" style="background-color:white">
+        <p> Visual Data Processing Engine</p>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="9" padding="around-small">
+                <template if:true={showLoadingSpinner}>
+                    <lightning-spinner alternative-text="Uploading......" size="medium"></lightning-spinner>
+                </template>
+                <div id="vis-networks" data-id="vis-networks" class="vis-networks" style="resize:both;height:500px;" lwc:dom="manual"></div>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" padding="around-small">
+                <h3>
+                <br />Use Arrow keys to navigate <br />Use + to Zoom in
+                <br />Use - to zoom out
+              </h3>
+              <h3>Click/Select and drag nodes to change layout</h3>
+              <h3>Hovering over nodes will display node details</h3>
+                <div id="vis-network" data-id="vis-network" class="vis-network" style="resize:both;height:500px;" lwc:dom="manual"></div>
+            </lightning-layout-item>
+            
+        </lightning-layout>
+    </div>
+</template>

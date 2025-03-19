@@ -1,0 +1,130 @@
+<template>
+    <lightning-card title="New Object Mapping">
+
+        <div class="slds-col slds-grid slds-size_1-of-2 slds-gutters slds-p-around_medium">
+
+            <div class="slds-col slds-size_1-of-2 slds-home">
+
+                <lightning-combobox name="progress" class="validate" label="Usage Type" value={usagevalue} placeholder="Select Usage Type"
+                    options={options} onchange={handleChange} required></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-2 slds-home">
+
+                <span>
+                    <lightning-input class="validate" type="text" label="Settings File Name" value={mName} required>
+                    </lightning-input>
+                </span>
+            </div>
+        </div>
+
+        <div class="slds-box slds-m-left_small slds-m-right_small">
+            <div><strong>Parent Mapping</strong></div>
+
+            <div class="slds-col slds-grid slds-gutters slds-p-around_medium my-datatable" >
+
+                <div class="slds-col slds-size_1-of-3">
+                    <span>
+                        <c-multi-select-combobox options={msOptions} selected-value={selectInputObj}
+                            label='Input Object' name='inputobj' onselect={handleSelect}></c-multi-select-combobox>
+                    </span>
+                </div>
+
+                <div class="slds-col slds-size_1-of-3">
+                    <span>
+                        <c-multi-select-combobox options={msOptions} selected-value={selectOutputObj}
+                            label='Output Object' name='outputobj' onselect={handleSelect}></c-multi-select-combobox>
+                    </span>
+                </div>
+            </div>
+            <div class="slds-var-p-around_x-small my-datatable">
+                <lightning-datatable key-field="id" data={_data} columns={_columns} onrowaction={handleRowAction}
+                    show-row-number-column hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+            <div class="mydiv">
+            <lightning-button class="slds-var-p-around_x-small my-datatable" variant="brand" label="Add Row" title="Add Row" name="parent"
+                onclick={handleAddRow}></lightning-button>
+            </div>
+            <c-som-addrows onselect={handleSave}></c-som-addrows>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-oncheck">
+            <lightning-input type="checkbox" checked={showBool} onchange={onCheck} label="Child Mapping" value=""></lightning-input>
+        </div>
+
+        <template if:true={showChild}>
+        <div class="slds-box slds-m-left_small slds-m-right_small">
+            <div><strong>Child Mapping</strong></div>
+
+            <div class="slds-col slds-grid slds-gutters slds-p-around_medium my-datatable">
+
+                <div class="slds-col slds-size_1-of-3">
+                    <span>
+                        <c-multi-select-combobox options={msOptions} selected-value={selectdInChildObj}
+                            label='Input Child object' name='inputchildobj' onselect={handleChildSelect}></c-multi-select-combobox>
+                    </span>
+                </div>
+
+                <div class="slds-col slds-size_1-of-3">
+                    <span>
+                        <c-multi-select-combobox options={msOptions} selected-value={selectdOutChildObj}
+                            label='Output Child Object' name='outputchildobj' onselect={handleChildSelect}></c-multi-select-combobox>
+                    </span>
+                </div>
+            </div>
+            <div class="slds-var-p-around_x-small my-datatable">
+                <lightning-datatable key-field="id" data={_childdata} columns={_columns} onrowaction={handleRowChildAction}
+                    show-row-number-column hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+            <div class="mydiv">
+            <lightning-button class="slds-var-p-around_x-small my-datatable" variant="brand" label="Add Row" title="Add Row" name="child"
+                onclick={handleAddRow}></lightning-button>
+            </div>
+            <c-som-addrows onselect={handleChildSave}></c-som-addrows>
+        </div>
+    </template>
+    </lightning-card>
+    <template if:true={showSpinner}>
+    <lightning-spinner alternative-text="Processing.." title="Processing.." variant="brand" size="large"></lightning-spinner>
+    </template>
+    <lightning-card>
+        <div class="slds-col slds-size_1-of-3 slds-buttoncheck">
+
+            <lightning-button data-id ="download" label="Download" name="download" onclick={downloadfile} variant="brand" disabled={disable} 
+                ></lightning-button>
+            <lightning-button data-id ="deploy" label="Deploy" onclick={deployZipFile} variant="brand" disabled={deploybutton}
+            class="slds-m-left_xx-small"></lightning-button>
+            <lightning-button label="Cancel" onclick={handleCancel} variant="brand" class="slds-m-left_xx-small"></lightning-button>
+        </div>
+    </lightning-card>
+
+    <!--Component Start-->
+    <div class="slds-m-around_xx-large">
+        <template if:true={showConfirmDialog}>
+            <!--Modal Box Start-->
+            <div role="dialog" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container">
+                    <!--Modal Box Header Start-->
+                    <header class="slds-modal__header">
+                        <h1 class="slds-text-heading--medium">Update object hierarchy relationship?</h1>
+                    </header>
+                    <!--Modal Box Header End-->
+                    
+                    <!--Modal Box Content Start-->
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <p><b>Are you sure you want to update the object hierarchy relationship?</b></p>
+                    </div>
+                    <!--Modal Box Content End-->
+                    
+                    <!--Modal Box Button Start-->
+                    <footer class="slds-modal__footer">
+                        <lightning-button name='No' label='Cancel' value= 'No' onclick={deployZipFile}></lightning-button>
+                        <lightning-button variant="brand" name='Update' label='Update' value= 'No' onclick={deployZipFile}></lightning-button>
+                    </footer>
+                    <!--Modal Box Button End-->
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>            
+        </template>
+    </div>  
+</template>

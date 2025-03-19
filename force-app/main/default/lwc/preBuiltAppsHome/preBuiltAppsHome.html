@@ -1,0 +1,64 @@
+<template>
+    <lightning-card footer="" title="Automotive Cloud Pre-Built Apps">
+        <h1 class="slds-text-heading_medium">{app_description}</h1>
+
+        <div class="c-footer" >
+            <a href="/lightning/n/Admin_Home">Return to Admin Home</a>
+        </div>
+
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <!-- <p class="c-description">{app_description}</p> -->
+
+                    <c-feature-child
+                    heading="Object Hierarchy Mapping" 
+                    image="standard:asset_object" 
+                    app="c__Manufacturing_Cloud_InApp_Learning"
+                    app-text="Create field mappings between objects in a custom tab. These mappings help you convert Opportunities to Sales Agreements and define relationships between Transaction Journal and aggregate objects used in Rebate Management." 
+                    url="/lightning/n/Configure_Mappings"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child> 
+
+                    <c-feature-child
+                    heading="Advanced Account Forecast Product Category" 
+                    image="standard:data_mapping" 
+                    app="c__Manufacturing_Cloud_InApp_Learning"
+                    app-text="Extend the default Data Processing Engine templates that work with advanced account forecasting to generate forecasts at any level in the product category hierarchy. Run a flow, then go to the Advanced Account Forecasting page in Setup to see the Sample Forecast Set for Category Hierarchy." 
+                    url="/lightning/n/CH_Create_Category_Hierarchy_Metadata"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <template if:false={no_flow_definition}>
+                    <c-feature-child
+                    heading="Advanced Account Forecast Revenue Measures" 
+                    image="standard:metrics" 
+                    app-text="Extend the default Data Processing Engine templates that work with advanced account forecasting to generate forecasts for key revenue measures. Run a flow, then go to the Advanced Account Forecasting page in Setup to see the Sample Forecast Set for Revenue Metrics." 
+                    url={flowDefinitionId}
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Data Processing Engine Edit" 
+                    image="custom:custom18" 
+                    app="c__Manufacturing_Cloud_InApp_Learning"
+                    app-text="Let admins easily edit Data Processing Engine definitions to add grouping add aggregation logic. Use this point-and-click solution to map fields between Transaction Journal and Rebate Member Product Aggregate objects." 
+                    url="/lightning/n/DPE_Edit"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+
+                    <c-feature-child
+                    heading="Data Processing Engine Debug" 
+                    image="custom:custom34" 
+                    app="c__Manufacturing_Cloud_InApp_Learning"
+                    app-text="Let admins easily optimize Data Processing Engine definition by tracking the count of records that pass through its nodes. Also, visualize a definition to explore its interlinked nodes and plan customizations." 
+                    url="/lightning/n/Debug_DPE"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+                </template>   
+            
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,31 @@
+.custom-combobox {
+    width: 100%;
+    
+}
+.custom-input {
+    width: 80%;
+}
+.button-container {
+    margin-top: 20px;
+}
+.animated-button {
+    transition: all 0.3s ease-in-out;
+}
+.animated-button:hover {
+    transform: scale(1.1);
+}
+.full-width-input {
+    width: 100%;
+}
+/* .animated-button {
+    --slds-c-button-destructive-color-background:rgb(247,236,43);
+
+    --slds-c-button-destructive-text-color:black;
+    --slds-c-button-destructive-color-border:rgb(11, 11, 11);
+}
+.animated-button {
+    --slds-c-button-success-color-background:rgb(0,125,182);
+    --slds-c-button-success-text-color:rgb(247,236,43);
+    --slds-c-button-success-radius-border:50%;
+    --slds-c-button-success-color-border:rgb(11, 11, 11);
+} */

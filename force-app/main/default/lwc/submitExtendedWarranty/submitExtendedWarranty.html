@@ -1,0 +1,90 @@
+<!--
+  @description       : 
+  @author            : Aniket Karmakar
+  @group             : 
+  @last modified on  : 02-25-2025
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="heading" style="background-color:rgb(0,125,182);color:rgb(247,236,43);height:70px;display:flex;justify-content:center;align-items:center;gap: 20px;padding:0 20px;">
+        <h1 style="text-align:center;font-size:x-large; margin-left: 150px; flex:1;">Submit Extended Warranty</h1>
+        <img src={rideRiverLogo} alt="Logo" style="height: 90px;width:120px">
+    </div>
+    
+    
+    <lightning-card>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </template>
+        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Dealer Code" value={vehicleData.dealerCode} disabled="true"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="date" label="Vehicle Sell Date" value={vehicleData.purchaseDate} disabled="true"></lightning-input>
+            </div>
+        </div>
+        <!---Section 2-->
+        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Chassis Number" value={vehicleData.chassisNumber} disabled="true"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Model" value={vehicleData.model} disabled="true"></lightning-input>
+            </div>
+        </div>
+        <!---Section 3-->
+        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+            
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Motor" value={vehicleData.engineNumber} disabled="true"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Charger" value={vehicleData.charger} disabled="true"></lightning-input>
+            </div>
+        </div>
+        <!---Section 4-->
+        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-input type="text" label="Battery" value={vehicleData.battery} disabled="true"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-around_small">
+                <lightning-combobox
+            name="progress"
+            label="Warranty Type"
+            value={warratyType}
+            data-id="warrantyType"
+            placeholder="Select Warranty Type"
+            options={warrantyTypeOptions}
+            onchange={handleWarrantyTypeChange} ></lightning-combobox>
+            </div>
+            
+        </div>
+        <!--section5-->
+        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+            <div class="slds-col slds-size_12-of-12 slds-p-around_small">
+                <lightning-combobox
+                name="progress"
+                label="Sale Origin"
+                value={saleOrigin}
+                data-id="saleOrigin"
+                placeholder="Select Sale Origin"
+                options={saleOriginOptions}
+                onchange={handleSaleOriginChange}></lightning-combobox>
+            </div>
+
+        </div>
+        <!--Buttons-->
+       
+    </lightning-card>
+    <template if:true={showButton}>
+        <center style="height:60px;background-color:rgb(211, 213, 220);display:flex;justify-content:center;align-items:center">
+            <div class="button area" style="display:flex;justify-content:center;align-items:center;height:100%">
+                <lightning-button variant="destructive" label="Close" title="Destructive action" onclick={handleCloseScreen} class="animated-button slds-m-left_x-small"></lightning-button>
+                <lightning-button variant="success" label="Submit" title="Successful action" onclick={handleSubmit} class="animated-button slds-m-left_x-small"></lightning-button>
+            </div>
+            
+           </center>
+    </template>
+    
+</template>

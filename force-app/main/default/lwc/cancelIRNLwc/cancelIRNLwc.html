@@ -1,0 +1,36 @@
+<template>
+    <div class="card">
+        <h2 class="title">IRN Details </h2>
+
+        <template if:true={showSpinner}>
+            <div class="slds-is-relative">
+                <lightning-spinner  alternative-text="Loading" size="medium" ></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            
+            <lightning-input  type="text"  label="IRN No."   value={irnValue}  disabled  class="styled-input"> </lightning-input>
+
+            <lightning-combobox  label="Select Reason"  value={selectedReason}  options={reasonOptions}  onchange={handleReasonChange}  required class="styled-input"> </lightning-combobox>
+
+            <lightning-input   type="text"  label="Enter Remarks"  value={irnRemarksValue}    onchange={handleIRNRemarksChange} required class="styled-input"> </lightning-input>
+
+        </div>
+
+        <!-- Button Centered Below -->
+        <template if:true={IsshowCancelBtn}>
+        <div class="button-container">
+            <button class="cancel-btn" onclick={handleCancelIRN} disabled={isButtonDisabled}>Cancel IRN</button>
+        </div>
+        </template>
+
+        <!-- Success Message with Animation -->
+        <template if:true={showToast}>
+            <div class={toastClass}>
+                {toastMessage}
+            </div>
+        </template>
+    </div>
+</template>

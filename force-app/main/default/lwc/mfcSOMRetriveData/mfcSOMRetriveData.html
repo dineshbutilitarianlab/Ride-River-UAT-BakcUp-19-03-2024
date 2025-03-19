@@ -1,0 +1,46 @@
+<template>
+    <lightning-card title="Object Hierarchy Relationships">
+        <lightning-button label="New" slot="actions" onclick={openOBJComponent}></lightning-button>
+        
+            <lightning-datatable data={objects}
+                                 columns={columns} 
+                                 key-field="Id"
+                                 hide-checkbox-column
+                                 onrowaction={viewRecord}
+                                 ></lightning-datatable>
+            
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Processing.." title="Processing.." variant="brand" size="large"></lightning-spinner>
+        </template>
+    </lightning-card>
+    
+    <!--Component Start-->
+    <div class="slds-m-around_xx-large">
+        <template if:true={showConfirmDialog}>
+            <!--Modal Box Start-->
+            <div role="dialog" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container">
+                    <!--Modal Box Header Start-->
+                    <header class="slds-modal__header">
+                        <h1 class="slds-text-heading--medium">Delete object hierarchy relationship?</h1>
+                    </header>
+                    <!--Modal Box Header End-->
+                    
+                    <!--Modal Box Content Start-->
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <p><b>Are you sure you want to delete the object hierarchy relationship?</b></p>
+                    </div>
+                    <!--Modal Box Content End-->
+                    
+                    <!--Modal Box Button Start-->
+                    <footer class="slds-modal__footer">
+                        <lightning-button name='No' label='Cancel' value= 'No' onclick={closeBox}></lightning-button>
+                        <lightning-button variant="brand" name='Yes' label='Delete' value= 'No' onclick={deleteFile}></lightning-button>
+                    </footer>
+                    <!--Modal Box Button End-->
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>            
+        </template>
+    </div>   
+</template>

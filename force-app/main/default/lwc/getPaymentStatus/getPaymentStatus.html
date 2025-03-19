@@ -1,0 +1,91 @@
+<template>
+
+    <template if:true={isLoading}>
+        <div class="slds-spinner_container">
+            <lightning-spinner alternative-text="Loading Payment Details"></lightning-spinner>
+        </div>
+    </template>
+
+        <div class="payment-header">
+            <div class="payment-title">
+                <lightning-icon icon-name="utility:money" size="large" alternative-text="Payment Icon"></lightning-icon>
+                <span>Payment Status</span>
+            </div>
+        </div>
+    <div class="slds-p-around_large payment-container">
+       
+       
+        <div class="status-container slds-m-top_medium">
+            <template if:true={isApproved}>
+                <div class="status-approved">
+                    <lightning-icon icon-name="utility:success" alternative-text="Approved" size="large" class="slds-m-right_small"></lightning-icon>
+                    Approved
+                </div>
+            </template>
+            <template if:true={isRejected}>
+                <div class="status-rejected">
+                    <lightning-icon icon-name="utility:error" alternative-text="Rejected" size="large" class="slds-m-right_small"></lightning-icon>
+                    Rejected
+                </div> 
+            </template> 
+        </div>
+        <br/>
+        <div class="slds-card slds-m-top_large">
+            <div class="slds-card__header slds-grid slds-grid_align-spread">
+                <h2 class="slds-card__header-title">Payment Details</h2>
+            </div>
+
+        <template if:true={hasPaymentDetails}>
+            <div class="slds-card__body">
+                <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+                    <lightning-layout>
+                        <!-- Transaction ID -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                                <lightning-icon icon-name="utility:record" alternative-text="Transaction ID" size="small" class="icon-custom slds-m-bottom_x-small"></lightning-icon>
+                                <strong>Transaction ID:</strong> {paymentDetails.transactionId}
+                            </div>
+                        </lightning-layout-item>
+            
+                        <!-- Amount -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                                <lightning-icon icon-name="utility:money" alternative-text="Amount" size="small" class="icon-custom slds-m-bottom_x-small"></lightning-icon>
+                                <strong>Amount:</strong> ₹{paymentDetails.amount}
+                            </div>
+                        </lightning-layout-item>
+            
+                        <!-- Date -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                                <lightning-icon icon-name="utility:event" alternative-text="Date" size="small" class="icon-custom slds-m-bottom_x-small"></lightning-icon>
+                                <strong>Date:</strong> {paymentDetails.date}
+                            </div>
+                        </lightning-layout-item>
+            
+                        <!-- Method -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                                <lightning-icon icon-name="utility:card" alternative-text="Method" size="small" class="icon-custom slds-m-bottom_x-small"></lightning-icon>
+                                <strong>Method:</strong> {paymentDetails.method}
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={NoPaymentDetailsFound}>
+            <div class="no-payment-container">
+                <lightning-icon icon-name="utility:warning" size="large" alternative-text="No Data" class="no-payment-icon"></lightning-icon>
+                <h2>No Payment Details Found</h2>
+                <p class="no-payment-message">
+                    It seems we couldn’t find any payment details for the selected record.
+                </p>
+            </div>
+        </template>
+
+        </div>
+    </div>
+
+</template>

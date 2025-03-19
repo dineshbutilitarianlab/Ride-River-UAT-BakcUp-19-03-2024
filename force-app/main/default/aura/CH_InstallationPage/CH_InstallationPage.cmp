@@ -1,0 +1,29 @@
+<aura:component implements="lightning:availableForFlowActions,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+ 	<aura:attribute name="isActive" default="true" type="Boolean" />
+   	<aura:attribute name="type" default="error" type="String" />
+    <aura:attribute name="message" default="" type="String" />
+    <aura:attribute name="processCompleted" default="false" type="Boolean" />
+    <aura:if isTrue="{!v.isActive}">
+    <lightning:flow aura:id="flowData" onstatuschange="{!c.handleStatusChange}" />   
+    </aura:if>
+      <div class="slds-grid slds-wrap">
+  <div class="slds-size_1-of-2">
+    <div class="slds-text-align_left slds-m-around_x-small slds-text-heading_small custom-title">
+		<p>Generate forecasts at any level in the product category hierarchy.
+           This quick start provides a permission set, custom fields, a sample forecast set, 
+            and DPE templates. When you click <b>Create Product Category Forecast Set</b>, a flow installs the quick start assets in the org.
+        </p>
+	</div>
+  </div>
+  <div class="slds-size_2-of-2">
+    <div class="slds-text-align_left slds-m-around_x-small slds-text-body_small custom-text">
+	 <div class="custom-box"><i>Note: You can install this quick start only once.</i> </div>
+     <div class="custom-btn">
+        
+         <lightning:button variant="brand" label="Create Product Category Forecast Set" disabled="{!v.processCompleted}" onclick="{! c.initiateFlow}" class="slds-m-left_x-small">
+         </lightning:button>
+       </div>
+	</div>
+  </div>
+  </div>
+</aura:component>

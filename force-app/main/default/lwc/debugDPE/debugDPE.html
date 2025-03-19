@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="Data Processing Engine Debug" icon-name="custom:custom19">
+       <div class="slds-form-element__control slds-grid">
+           
+            <div class="slds-size_1-of-3 slds-p-left_medium">
+                <lightning-combobox name="types" label="Data Processing Engine Definition" value={value} options={TypeOptions} onchange={onValueSelection}> </lightning-combobox> 
+             </div>
+             <div class="slds-size_2-of-3 slds-p-left_large mycustom-margin">
+            <template if:true={showList}>
+               <lightning-button label="Visual Data Processing Engine" slot="actions" onclick={openVisualDPE}></lightning-button>
+            </template>
+            </div>
+        </div>
+      <template if:true={showList}>
+      <c-show-d-p-e-node filedatav1={jsondata}></c-show-d-p-e-node>
+    </template>
+    </lightning-card>
+</template>

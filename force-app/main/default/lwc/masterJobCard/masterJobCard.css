@@ -1,0 +1,27 @@
+.container {
+    position: relative;
+}
+
+.center {
+    position: fixed;
+    bottom: 100px;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+.next-button{
+    background-color: #6d83ed;
+    border: 5px solid lightgrey;
+    border-radius: 50px;
+    color: black;
+    padding: 10px;
+    width:150px;
+}
+
+
+.next-button:hover {
+    background-color: #b3d943;
+    color: white;
+}

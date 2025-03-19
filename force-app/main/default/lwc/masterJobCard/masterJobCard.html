@@ -1,0 +1,60 @@
+<template>
+    <div class="container"> 
+    <template if:true={successMessage}><div ><center><b> Successfully added Work Plans, Products, Action Taken</b></center></div></template>
+        <template if:false={successMessage}>
+         <lightning-progress-indicator 
+            current-step={currentStep} 
+            type="base" 
+            variant="base">
+            <template for:each={steps} for:item="step">
+                <lightning-progress-step 
+                    key={step.value} 
+                    label={step.label} 
+                    value={step.value}>
+                </lightning-progress-step>
+            </template>
+        </lightning-progress-indicator>
+        <br>
+        <hr style="margin:0px;">
+        <template if:true={showBulkInsertJCProducts}>
+            <c-bulk-insert-j-c-products
+                record-id={recordId}
+                onsubmit={handleChildSubmit} 
+                onerror={handleChildError} 
+                if:false={showError}>
+            </c-bulk-insert-j-c-products>
+        </template>
+            <template if:true={showBulkInsertWorkPlans}>
+                <c-bulk-insert-work-plans 
+                    record-id={recordId}
+                    onsubmit={handleChildSubmit} 
+                    onerror={handleChildError} 
+                    if:false={showError}>
+                </c-bulk-insert-work-plans>
+            </template>
+            <template if:true={showBulkInsertCustomerVoices}>
+                <c-bulk-insert-customer-voices 
+                    record-id={recordId}
+                    onsubmit={handleChildSubmit} 
+                    onerror={handleChildError} 
+                    if:false={showError}>
+                </c-bulk-insert-customer-voices>
+            </template>
+        </br>
+    
+    <hr style="margin:0px;">
+        <template if:true={showNextButton}>
+           <div class="slds-clearfix" style="padding-top: 10px;">
+                <div class="slds-float_right">
+                    <!-- <button class="next-button" onclick={handleCancel}>Cancel </button> -->
+                    <button class="next-button" onclick={handlePrevious}>Previous</button>
+                    <button class="next-button" onclick={handleNext}>{buttonlabel}</button>                
+                </div>
+                </div>
+        </template>
+        <template if:true={showError}>
+            <p>{error}</p>
+        </template>
+        </template>
+    </div>
+</template>

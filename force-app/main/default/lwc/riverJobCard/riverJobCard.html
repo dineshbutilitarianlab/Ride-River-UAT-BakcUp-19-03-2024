@@ -1,0 +1,706 @@
+<template>
+    <div class="Section" style="font-size:20px;"><Center><strong>JOB CARD  {formattedLocation} </strong></Center></div>
+
+    <template if:true={tile1}>
+            
+        <div class="Section">
+
+            <!--<lightning-card title="Fetch Vehicle Details">-->
+                <div class="slds-m-around_medium">
+                    <lightning-radio-group name="radioGroup" class="input-margin"
+                              label="Identifier Type"
+                              options={options}
+                              value={inputType}
+                              onchange={handleTypeChange}
+                              type="radio" disabled={showPhoneInput}></lightning-radio-group>
+                    <lightning-input class="input-margin" type="text" label={label} value={vehicleIdentifier} onchange={handleVehicleNumberChange} disabled={showPhoneInput}></lightning-input>
+    
+                    <template if:false={showPhoneInput}>
+                        <lightning-button class="input-margin" variant="brand" label="Fetch Vehicle Details" onclick={fetchVehicleDetails} disabled={enableFetchButton}></lightning-button>
+                    </template>
+    
+                    <template if:true={showPhoneInput}>
+                        <lightning-input class="phonenumberinput input-margin" type="tel" label="Phone Number" value={phoneNumber} pattern="[0-9]{10}" onchange={handlePhoneNumberChange} maxlength="10" disabled={showOtpInput}></lightning-input>
+    
+                        <template if:false={showOtpInput}>
+                            <lightning-button  class="input-margin" variant="brand" label="Send OTP" onclick={sendOTP}></lightning-button>
+                        </template>
+                         <template if:true={showOtpInput}>
+                        <lightning-button class="input-margin" variant="brand"
+                             label="OTP not received" 
+                             onclick={handleResendOtp}>
+                         </lightning-button>
+                         </template>
+    
+                        <template if:true={showOtpInput}>
+                            <lightning-input class="otpinput input-margin" type="number" label="Enter OTP" value={otpEntered} onchange={handleOtp}></lightning-input>
+                            <lightning-button  class="input-margin" variant="brand" label="Verify OTP" onclick={verifyOTP}></lightning-button>
+                        </template>
+                    </template>
+            </div>
+            <!-- </lightning-card> -->
+        </div>
+    </template>
+    
+    <!--second Tile-->
+    <template if:false={tile1}>
+        <!--##########################################  Custom lookup  ############################################################-->
+        <div class="Section" width="100%">
+
+            <div class="slds-grid slds-wrap " style="padding:10px;">
+                <div class="slds-col slds-large-size_12-of-12">
+                    <div class="slds-grid slds-wrap ">
+                        <div class="slds-col slds-large-size_8-of-24">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <lightning-input
+                                        name = "ServiceAdvisorSearch"
+                                        data-elementsearch = "ServiceAdvisorSearch"
+                                        data-id="searchInput1"
+                                        data-storedvariable = "searchAdvisorsResult"
+                                        data-listcontrol = "showAdvisorList"
+                                        label="Service Advisor"
+                                        data-searchkey = "searchKey"
+                                        type="search"
+                                        value={ServiceAdvisorName}
+                                        placeholder="Search Advisor..."
+                                        onfocus={searchFocusHandler}
+                                        onblur={searchBlurHandler}
+                                        onkeyup={handleSearchChange}
+                                        variant="label-stacked"
+                                        class="validate"
+                                       required
+                                    ></lightning-input>
+        
+                                    <div if:true={showAdvisorList} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+                                        role="listbox" style="max-width: 99%;">
+                                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                            <template for:each={searchAdvisorsResult} for:item="searchResult">
+                                                <li key={searchResult.value} data-value={searchResult.value} role="presentation" data-variablename="ServiceAdvisor" data-listname="searchAdvisorsResult"
+                                                    data-id={searchResult.Id} data-name={searchResult.Name} data-listcontrol = "showAdvisorList" data-namevariable="ServiceAdvisorName" onclick={selectAdvisor} class="slds-listbox__item">
+                                                   
+                                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small "
+                                                        role="option">
+                                                        <span class="slds-media__body">
+                                                            <div style="display: flex; flex-direction: column;">
+                                                                <span class="slds-truncate" style="font-weight: bold;">
+                                                                    <lightning-icon icon-name='standard:people' alternative-text='Advisor' size='small' title='advisor'></lightning-icon> {searchResult.Name}
+                                                                </span>
+                                                                <span class="slds-truncate">
+                                                                    <span style="font-weight: bold;">Email : </span>{searchResult.RelatedRecord.Email}
+                                                                </span>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-large-size_8-of-24">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <lightning-input
+                                        name = "CitySearch"
+                                        data-elementsearch = "CitySearch"
+                                        data-id="searchInput2"
+                                        data-storedvariable = "searchCityResult"
+                                        data-listcontrol = "showCityList"
+                                        label="Service City"
+                                        data-searchkey = "CitySearchKey"
+                                        type="search"
+                                        value={CityName}
+                                        placeholder="Search City..."
+                                        onfocus={searchFocusHandler}
+                                        onblur={searchBlurHandler}
+                                        onkeyup={handleSearchChange}
+                                        variant="label-stacked"
+                                        class="validate"
+                                        required
+                                    ></lightning-input>
+        
+                                    <div if:true={showCityList} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+                                        role="listbox" style="max-width: 99%;">
+                                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                            <template for:each={searchCityResult} for:item="searchResult">
+                                                <li key={searchResult.value} data-value={searchResult.value} role="presentation" data-variablename="City" data-listname="searchCityResult"
+                                                    data-id={searchResult.Id} data-name={searchResult.Name} data-listcontrol = "showCityList" data-namevariable="CityName" onclick={selectAdvisor} class="slds-listbox__item">
+                                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small "
+                                                        role="option">
+                                                        <span class="slds-media__body">
+                                                            <div style="display: flex; flex-direction: column;">
+                                                                <span class="slds-truncate" style="font-weight: bold;">
+                                                                    <lightning-icon icon-name='standard:service_territory' alternative-text='Advisor' size='small' title='advisor'></lightning-icon> {searchResult.Name}
+                                                                </span>
+                                                                <span class="slds-truncate">
+                                                                    <span style="font-weight: bold;"></span>
+                                                                    {searchResult.formattedLocation}
+                                                                </span>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+    
+                      <!-- <div class="slds-col slds-large-size_18-of-24">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <lightning-input
+                                        data-id="searchInput2"
+                                        name = "ServiceCenterSearch"
+                                        data-elementsearch = "ServiceCenterSearch"
+                                        data-searchkey = "centerSearchKey"
+                                        data-storedvariable = "searchCenterResult"
+                                        data-listcontrol = "showCenterList"
+                                        label="Service Center"
+                                        type="search"
+                                        value={ServiceCenterName}
+                                        placeholder="Search Service Center..."
+                                        onfocus={searchFocusHandler}
+                                        onblur={searchBlurHandler}
+                                        onkeyup={handleSearchChange}
+                                        variant="label-stacked"
+                                        class="validate"
+                                        
+                                    ></lightning-input>
+    
+                                    <div if:true={showCenterList} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+                                        role="listbox" style="max-width: 99%;">
+                                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                            <template for:each={searchCenterResult} for:item="searchResult">
+                                                <li key={searchResult.value} data-value={searchResult.value} role="presentation" data-variablename="ServiceCenter" data-listname="searchCenterResult"
+                                                    data-id={searchResult.Id} data-name={searchResult.Name} data-listcontrol = "showCenterList" data-namevariable="ServiceCenterName" onclick={selectAdvisor} class="slds-listbox__item">
+                                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small "
+                                                        role="option">
+                                                        <span class="slds-media__body">
+                                                            <div style="display: flex; flex-direction: column;">
+                                                                <span class="slds-truncate" style="font-weight: bold;">
+                                                                    <lightning-icon icon-name='standard:service_territory_member' alternative-text='Advisor' size='small' title='advisor'></lightning-icon> {searchResult.Name}
+                                                                </span>
+                                                                <span class="slds-truncate">
+                                                                    <span style="font-weight: normal;">Code : </span>{searchResult.Center_Code__c}, {searchResult.BillingCity}
+                                                                </span>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+    
+                    </div>
+                       
+                </div>       
+           </div>
+        </div>
+
+        
+        <!--##########################################  Custom lookup  ############################################################-->
+
+
+    
+    <div class="Section" width="100%">
+        <div class=" borderradius">
+            <Center><strong>Important Details</strong></Center>
+            <table class="my-table">
+                
+                <tr class="row">
+                    <td class="row">Job Card No.</td>
+                    <td class="row"></td>
+                    <td class="row">Date</td>
+                    <td class="row">{currentDate}</td>
+                </tr>
+                <tr class="row">
+                    <td class="row">VIN No.</td>
+                    <td class="row">{vehicleDetails.VehicleIdentificationNumber}</td>
+                    <td class="row">Product (Model)</td>
+                    <td class="row">{vehicleDetails.ModelName}</td>
+                </tr>
+                <tr class="row">
+                    <td class="row">Reg No.</td>
+                    <td class="row">{vehicleDetails.VehicleRegistrationNumber}</td>
+                    <td class="row">Kms Covered</td>
+                    <td class="row">
+                        <lightning-input
+                            type="number"
+                            class="validate"
+                            value={KmsCovered}
+                            onchange={handlechanges}
+                            name="KmsCovered"
+                            variant="label-hidden"
+                            required>
+                        </lightning-input>
+                    </td>
+                </tr>
+                <tr >
+                    <td class="row">Motor No.</td>
+                    <td class="row">{vehicleDetails.EngineNumber}</td>
+                    <td class="row">Date of Sale</td>
+                    <td class="row">{vehicleDetails.Purchased_Date__c}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="Section">
+    
+        <div>
+            <Center><strong>Primary Customer Details</strong></Center>
+            <table class="row">
+                <tr class="row">
+                    <td class="row">Name</td>
+                    <td class="row" colspan="2">
+                        {primaryContact.Name}
+                    </td>
+                </tr>
+                <tr class="row">
+                    <td class="row">Address</td>
+                    <td class="row" colspan="2">
+                        {primaryContact.MailingStreet} {primaryContact.MailingCity}<br/>
+                        {primaryContact.MailingState} {primaryContact.MailingCountry} {primaryContact.MailingPostalCode}
+                    </td>
+                </tr>
+                    <tr class="row">
+                    <td class="row" rowspan="2">Contact Details</td>
+                    <td class="row">Mobile</td>
+                    <td class="row">
+                        {primaryContact.Phone}
+                    </td>
+                </tr>
+                    <tr>
+                    <td class="row colspan">Email</td>
+                    <td class="row colspan">
+                        {primaryContact.Email}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    
+        <template if:false={isPrimary}>
+            <div>
+                <Center><strong>Secondary Customer Details</strong></Center>
+                <table class="row">
+                    <tr class="row">
+                        <td class="row">Name</td>
+                        <td class="row" colspan="2">
+                            <lightning-input
+                                type="text"
+                                class="validate"
+                                value={contactName}
+                                variant="label-hidden"
+                                onchange={handlechanges}
+                                name="contactName"
+                                required>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td class="row">Address</td>
+                        <td class="row" colspan="2">
+                            <lightning-input-address
+                                variant="label-hidden"
+                                class="validate"
+                                onchange={handleAddressChanges}
+                                street-label="Street"
+                                city-label="City"
+                                country-label="Country"
+                                province-label="State"
+                                postal-code-label="Pin Code"
+                                street={address.street}
+                                city={address.city}
+                                country={address.country}
+                                province={address.province}
+                                postal-code={address.postalCode}
+                                name={address.street}
+                                required>
+                            </lightning-input-address>
+                        </td>
+                    </tr>
+                        <tr class="row">
+                        <td class="row" rowspan="2">Contact Details</td>
+                        <td class="row">Mobile</td>
+                        <td class="row">
+                            {phoneNumber}
+                        </td>
+                    </tr>
+                        <tr>
+                        <td class="row colspan">Email</td>
+                        <td class="row colspan">
+                            <lightning-input
+                                type="email"
+                                class="validate"
+                                value={email}
+                                variant="label-hidden"
+                                onchange={handlechanges}
+                                name="email"
+                                required>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+    </div>
+    <div class="Section">
+        <div>
+                    <table class="my-table">
+                    <tr class="row">
+                        <td class="row"><Center><strong>Bike Inventory</strong></Center></td>
+                        <td class="row"><Center><strong>Accessories</strong></Center></td>
+                        <td class="row" rowspan="2"><strong>Type Of Job</strong></td>
+                        <td class="row" rowspan="2">
+                            <lightning-combobox
+                                class="validate"
+                                name="TypeOfJob"
+                                variant="label-hidden"
+                                value={TypeOfJob}
+                                placeholder="Select Job type..."
+                                options={jobTypeOptions}
+                                onchange={handleJobTypeChange} >
+                            </lightning-combobox>
+                            <template if:true={showSubType}>
+                                <lightning-combobox
+                                    class="validate"
+                                    name="subType"
+                                    variant="label-hidden"
+                                    value={subType}
+                                    placeholder="Select Subtype..."
+                                    options={periodicTypeOptions}
+                                    onchange={handlechanges} 
+                                    style="margin-top:5px;">
+                                </lightning-combobox>
+                            </template>
+                            <!-- <lightning-record-edit-form object-api-name="WorkOrder">
+                                <lightning-input-field 
+                                    class="validate"
+                                    field-name="RR_Job_Type__c"
+                                    variant="label-hidden"
+                                    value={TypeOfJob}
+                                    onchange={handlechanges}
+                                    name="TypeOfJob"
+                                    required> 
+    
+                                </lightning-input-field>
+                                <template if:true={showSubType}>
+                                    <lightning-input-field 
+                                    field-name="RR_Periodic_Maintenance_Type__c"
+                                    class="validate"
+                                    value={subType}
+                                    onchange={handlechanges}
+                                    name="subType"
+                                    style="margin-top:5px;"> 
+    
+                                    </lightning-input-field>
+                                    
+                                </template>
+                            </lightning-record-edit-form> -->
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td class="row">Rear View Mirror
+                            <div style="display: inline-block;width:auto;float: right;">
+                                
+                                <lightning-input 
+                                    class="validate"
+                                    type="checkbox" 
+                                    variant="label-hidden"
+                                    onchange={handleToggeleChanges}
+                                    name="RearViewMirror"
+                                    style="float: right;"
+                                    value={RearViewMirror}>
+                                </lightning-input>
+                            </div>
+                        </td>
+                        <td class="row" rowspan="2">
+                                
+                            <lightning-input 
+                                type="toggle"
+                                class="validate" 
+                                message-toggle-inactive = ""
+                                message-toggle-active = ""
+                                label = "Non OE Acc. Fitted"
+                                onchange={handleToggeleChanges}
+                                name="NonOEAccFitted"
+                                value={NonOEAccFitted}>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td class="row">Tool Kit
+                            <div style="display: inline-block;width:auto;float:right;">
+                                
+                                <lightning-input 
+                                    type="checkbox" 
+                                    class="validate"
+                                    variant="label-hidden"
+                                    onchange={handleToggeleChanges}
+                                    name="ToolKit"
+                                    style="float: right;"
+                                    value={ToolKit}>
+                                </lightning-input>
+                            </div>
+                        </td>
+                        <td class="row" rowspan="2">Estimated Delivery Time</td>
+                        <td class="row" rowspan="2">
+                            <lightning-input 
+                                    type="datetime" 
+                                    class="validate"
+                                    variant="label-hidden"
+                                    onchange={handlechanges}
+                                    name="EstimatedDeliveryTime"
+                                    value={EstimatedDeliveryTime}
+                                    required>
+                                </lightning-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">Battery No:
+                                {vehicleDetails.RR_Battery_Number__c}
+                        </td>
+                        <td class="row" rowspan="6">
+                            <template if:true={NonOEAccFitted}>
+                                <lightning-textarea 
+                                    name="AllNonOEAccFitted" 
+                                    class="validate"
+                                    variant="label-hidden" 
+                                    onchange={handlechanges} 
+                                    placeholder="Add Non OE Acc. Fitted..."
+                                    value={AllNonOEAccFitted}
+                                    style="height:200px;"
+                                    required={NonOEAccFitted}>
+                                </lightning-textarea>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">Key Code:
+                            {vehicleDetails.IgnitionKeyCode}
+                        </td>
+                        <td class="row" rowspan="2">Estimated Cost</td>
+                        <td class="row" rowspan="2"> 
+                            <lightning-input 
+                            class="validate"
+                                    type="number"
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    step="1"
+                                    onchange={handlechanges}
+                                    name="EstimatedCost"
+                                    
+                                    value={EstimatedCost}
+                                    required>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">Vehicle Document
+                            <div style="display: inline-block;width:auto;float: right;">
+                                
+                                <lightning-input 
+                                class="validate"
+                                    type="checkbox" 
+                                    variant="label-hidden"
+                                    onchange={handleToggeleChanges}
+                                    name="VehicleDocument"
+                                    style="float: right;"
+                                    value={VehicleDocument}>
+                                </lightning-input>
+                            </div>
+    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">First Aid Kit
+                            <div style="display: inline-block;width:auto;float: right;">
+                                
+                                <lightning-input 
+                                class="validate"
+                                    type="checkbox" 
+                                    variant="label-hidden"
+                                    onchange={handleToggeleChanges}
+                                    name="FirstAidKit"
+                                    style="float: right;"
+                                    value={FirstAidKit}>
+                                </lightning-input>
+                            </div>
+                        </td>
+                        <td class="row" rowspan="2">Technician</td>
+                        <td class="row" rowspan="2">
+                            <lightning-record-edit-form object-api-name="WorkOrder">
+                                <lightning-input-field 
+                                class="validate"
+                                    field-name="RR_Technician__c"
+                                    variant="label-hidden"
+                                    value={Technician}
+                                    onchange={handlechanges}
+                                    name="Technician"
+                                    disabled> 
+                                </lightning-input-field>
+                            </lightning-record-edit-form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">Charger
+                            <div style="display: inline-block;width:auto;float: right;">
+                                
+                                <lightning-input 
+                                class="validate"
+                                    type="checkbox" 
+                                    variant="label-hidden"
+                                    onchange={handleToggeleChanges}
+                                    name="Charger"
+                                    style="float: right;"
+                                    value={Charger}>
+                                </lightning-input>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row">
+    
+                            <lightning-textarea 
+                            class="validate"
+                                name="PersonalBelongings" 
+                                onchange={handlechanges} 
+                                label="Personal Belongings" 
+                                placeholder="type here...">
+                            </lightning-textarea>
+                        </td>
+                        <td class="row" rowspan="2">SOC (%)</td>
+                        <td class="row" rowspan="2">
+                            <lightning-input 
+                            class="validate"
+                                    type="number"
+                                    variant="label-hidden"
+                                    onchange={handlechanges}
+                                    name="SOC"
+                                    value={SOC}
+                                    required>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+        </div>
+    
+    <div class="Section">
+        <div>
+            <strong><center>Customer Concern</center></strong>
+        </div>
+        
+        <template for:each={concernNoList} for:item="item" for:index="index">
+                <!-- <lightning-record-edit-form key={item.id}   object-api-name="RR_Customer_Voice__c" record-id={item.Id} onsubmit={handleSubmit}> -->
+                    <div key={item.id}>
+                    <!-- <lightning-messages></lightning-messages> -->
+                    <lightning-layout multiple-rows class="custom-layout row" data-name="voices" data-index={index}>
+
+                        <lightning-layout-item size="12" large-device-size="1" class="custom-layout-item slds-align_absolute-center" padding="around-small">
+                            <span>{item.serialNumber}</span>
+                        </lightning-layout-item>
+                        
+                        <lightning-layout-item   size="12" large-device-size="3"  class="custom-layout-item" padding="around-small">
+                            <!-- <lightning-input-field   field-name="RR_Concern_Category__c" variant="label-stacked" value={item.RRConcernCategory}
+                            onchange={handleChange} data-name="RRConcernCategory" data-index={index} class="validate" required>
+                            </lightning-input-field> -->
+
+                            <lightning-combobox
+                                class="validate"
+                                label="Concern Category"
+                                variant="label-stacked"
+                                value={item.RR_Concern_Category__c}
+                                placeholder="Select Concern Category..."
+                                options={concernCategoryOptions}
+                                onchange={handleChange} 
+                                field-name="RR_Concern_Category__c"
+                                data-name="RRConcernCategory" 
+                                data-index={index}
+                                disabled={item.isDisabled}
+                                required>
+                            </lightning-combobox>
+
+                        </lightning-layout-item>
+
+                        <lightning-layout-item   size="12" large-device-size="3"  class="custom-layout-item" padding="around-small">
+                            <!-- <lightning-input-field   field-name="RR_Sub_Category__c" variant="label-stacked" value={item.RRSubCategory}
+                            onchange={handleChange} data-name="RRSubCategory" data-index={index} class="validate" required>
+                            </lightning-input-field> -->
+
+                            <lightning-combobox
+                                class="validate"
+                                label="Sub Category"
+                                variant="label-stacked"
+                                value={item.RRSubCategory}
+                                placeholder="Select Sub Category..."
+                                options={item.subCategoryOptions}
+                                onchange={handleChange} 
+                                field-name="RR_Sub_Category__c"
+                                data-name="RRSubCategory" 
+                                data-index={index}
+                                required>
+                            </lightning-combobox>
+
+                        </lightning-layout-item>
+
+                        <lightning-layout-item   size="12" large-device-size="5"  class="custom-layout-item" padding="around-small">
+                            <label for="Desriptionfield">Description</label><br/>
+                            <textarea variant="label-stacked" value={item.RRDescription} label="Description" id="Desriptionfield" rows="2" cols="50"
+                            onchange={handleChange} data-name="RRDescription" data-index={index} class="validate" required maxlength="250">
+                            </textarea>
+                        </lightning-layout-item>
+
+                    </lightning-layout>
+
+                    <template if:true={item.haserror}>
+                        <div class="slds-theme_error" style="padding:10px;"> 
+                            <lightning-icon icon-name="utility:error" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-p-left_xx-small" style="padding:10px;text-align:center;">
+                                Duplicate found for the above entry with the same concern category and sub category!
+                            </span>
+                        </div>
+                    </template>
+                </div>
+
+            <!-- </lightning-record-edit-form> -->
+        </template>
+    <div class="buttonGroup1">
+        <lightning-button label="Add Row" onclick={addRow} style="margin:10px;"></lightning-button>
+        <lightning-button label="Delete Row" onclick={deleteRow} style="margin:10px;"></lightning-button>
+    </div>
+    
+        
+    </div>
+    
+    <div class="Section">
+        
+        <div class="row">
+                Any Other Observations
+    
+                <lightning-textarea 
+                    class="validate"
+                    name="OtherObservations" 
+                    variant="label-hidden" 
+                    onchange={handlechanges} 
+                    placeholder="Type here..."
+                    value={OtherObservations}
+                    >
+                </lightning-textarea>
+        </div>
+    </div>
+    
+        <div class="Section">
+            <lightning-button class="buttonGroup" style="padding:10px;" variant="success" label="Submit" onclick={handleSubmit} disabled={disableSave}></lightning-button>
+        </div>
+    </template>
+    </template>

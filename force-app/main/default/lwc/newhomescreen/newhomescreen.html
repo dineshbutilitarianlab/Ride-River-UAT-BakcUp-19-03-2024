@@ -1,0 +1,939 @@
+<template>
+
+    <div class="slds-grid slds-wrap">
+
+        <div class="slds-col slds-size--2-of-6">
+            <lightning-card title="Leads" icon-name="standard:lead">
+                <div class="slds-grid slds-wrap slds-p-around_medium">
+                    <div class="slds-size--4-of-6">
+                        <lightning-input type="text" placeholder="Search by Lead Name" value={Searchkey}
+                            onchange={handleLeadName}></lightning-input>
+                    </div>
+                    <div class="slds-size--2-of-6 slds-p-around_medium">
+                        <lightning-button variant="brand" label="Search" onclick={handleSearchClick}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-size--2-of-6 slds-p-around_small">
+                        <lightning-button variant="brand" label="New Lead" slot="actions" onclick={handleNewLead}
+                            class="slds-m-right_x-small slds-align_absolute-center"></lightning-button>
+                    </div>
+
+                    <div class="slds-size--2-of-6 slds-p-around_small">
+                        <lightning-button variant="brand" label="Test Rides" onclick={handleTestRides}
+                            class="slds-m-right_x-small slds-align_absolute-center"></lightning-button>
+                    </div>
+                    <div class="slds-size--2-of-6 slds-p-around_small">
+                        <lightning-button variant="brand" label="Follow Up" onclick={handleFollowUp}
+                            class="slds-m-right_x-small slds-align_absolute-center"></lightning-button>
+                    </div>
+                </div>
+
+                <div if:true={Allleads}>
+                    <div class="table-container" style="height:515px;">
+                        <lightning-datatable key-field="id" data={records} columns={columns} show-row-number-column
+                            hide-checkbox-column onrowaction={handleRowAction} class="slds-table">
+                        </lightning-datatable>
+                    </div>
+                    <!-- 
+
+                    <div class="slds-grid slds-grid_align-end" style="margin-top: 20px; margin-right: 20px;">
+                        <lightning-button label="Previous" onclick={handlePrevious} disabled={isFirstPage}>
+                        </lightning-button>
+                        <lightning-button label="Next" onclick={handleNext} disabled={isLastPage}>
+                        </lightning-button>
+                    </div>
+
+                    <p class="slds-text-align_right" style="margin-right: 30px;"> Page {currentPage} of {totalPages}
+                    </p> -->
+
+                </div>
+                <div if:true={searchlead}>
+                    <lightning-datatable key-field="id" data={records} columns={columns} show-row-number-column
+                        hide-checkbox-column onrowaction={handleRowAction}>
+                    </lightning-datatable>
+                </div>
+
+            </lightning-card>
+        </div>
+        <div if:true={leaddetails} class="slds-col slds-size--4-of-6" style="height:1000px;">
+            <lightning-card title="Lead Details" icon-name="standard:party_profile">
+                <div if:true={leaddetailspageopen}>
+                    <lightning-progress-indicator current-step={LeadStatus} type="path" variant="non-linear">
+                        <template for:each={steps} for:item="step">
+                            <lightning-progress-step label={step.label} value={step.value} key={step.label}
+                                data-value={step.value} onclick={handleStepClick}>
+                            </lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="text" label="LeadName" value={LeadName} required disabled>
+                            </lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-combobox name="Lead Status" label=" LeadSource" value={source}
+                                placeholder="Select Progress" options={leadsourceoptions}
+                                onchange={handleChangeleadsource} disabled></lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-combobox name="Lead Status" label=" Lead Status" value={LeadStatus}
+                                options={steps} onchange={handleChangeleadstatus} disabled></lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-combobox name="Lead Resaon" label=" Lead Resaon" value={LeadReason}
+                                options={leadReasonOption} onchange={handleChangeleadReason} disabled>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="phone" label="Mobile" value={MobilePhone} onchange={handleleadmoblie}
+                                required disabled></lightning-input>
+                        </lightning-layout-item>
+                        <!--  <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="number" label="Customer Age" value={CustomerAge}
+                                onchange={handleleadcoustmerage} disabled>
+                            </lightning-input>
+                        </lightning-layout-item>-->
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="Email" label="Email" value={leademail} onchange={handleleadeamil}
+                                disabled>
+                            </lightning-input>
+
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="number" label="Lead Age(In Days)" value={LeadAge} disabled>
+                            </lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="text" label="Lead Owner" value={leadowner} onchange={handleleadowner}
+                                disabled>
+                            </lightning-input>
+                        </lightning-layout-item>
+
+                        <lightning-input-address address-label="Address" street-label="Street" city-label="City"
+                            country-label="Country" postal-code-label="PostalCode" province-label="State"
+                            street={street} city={city} country={country} postal-code={postalCode} province={state}
+                            onchange={handleleadAddreess} field-level-help="Help Text for inputAddress field" disabled
+                            class="slds-p-around_small">
+                        </lightning-input-address>
+                    </lightning-layout>
+
+                    <div>
+                        <footer class="slds-modal__footer slds-text-align_center">
+                            <lightning-button variant="brand" label="Edit" onclick={handleEdit}
+                                class="slds-m-left_x-small">
+                            </lightning-button>
+
+                            <lightning-button variant="brand-outline" label="Convert" class="slds-m-left_x-small" onclick={handleLeadConvert1}>
+                            </lightning-button>
+                        </footer>
+                    </div>
+                </div>
+                <div if:true={edittrue}>
+                    <lightning-card>
+                        <lightning-progress-indicator current-step={LeadStatus} type="path" variant="non-linear"
+                            class="hide-tick-mark">
+                            <template for:each={steps} for:item="step" class="slds-is-complete lightning-icon">
+                                <lightning-progress-step label={step.label} value={step.value} key={step.label}
+                                    data-value={step.value} onclick={handleStepClick}>
+                                </lightning-progress-step>
+                            </template>
+                        </lightning-progress-indicator>
+                        <lightning-layout multiple-rows="true">
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-input type="text" label="LeadName" value={LeadName} required readonly>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-combobox name="Lead Status" label=" LeadSource" value={source}
+                                    placeholder="Select Progress" options={leadsourceoptions}
+                                    onchange={handleChangeleadsource} required disabled></lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-combobox name="Lead Status" label=" Lead Status" value={LeadStatus}
+                                    options={steps} onchange={handleChangeleadstatus}></lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-combobox name="Lead Resaon" label=" Lead Resaon" value={LeadReason}
+                                    options={leadReasonOption} onchange={handleChangeleadReason}>
+                                </lightning-combobox>
+                                <div if:true={errorforclosedLost}>
+                                    <span style="color:red;">Please select reason for clost lost</span>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-input type="phone" label="Mobile" value={MobilePhone}
+                                    onchange={handleleadmoblie} required disabled></lightning-input>
+                            </lightning-layout-item>
+                            <!-- <lightning-layout-item padding="around-small" size="6">
+                            <lightning-input type="number" label="Customer Age" value={CustomerAge}
+                                onchange={handleleadcoustmerage}>
+                            </lightning-input>
+                        </lightning-layout-item>-->
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-input type="Email" label="Email" value={leademail}
+                                    onchange={handleleadeamil}>
+                                </lightning-input>
+
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-input type="number" label="Lead Age(In Days)" value={LeadAge} readonly>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size="6">
+                                <lightning-input type="text" label="Lead Owner" value={leadowner}
+                                    onchange={handleleadowner} disabled>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-input-address address-label="Address" street-label="Street" city-label="City"
+                                country-label="Country" province-label="State" postal-code-label="PostalCode"
+                                street={street} city={city} country={country} postal-code={postalCode} province={state}
+                                onchange={handleleadAddreess} field-level-help="Help Text for inputAddress field"
+                                class="slds-p-around_small">
+                            </lightning-input-address>
+                        </lightning-layout>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <lightning-radio-group name="radioGroup" label="Choose Any Action"
+                                options={chooseactionoptions} value={chooseoption} onchange={ChooseAnyactionchange}
+                                type="button"></lightning-radio-group>
+
+                        </div>
+
+
+                        <div if:true={Ridetypetrue}>
+
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-radio-group name="radioGroup" label="Select Test Ride Type"
+                                    options={Ridetypeoptions} value={Ridetypevale} onchange={Ridetypeoptionschange}
+                                    required type="radio"></lightning-radio-group>
+                            </div>
+
+
+                        </div>
+                        <template if:true={isshowTestRideModalstore}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRidestrore}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New TestRide</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-input type="text" label="Lead Name" disabled value={LeadName}
+                                            minlength="3"></lightning-input>
+                                        <lightning-input type="text" label="Test ride executive's Name"
+                                            value={storeExcutiveName} onchange={handlestoreExcutiveName} minlength="3">
+                                        </lightning-input>
+                                        <lightning-input type="text" label="DL Number" value={storedlnumber}
+                                            onchange={storehandledlnumber} minlength="3"></lightning-input>
+                                        <template if:true={errorMessage}>
+                                            <p class="slds-text-color_error">{errorMessage}</p>
+                                        </template>
+                                        <lightning-input type="checkbox" label="Indemnity Form Signed"
+                                            value={storeIndemnity} onchange={handlestoreCheckboxChange} unchecked
+                                            required></lightning-input>
+
+
+
+                                        <lightning-input type="datetime" label="Test Ride Date"
+                                            value={testridestorevaluedate} onchange={testridestorevaluedatehandle}>
+
+                                        </lightning-input>
+                                        <template if:true={errordateMessage}>
+                                            <p class="slds-text-color_error">{errordateMessage}</p>
+                                        </template>
+
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+                                        <lightning-button variant="success" label="Save" title="Successful action"
+                                            onclick={handlestoresaveClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+                                        <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                            onclick={cancelNewTestRidestrore} class="slds-m-left_x-small">
+                                        </lightning-button>
+
+                                    </footer>
+                                </div>
+                            </section>
+                        </template>
+
+                        <template if:true={isshowTestRideModalhome}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open ">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRidehome}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+
+                                        <h2 class="slds-text-heading_medium">New TestRide</h2>
+                                    </header>
+
+                                    <!-- <lightning-layout multiple-rows="true">-->
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-input type="text" label="Lead Name" disabled value={LeadName}
+                                            minlength="3">
+                                        </lightning-input>
+                                        <lightning-input type="text" label="Test ride executive's Name"
+                                            value={homeExcutiveName} onchange={handlehomeExcutiveName} minlength="3">
+                                        </lightning-input>
+                                        <lightning-input type="text" label="DL Number" value={homedlnumber}
+                                            onchange={homehandledlnumber} minlength="3"></lightning-input>
+                                        <template if:true={errorMessage}>
+                                            <p class="slds-text-color_error">{errorMessage}</p>
+                                        </template>
+                                        <lightning-input type="checkbox" label="Indemnity Form Signed"
+                                            value={homeIndemnity} onchange={handlehomeCheckboxChange} unchecked
+                                            required></lightning-input>
+                                        <lightning-input type="datetime" name="input2" label="Test Ride Date"
+                                            value={testridehomevaluedate} onchange={testridehomevaluedatehandle}
+                                            minlength={todaysDate}>
+                                        </lightning-input>
+                                        <template if:true={errordateMessage}>
+                                            <p class="slds-text-color_error">{errordateMessage}</p>
+                                        </template>
+
+
+                                        <lightning-input-address address-label="Address" street-label="Street"
+                                            city-label="City" country-label="Country" province-label="State"
+                                            postal-code-label="Postal Code" street={street} city={city}
+                                            country={country} postal-code={postalCode} province={state}
+                                            onchange={handleLeadhomeAddressChange}
+                                            field-level-help="Help Text for inputAddress field"
+                                            class="slds-p-around_small" minlength="3">
+                                        </lightning-input-address>
+
+                                        <footer class="slds-modal__footer slds-text-align_center">
+                                            <lightning-button variant="success" label="Save" title="Successful action"
+                                                onclick={handlehomesaveClick} class="slds-m-left_x-small">
+                                            </lightning-button>
+                                            <lightning-button variant="destructive" label="Cancel"
+                                                title="Successful action" onclick={cancelNewTestRidehome}
+                                                class="slds-m-left_x-small">
+                                            </lightning-button>
+
+                                        </footer>
+                                    </div>
+
+                                </div>
+                            </section>
+
+                        </template>
+                        <template if:true={followoptionchoose}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelfollowoptionchoose}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-radio-group name="radioGroup" label="Follow Up Subject"
+                                            options={followoptionchooseoptions} value={followoptionchoosevalue}
+                                            onchange={followoptionchoosechange} required type="radio">
+                                        </lightning-radio-group>
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+
+                                    </footer>
+                                </div>
+                            </section>
+
+                        </template>
+                        <template if:true={readyforbookingoptiontrue}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelreadyforbookingoption}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-radio-group name="radioGroup" label="Select Option"
+                                            options={readyforbookingoptions} value={readyforbookingoption}
+                                            onchange={readyforbookingoptionchange} required type="radio">
+                                        </lightning-radio-group>
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+
+                                    </footer>
+                                </div>
+                            </section>
+
+                        </template>
+                        <template if:true={bookedtrue}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelbookedtruecancel}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <lightning-input type="text" label="Enter Booking ID" value={bookingId}
+                                            onchange={bookingidhandler}></lightning-input>
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+                                        <lightning-button variant="success" label="Save" title="Successful action"
+                                            onclick={handlebookidsaveClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+                                        <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                            onclick={handlebookidcancelClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+
+                                    </footer>
+                                </div>
+                            </section>
+
+                        </template>
+                        <template if:true={newfollowuptrue}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handlenewfollowupcancelClick}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <!--  <lightning-input type="text" label="Enter Followup" value={newfollowupname}
+                                            onchange={followupnamehandler}></lightning-input>-->
+                                        <lightning-input type="datetime" name="input2" label="Followup Date"
+                                            value={newfollowupdate} onchange={followupdatehandle}></lightning-input>
+                                        <lightning-input type="text" label="Follow up Feedback"
+                                            value={newFollowupfeedbck} onchange={followupfeedbackHandler}
+                                            min={todaysDate}>
+                                        </lightning-input>
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+                                        <lightning-button variant="success" label="Save" title="Successful action"
+                                            onclick={handlenewfollowupsaveClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+                                        <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                            onclick={handlenewfollowupcancelClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+
+                                    </footer>
+                                </div>
+                            </section>
+
+                        </template>
+
+
+                        <footer class="slds-modal__footer slds-text-align_center">
+                            <lightning-button variant="brand" label="Save" onclick={handlesave}
+                                class="slds-m-left_x-small">
+                            </lightning-button>
+                            <lightning-button variant="brand" label="Cancel" onclick={cancelclick}
+                                class="slds-m-left_x-small">
+                            </lightning-button>
+                            <div if:true={isConvert}>
+                                <!--<lightning-button variant="sucess" label="Convert" onclick={Convertclick}
+                                    class="slds-m-left_x-small">
+                                </lightning-button> -->
+                            </div>
+                        </footer>
+                    </lightning-card>
+                </div>
+            </lightning-card>
+        </div>
+
+
+        <div if:true={ifFollowUp} class="slds-col slds-size--4-of-6">
+
+            <lightning-card title="Today's FollowUp" icon-name="custom:custom63" style="height:720px;">
+                <div class="slds-text-align_right slds-p-right_small">
+                    <p> Num of FollowUps:<strong>{followupscount} </strong> </p>
+                </div>
+                <template if:true={recordId}>
+                    <!--  <div class="slds-p-around_small slds-m-around_medium">
+                        <lightning-button label="New" onclick={showModalBox} variant="brand">
+                        </lightning-button>
+                    </div> -->
+                </template>
+                <template if:true={isShowModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewFollowUp}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-flow flow-api-name={flowApiName} flow-input-variables={flowInputVariables}>
+                                </lightning-flow>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+                </template>
+                <template if:true={bRecordFound}>
+                    <div class="slds-m-around_medium">
+
+                        <lightning-datatable key-field="id" data={dataFolloUp} columns={followUpColumns}
+                            show-row-number-column hide-checkbox-column onrowaction={handleFolluwUpRowAction}>
+                        </lightning-datatable>
+                    </div>
+                </template>
+                <template if:false={bRecordFound}>
+                    <div class="slds-m-around_medium">
+                        No Records Found
+                    </div>
+                </template>
+                <template if:true={showFeedbackModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeFeedbackModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Provide Feedback</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" style="padding-bottom: 34%;">
+                                <lightning-textarea label="Feedback" value={FeedbackValue}
+                                    onchange={handleFeedbackChange}></lightning-textarea>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+
+                                <lightning-button variant="neutral" label="Cancel" onclick={closeFeedbackModal}
+                                    class="slds-m-left_x-small"></lightning-button>
+                                <lightning-button variant="brand" label="Submit" onclick={handlefeedbacksubmit}
+                                    class="slds-m-left_x-small"></lightning-button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+
+                <template if:true={shownewfollowupModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handlenewfollowupcancelClick}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Complete</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-radio-group name="radioGroup" label="Choose Any Action"
+                                    options={completeoptions} value={completeValue} onchange={hanleCompleteactions}
+                                    type="radio"></lightning-radio-group>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+                                <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                    onclick={handlenewfollowupcancelClick} class="slds-m-left_x-small">
+                                </lightning-button>
+
+                            </footer>
+                        </div>
+                    </section>
+                </template>
+                <template if:true={isshowTestRideModalhome}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open ">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRidehome}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+
+                                <h2 class="slds-text-heading_medium">New TestRide</h2>
+                            </header>
+
+                            <!-- <lightning-layout multiple-rows="true">-->
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-input type="text" label="Lead Name" disabled value={LeadName} minlength="3">
+                                </lightning-input>
+                                <lightning-input type="text" label="Test ride executive's Name" value={homeExcutiveName}
+                                    onchange={handlehomeExcutiveName} minlength="3">
+                                </lightning-input>
+                                <lightning-input type="text" label="DL Number" value={homedlnumber}
+                                    onchange={homehandledlnumber} minlength="3"></lightning-input>
+                                <template if:true={errorMessage}>
+                                    <p class="slds-text-color_error">{errorMessage}</p>
+                                </template>
+                                <lightning-input type="checkbox" label="Indemnity Form Signed" value={homeIndemnity}
+                                    onchange={handlehomeCheckboxChange} unchecked required></lightning-input>
+                                <lightning-input type="datetime" name="input2" label="Test Ride Date"
+                                    value={testridehomevaluedate} onchange={testridehomevaluedatehandle}
+                                    minlength={todaysDate}>
+                                </lightning-input>
+                                <template if:true={errordateMessage}>
+                                    <p class="slds-text-color_error">{errordateMessage}</p>
+                                </template>
+
+
+                                <lightning-input-address address-label="Address" street-label="Street" city-label="City"
+                                    country-label="Country" province-label="State" postal-code-label="Postal Code"
+                                    street={street} city={city} country={country} postal-code={postalCode}
+                                    province={state} onchange={handleLeadhomeAddressChange}
+                                    field-level-help="Help Text for inputAddress field" class="slds-p-around_small"
+                                    minlength="3">
+                                </lightning-input-address>
+
+                                <footer class="slds-modal__footer slds-text-align_center">
+                                    <lightning-button variant="success" label="Save" title="Successful action"
+                                        onclick={handlehomesaveClick} class="slds-m-left_x-small">
+                                    </lightning-button>
+                                    <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                        onclick={cancelNewTestRidehome} class="slds-m-left_x-small">
+                                    </lightning-button>
+
+                                </footer>
+                            </div>
+
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+                <template if:true={completeNewFollowup}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handlenewfollowupcancelClick}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <!--  <lightning-input type="text" label="Enter Followup" value={newfollowupname}
+                                            onchange={followupnamehandler}></lightning-input>-->
+                                <lightning-input type="datetime" name="input2" label="Followup Date"
+                                    value={newfollowupdate} onchange={followupdatehandle}></lightning-input>
+                                <lightning-input type="text" label="Follow up Feedback" value={newFollowupfeedbck}
+                                    onchange={followupfeedbackHandler} min={todaysDate}>
+                                </lightning-input>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+                                <lightning-button variant="success" label="Save" title="Successful action"
+                                    onclick={newfollowupsubmit} class="slds-m-left_x-small">
+                                </lightning-button>
+                                <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                    onclick={handlenewfollowupcancelClick} class="slds-m-left_x-small">
+                                </lightning-button>
+
+                            </footer>
+                        </div>
+                    </section>
+                </template>
+                <template if:true={Rescheduledate}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={ReschedulehandleClickcancel}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Reschedule Date</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-input type="datetime" name="date" label="Select Date" value={datevalue}
+                                    min={todaysDate} onchange={handledatevalue}></lightning-input>
+                                <lightning-combobox name="progress" label="Type" value={typevalue}
+                                    options={Ridetypeoptions} onchange={handletypeValueChange}>
+                                </lightning-combobox>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+                                <lightning-button variant="brand" label="Cancel" title="Primary action"
+                                    onclick={ReschedulehandleClickcancel} class="slds-m-left_x-small">
+                                </lightning-button>
+                                <lightning-button variant="success" label="Save" title="Successful action"
+                                    onclick={reschedulesavehandleClick} class="slds-m-left_x-small"></lightning-button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+                </template>
+
+            </lightning-card>
+        </div>
+
+
+        <div if:true={ifTesTRideUp} class="slds-col slds-size--4-of-6" style="height:720px;">
+            <lightning-card title="Today's Test Rides" icon-name="custom:custom98">
+
+                <template if:true={recordId}>
+
+                    <!-- <div class="slds-p-around_small slds-m-around_medium">
+                        <lightning-button label="New" onclick={ridetypemodelshow} variant="brand">
+                        </lightning-button>
+                    </div> -->
+                </template>
+                <template if:true={Ridetypetrue}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelridetypepopup}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-radio-group name="radioGroup" label="Select Ride Type"
+                                    options={Ridetypeoptions} value={Ridetypevale} onchange={Ridetypeoptionschange}
+                                    required type="radio"></lightning-radio-group>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+
+                            </footer>
+                        </div>
+                    </section>
+
+                </template>
+
+                <template if:true={isshowTestRideModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={cancelNewTestRide}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">New TestRide</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-flow flow-api-name={flowApiNameTestRide}
+                                    flow-input-variables={flowInputVariables}>
+                                </lightning-flow>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+                <template if:true={btestRideRecordFound}>
+
+                    <div class="slds-text-align_right slds-p-right_small">
+                        <p> Num of Test Rides : <strong>{testridescount} </strong> </p>
+                    </div>
+                    <div class="slds-m-around_medium">
+                        <lightning-datatable key-field="id" data={datatestRides} columns={testRidecolumns}
+                            show-row-number-column hide-checkbox-column onrowaction={handleTestRideRowAction}>
+                        </lightning-datatable>
+                    </div>
+
+                </template>
+                
+    <template if:true={istart}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closestartModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Reschedule Date</h2>
+                            </header>
+
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input label="Driving Licence Number" value={homedlnumber} 
+                                     onchange={homehandledlnumber} data-id="license"></lightning-input>
+                                  <template if:true={errorMessage}>
+                                            <p class="slds-text-color_error">{errorMessage}</p>
+                                        </template>
+                    <lightning-input type="checkbox" label="Indemnity Form Signed"
+                                    value={homeIndemnity} onchange={handlehomeCheckboxChange} unchecked
+                                            required></lightning-input>
+                </div>
+
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="neutral" label="Cancel" onclick={closestartModal}></lightning-button>
+                    <lightning-button variant="brand" label="Submit" onclick={startestride}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+                <template if:false={bRecordFound}>
+                    <div class="slds-text-align_right slds-p-right_xx-me">
+                        <p> Num of FollowUps : <strong>{followupscount} </strong> </p>
+                    </div>
+                    <div class="slds-m-around_medium">
+                        No Records Found
+                    </div>
+                </template>
+                <template if:true={Rescheduledate}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={ReschedulehandleClickcancel}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Reschedule Date</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-input type="datetime" name="date" label="Select Date" value={datevalue}
+                                    min={todaysDate} onchange={handledatevalue}></lightning-input>
+                                <lightning-combobox name="progress" label="Type" value={typevalue}
+                                    options={Ridetypeoptions} onchange={handletypeValueChange}>
+                                </lightning-combobox>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+                                <lightning-button variant="brand" label="Cancel" title="Primary action"
+                                    onclick={ReschedulehandleClickcancel} class="slds-m-left_x-small">
+                                </lightning-button>
+                                <lightning-button variant="success" label="Save" title="Successful action"
+                                    onclick={reschedulesavehandleClick} class="slds-m-left_x-small"></lightning-button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+                </template>
+                <template if:true={showFeedbackModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeFeedbackModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Provide Feedback</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-radio-group name="radioGroup" label="Follow Up Subject"
+                                    options={followoptionchooseoptions} value={followoptionchoosevalue}
+                                    onchange={followoptionchoosechange} required type="radio">
+                                </lightning-radio-group>
+                            </div>
+                            <!-- <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-textarea label="Feedback" value={FeedbackValue}
+                                    onchange={handleFeedbackChange}>
+                                </lightning-textarea>
+                            </div> -->
+                            <footer class="slds-modal__footer slds-text-align_center">
+
+                                <lightning-button variant="neutral" label="Cancel" onclick={closeFeedbackModal}
+                                    class="slds-m-left_x-small"></lightning-button>
+                                <!-- <lightning-button variant="brand" label="Submit" onclick={submitTestRideFeedback}
+                                    class="slds-m-left_x-small"></lightning-button> -->
+                            </footer>
+                        </div>
+                        <template if:true={newfollowuptrue}>
+                            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handlenewfollowupcancelClick}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                        <h2 class="slds-text-heading_medium">New Follow UP</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <!--  <lightning-input type="text" label="Enter Followup" value={newfollowupname}
+                                            onchange={followupnamehandler}></lightning-input>-->
+                                        <lightning-input type="datetime" name="date" label="Select Date"
+                                            value={newfollowupdate} min={todaysDate} onchange={followupdatehandle}>
+                                        </lightning-input>
+                                        <!-- 
+                                        <lightning-input type="date" name="input2" label="Followup Date"
+                                            value={newfollowupdate} onchange={followupdatehandle}></lightning-input> -->
+                                        <lightning-input type="text" label="Follow up Feedback"
+                                            value={newFollowupfeedbck} onchange={followupfeedbackHandler}
+                                            min={todaysDate}>
+                                        </lightning-input>
+                                    </div>
+                                    <footer class="slds-modal__footer slds-text-align_center">
+                                        <lightning-button variant="success" label="Save" title="Successful action"
+                                            onclick={handlenewfollowupsaveClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+                                        <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                                            onclick={handlenewfollowupcancelClick} class="slds-m-left_x-small">
+                                        </lightning-button>
+
+                                    </footer>
+                                </div>
+                            </section>
+
+                        </template>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+                <template if:true={showcancelModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closecancelModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                                <h2 class="slds-text-heading_medium">Reason For Cancellation</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-input type="datetime" name="date" label="Select Date"
+                                    value={newcNowshowfollowupdate} onchange={followupdatehandle}>
+                                </lightning-input>
+                                <lightning-input type="text" label="Follow up Feedback" value={newFollowupfeedbck}
+                                    onchange={followupfeedbackHandler}>
+                                </lightning-input>
+                            </div>
+                            <footer class="slds-modal__footer slds-text-align_center">
+                                <div class="slds-m-top_small slds-m-bottom_medium">
+                                    <lightning-button variant="neutral" label="Cancel" onclick={closecancelModal}
+                                        class="slds-m-left_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Submit" onclick={handelcancelreason}
+                                        class="slds-m-left_x-small"></lightning-button>
+                                </div>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+            </lightning-card>
+        </div>
+        <template if:true={isLostonTestRideComplete}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={todaysfollowuplostleadcancel}>
+                                                <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                                                <span class="slds-assistive-text">Close</span>
+                                                </button>
+                        <h2 class="slds-text-heading_medium">Lead Lost</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-combobox name="progress" label="Reason" value={reasonvalue} options={reasonoptions}
+                            onchange={reasonhandleChange}>
+                        </lightning-combobox>
+
+                        <lightning-input type="text" label="Cancel For Reason" value={leadcancelreason}
+                            onchange={handleleadcancelreason} required minlength="6"></lightning-input>
+                    </div>
+
+                    <footer class="slds-modal__footer slds-text-align_center">
+                        <lightning-button variant="success" label="Save" title="Successful action"
+                            onclick={todaysfollowuplostleadsave} class="slds-m-left_x-small">
+                        </lightning-button>
+                        <lightning-button variant="destructive" label="Cancel" title="Successful action"
+                            onclick={todaysfollowuplostleadcancel} class="slds-m-left_x-small">
+                        </lightning-button>
+
+                    </footer>
+
+                </div>
+            </section>
+        </template>
+    </div>
+
+</template>

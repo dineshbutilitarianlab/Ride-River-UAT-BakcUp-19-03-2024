@@ -1,0 +1,217 @@
+<!--<apex:page standardController="Case" extensions="CustomerFeedbackController" renderas="pdf" showHeader="false" applyBodyTag="false" applyHtmlTag="false"  showQuickActionVfHeader="false" > -->
+<apex:page standardController="Case" extensions="CustomerFeedbackController" renderas="pdf" applyBodyTag="false" applyHtmlTag="false" showHeader="false" showQuickActionVfHeader="false" >
+<html>
+<head>
+    <style>
+        @page {
+        size: A4 Potrait;
+        margin: 3mm;
+    	}
+        body{
+        font-family: 'Ariel Unicode MS';
+        font-size: 12px;
+        }
+        table {   	
+            border-collapse: collapse;
+            border:1px solid black;
+        }
+        td, th {
+        text-align: left;
+        padding: 5px;
+        white-space: normal;
+        word-wrap: break-word;
+        border: 1px solid black;
+        overflow: hidden;
+        text-overflow: ellipsis;   
+        
+        } 
+        .center-text {
+            text-align: center;
+        }
+        .info-cell {
+            width: 33%;
+        }
+        .info {
+            width: 16%;
+        }
+         .remarks {
+            height: 70px;
+        }
+        tr {
+            page-break-inside: avoid;
+       		height: 40px;
+            border: 1px solid black;
+        }
+        .element {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }  
+    </style>
+</head>
+<body>
+    <!--<apex:pageMessages />-->
+    <apex:messages style="font-size:50px; color:red;"/>
+	<!--<apex:outputPanel rendered="{!hasError}">
+        <apex:outputPanel rendered="{!ISNULL(currentCase)}">
+            <p>Something went wrong. Please contact your administrator.</p>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!ISNULL(caseVehicle)}">
+            <p>Your query will be solved on call itself. Current case does not contain any vehicle. Please select a vehicle to show issues.</p>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!ISNULL(owner)}">
+            <p>Vehicle does not contain an owner.</p>
+        </apex:outputPanel>
+        
+    </apex:outputPanel>-->
+	<apex:outputPanel rendered="{!NOT(hasError)}">
+    <table border="1" style="table-layout: fixed;">
+        <thead>
+            <tr>
+                <th colspan="2" rowspan="2" class="info-cell center-text">RIVER MOBILITY PRIVATE LIMITED
+                    No. 25/3, KIADB EPIP Zone,
+                    Seetharampalya - Hoodi Road,
+                    Mahadevapura, Whitefield, Bengaluru,
+                    Karnataka, India - 560048
+                </th>
+                <th colspan="2" rowspan="2" class="info-cell center-text">Customer Feedback Form</th>
+                <th colspan="2" rowspan="2" class="info-cell center-text"><img src="https://rivermobilityprivatelimited2--riverdev.sandbox.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&versionId=0680T0000025U2m&operationContext=DELIVERY&contentId=05T0T000006rUxr&page=0&d=/a/0T0000009wp9/yFYNT7wN42ZGE4fO2AjOkbtkiLPcKxiFQXYbUBybZR8&oid=00D0T0000000eGD&dpt=null&viewId=" alt="River Mobility Private Limited Logo"/></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="info">Customer Name</td>
+                <td class="info" >{!owner.Name}</td>
+                <td class="info">Dealership Name</td>
+                <td class="info">{!caseVehicle.Dealer__r.Name}</td>
+                <td rowspan="2" class="info">Date Vehicle Received</td>
+				<!--<td rowspan="2" class="info">{!deliverDate}</td>-->
+                <td rowspan="2" class="info">
+                	<!--<apex:outputText value="{0,date,d MMMM, yyyy}">
+                        <apex:param value="{!deliverDate}" />
+                    </apex:outputText> -->
+                </td>
+                <!--<td rowspan="2" class="info">
+                	<apex:outputText value="{0,date,yyyy-MM-dd}">
+                        <apex:param value="{!Date.valueOf(vehicleDetailsMap['deliverDate'])}" />
+                    </apex:outputText> 
+                </td>-->
+            </tr>
+            <tr>
+                <td>Customer Contact</td>
+                <td>{!owner.phone}</td>
+                <td>Dealership Code</td>
+                <td>{!caseVehicle.Dealer__r.Center_Code__c}</td>
+            </tr>
+            <tr>
+                <td rowspan="4">Customer Address</td>
+                <td rowspan="4">{!owner.ShippingStreet} <br/> {!owner.ShippingCity} {!owner.ShippingPostalCode}<br/> {!owner.ShippingState}<br/> {!owner.ShippingCountry}</td>
+                <!--<td rowspan="4"> <apex:outputText escape="false" value="{!formattedAddress}" /></td>-->
+                <td>Dealership Location</td>
+                <td>{!caseVehicle.Dealer__r.ShippingState}</td>
+                <td rowspan="2">Vehicle Received By</td>
+                <td rowspan="2">{!VehicleReceviedBy}</td>
+            </tr>
+            <tr>
+                <td>Dealership City</td>
+                <td>{!caseVehicle.Dealer__r.ShippingCity}</td>
+            </tr>
+            <tr>
+                <td>Date of Purchase</td>
+                <!--<td>{!purchaseDate}</td>-->
+                <td>
+                    <apex:outputText value="{0,date,d MMMM, yyyy}">
+                        <apex:param value="{!purchaseDate}" />
+                    </apex:outputText> 
+				</td>
+                <!--<td>
+                    <apex:outputText value="{0,date,yyyy-MM-dd}">
+                        <apex:param value="{!Date(vehicleDetailsMap['purchaseDate'])}" />
+                    </apex:outputText> 
+				</td>-->
+                <td rowspan="2">Vehicle Delivered Date</td>
+                <!--<td rowspan="2">{!perfectDeliverTime}</td>-->
+                <td rowspan="2">
+                	<apex:outputText value="{0, date,d MMMM, yyyy}">
+                        <apex:param value="{!perfectDeliverDate}" />
+                    </apex:outputText>
+                </td>
+                <!--<td rowspan="2">
+                	<apex:outputText value="{0, date,d MMMM, yyyy HH:mm:ss}">
+                        <apex:param value="{!DateTime.parse(vehicleDetailsMap['perfectDeliverTime'])}" />
+                    </apex:outputText>
+                </td>-->
+            </tr>
+            <tr>
+                <td>Odometer Reading</td>
+                <td>{!caseVehicle.LastOdometerReading}</td>
+            </tr>
+            <tr>
+                <td>VIN No.</td>
+                <td>{!caseVehicle.VehicleIdentificationNumber}</td>
+                <td>Case No.</td>
+                <td>{!currentCase.CaseNumber}</td>
+                <td rowspan="2">Vehicle Delivered Time</td>
+                <td rowspan="2">{!perfectDeliverTime}
+                	<!--<apex:outputText value="{0, date,HH:mm:ss}">
+                        <apex:param value="{!perfectDeliverTime}" />
+                    </apex:outputText>-->
+                </td>
+            </tr>
+            <tr>
+                <td>Registration No.</td>
+                <td>{!caseVehicle.VehicleRegistrationNumber}</td>
+                <td>Case Date</td>
+                <td>{!caseCurrentDate}
+                    <!--<apex:outputText value="{0, date,d MMMM, yyyy HH:mm:ss}">
+                        <apex:param value="{!caseCurrentDate}" />
+                    </apex:outputText>-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table border="1">
+         <apex:outputPanel rendered="{! IF(ISBLANK(customerFeedbacks), false, true) }">
+            <tr>
+                <td colspan="10" class="center-text"> <b>*Attach a photocopy of any bills, invoices or other documents with the form for reference.</b></td>
+            </tr>
+            <tr>
+                
+                <th class="center-text" style="width:1%;"> Sr no.</th>
+                <th class="center-text" colspan="3">Issue</th>
+                <th class="center-text" colspan="3" >Resolution Provided</th>
+                <th class="center-text" colspan="3" >Remarks</th>
+                
+            </tr>
+            <apex:variable var="counter" value="{!0}" />
+            <apex:repeat value="{!customerFeedbacks}" var="data">
+                <tr>
+                    
+                    <td>{!counter + 1}</td>
+                    <td colspan="3">{!data.Issue_Type__c}</td>
+                    <td colspan="3">{!data.Resolution_Provided__c}</td>
+                    <td colspan="3">{!data.Remarks__c}</td>
+                   
+                </tr>
+                <apex:variable var="counter" value="{!counter + 1}" />
+            </apex:repeat>
+        </apex:outputPanel>
+
+        <tr>
+            <td colspan="2">Remarks If Any</td>
+            <td colspan="8">{!currentCase.Description}</td>
+        </tr>
+        
+        <tr>
+            <td colspan="5"  class="remarks"></td>
+            <td colspan="5"  class="remarks"></td>
+        </tr>
+        <tr>
+            <td class="center-text" colspan="5"><b>Customer's Signature</b></td>
+            <td class="center-text" colspan="5"><b>Workshop Manager's Signature and Stamp</b></td>
+        </tr>
+    </table>
+        </apex:outputPanel>
+</body>
+</html>
+</apex:page>

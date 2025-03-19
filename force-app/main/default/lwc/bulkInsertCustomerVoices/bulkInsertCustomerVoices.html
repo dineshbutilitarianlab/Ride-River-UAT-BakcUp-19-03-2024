@@ -1,0 +1,67 @@
+<template>
+    <!-- <template if:true={showtable}> -->
+        <p class="slds-p-horizontal_small">
+            <lightning-datatable
+                key-field="id"
+                data={initialvoiceRecords}
+                columns={columns}
+                hide-checkbox-column
+                resize-column-disabled
+                sorted-by={sortedBy}
+                sorted-direction={sortedDirection}
+                onsort={handleSort}
+                oncellchange={handleSave}
+            ></lightning-datatable>
+        </p>
+        <template if:true={showBtn}>
+            <div class="slds-align_absolute-center" >
+                <lightning-button onclick={toggleEdit} label="Edit" variant="brand" style="margin:5px;"></lightning-button> 
+            </div>
+        </template>
+    <!-- </template> -->
+
+    <template if:true={showEditForm}>
+         <lightning-card>
+            <template for:each={voiceRecords} for:item="item" for:index="index">
+                <div class="tile" key={item.id}>
+                    <lightning-record-edit-form object-api-name="RR_Customer_Voice__c" record-id={item.Id} onsubmit={handleSubmit} onsuccess={handleSuccess} onerror={handleError}>
+                        <lightning-messages> </lightning-messages>
+                        <lightning-layout multiple-rows class="custom-layout">
+                            <lightning-layout-item   size="12" large-device-size="2"  class="custom-layout-item slds-align_absolute-center">
+                                <lightning-input-field   field-name="Name" variant="label-stacked"  value={item.Name}>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item   size="12" large-device-size="2"  class="custom-layout-item slds-align_absolute-center">
+                                <lightning-input-field   field-name="RR_Concern_Category__c" variant="label-stacked" value={item.RR_Concern_Category__c}
+                                 disabled>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item   size="12" large-device-size="2"  class="custom-layout-item slds-align_absolute-center">
+                                <lightning-input-field   field-name="RR_Sub_Category__c" variant="label-stacked" value={item.RR_Sub_Category__c}
+                                 disabled>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item   size="12" large-device-size="2"  class="custom-layout-item slds-align_absolute-center">
+                                <lightning-input-field   field-name="RR_Work_Order__c" variant="label-stacked" value={item.RR_Work_Order__c}
+                                disabled>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item   size="12" large-device-size="4" class="custom-layout-item slds-align_absolute-center">
+                                <lightning-input-field   field-name="RR_Observation_Action_Taken__c" variant="label-stacked" value={item.RR_Observation_Action_Taken__c}
+                                required name={item.Id} onchange={handleCellChange}>
+                                </lightning-input-field>      
+                            </lightning-layout-item>     
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </div>
+            </template>
+        
+            <lightning-layout>
+                <div class="slds-align_absolute-center">
+                    <lightning-button variant="brand-outline" onclick={cancel} label="Cancel" title="Reset all Actual Qty" style="margin:10px;"></lightning-button>
+                    <lightning-button variant="brand" onclick={handleSubmit} name="Submit" label="Submit"></lightning-button>
+                </div>
+            </lightning-layout>
+        </lightning-card>
+    </template>  
+</template>

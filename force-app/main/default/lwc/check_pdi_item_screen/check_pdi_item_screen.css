@@ -1,0 +1,114 @@
+.container {
+    padding: 10px;
+    width: 100%;
+}
+
+/* Start Loading CSS */
+/* .exampleHolder{
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+} */
+/* End Loading CSS */
+
+.pdi-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+}
+
+.pdi-section{
+	display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%
+}
+
+.right-buttons {
+    width: 30%;
+}
+
+.buttons {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10%;
+    width: 100%;
+}
+
+.buttons-right {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5%;
+    width: 100%;
+    padding-right: 0px;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.exampleHolder{
+    position: relative;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    min-height: 100px;
+}
+
+/* Start Error message CSS */
+.warning-container {
+    background-color: #ffe4b5; /* Light Orange */
+    border: 1px solid #ffc107; /* Dark Orange */
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.warning-icon {
+    margin-right: 10px;
+}
+.warning-message {
+    font-size: 14px;
+    color: #dc143c; /* Crimson */
+}
+
+/* End Error message CSS */
+
+
+/* Start Custom Table CSS */
+
+.pd-block-0 {
+    padding-block: 0
+}
+
+.center-css-th {
+    border-left: 1px solid;
+    border-color: #c9c9c9;
+}
+
+.center-css {
+    padding: 0px;
+    border-left: 1px solid;
+    border-color: #c9c9c9;
+}
+
+td {
+    height: 32px;
+}
+
+/* End Custom Table CSS */

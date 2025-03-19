@@ -1,0 +1,90 @@
+<template>
+    <lightning-card title="Batch List" icon-name="custom:custom19">
+        <div class="slds-m-bottom_medium">
+            <lightning-button label="Create Record" variant="brand" onclick={handleCreateRecord}></lightning-button>
+        </div>
+
+        <!-- Batch List Datatable -->
+        <template if:true={batches}>
+            <lightning-datatable key-field="Id" data={batches} columns={columns}></lightning-datatable>
+        </template>
+
+        <template if:true={error}>
+            <p>Error fetching batches: {error.message}</p>
+        </template>
+    </lightning-card>
+
+    <!-- Create Batch Modal -->
+    <template if:true={showCreateForm}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close"
+                        onclick={resetForm}
+                    >
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Create Batch</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- Batch Details -->
+                    <lightning-input type="date" label="Dispatch Date" onchange={handleDispatchDateChange}></lightning-input>
+                    <lightning-input label="LR Number" onchange={handleLRNumberChange}></lightning-input>
+                    <lightning-input type="url" label="LR Attachment" onchange={handleLRAttachmentChange}></lightning-input>
+                    <lightning-input type="date" label="Batch Created Date" value={today} disabled class="input-field"></lightning-input>
+                    <lightning-input type="number" label="Batch Amount" value={batchAmount} readonly></lightning-input>
+
+                    <template if:true={selectedClaims.length}>
+                        <lightning-datatable key-field="Id" data={selectedClaims} columns={selectedClaimsColumns} onrowaction={handleRowAction} class="styled-datatable" hide-checkbox-column="true"></lightning-datatable>
+                    </template>
+                    <!-- Add Warranty Claim Section -->
+                    <div class="claim-section">
+                        <lightning-button label="Add Warranty Claim" onclick={handleAddWarrantyClaim}></lightning-button>
+                        <p class="instruction-text">Select one or more warranty claims to associate with this batch.</p>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" variant="neutral" onclick={resetForm}></lightning-button>
+                    <lightning-button label="Submit" variant="brand" onclick={handleSubmit}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- Claims Modal -->
+    <template if:true={showClaimModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close"
+                        onclick={closeModal}
+                    >
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Add Warranty Claims</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- Claims Datatable -->
+                    <lightning-datatable
+                        key-field="Id"
+                        data={claims}
+                        columns={claimsColumns}
+                        onrowselection={handleRowSelection}
+                    ></lightning-datatable>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" variant="neutral" onclick={closeClaimsModal}></lightning-button>
+                    <lightning-button label="Add Selected Claims" variant="brand" onclick={handleAddSelectedClaims}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

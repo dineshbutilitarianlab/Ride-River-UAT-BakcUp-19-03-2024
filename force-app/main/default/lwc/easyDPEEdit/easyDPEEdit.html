@@ -1,0 +1,150 @@
+<template>
+    <lightning-card variant="Narrow" title="Simple Scenario-Based Data Processing Engine Edits for Rebates"
+        icon-name="standard:account">
+        <h1 class="easyDPE-header"><b class="easyDPE-b1">{header}</b></h1>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="6" padding="around-small">
+               
+                            <lightning-input class="validate" type="text" label="Data Processing Engine Definition" placeholder="Enter the API name…"
+                                onchange={handleInputChange} data-id="reset"
+                                field-level-help="Specify a definition that’s cloned from the Aggregate Payouts by Member with Aggregate Item Details template.">
+                            </lightning-input>
+               
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="8" padding="around-small">
+            <h1><b class="easyDPE-b">Aggregate Data</b></h1>
+            <h1 class="easyDPE-h1b1"><b class="easyDPE-b1">{subHeader}</b></h1>
+        </lightning-layout-item>
+            
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="progress" label="Transaction Journal Field" value={value}
+                    placeholder="Select a field…" options={options} onchange={handleChange}>
+                </lightning-combobox>
+                
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate" label="Rebate Aggregate Object Field" value={value}
+                    placeholder="Select a field…" options={optionsRebateData} onchange={handleChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+          
+                <lightning-layout-item size="3" medium-device-size="3" padding="around-small">
+                    <lightning-input class="easyDPE-padding" type="checkbox" label="Aggregate with Eligibility Criteria" name="input0"
+                        onchange={handleChecked} field-level-help={checkboxHelpText}></lightning-input> 
+                      
+                </lightning-layout-item>
+            
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="progress1" label="Transaction Journal Field" value={value} placeholder="Select a field…" options={options}
+                    onchange={handleChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3"  medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate1" label="Rebate Aggregate Object Field" value={value} placeholder="Select a field…" options={optionsRebateData}
+                    onchange={handleChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" medium-device-size="3" padding="around-small">
+                <lightning-input class="easyDPE-padding" type="checkbox" label="Aggregate with Eligibility Criteria" name="input1"
+                    onchange={handleChecked} field-level-help={checkboxHelpText}></lightning-input>
+                   
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="progress2"  label="Transaction Journal Field" value={value} placeholder="Select a field…" options={options}
+                    onchange={handleChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3"  medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate2" label="Rebate Aggregate Object Field" value={value} placeholder="Select a field…" options={optionsRebateData}
+                    onchange={handleChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+        
+            <lightning-layout-item size="3" medium-device-size="3" padding="around-small">
+                <lightning-input  class="easyDPE-padding" type="checkbox" label="Aggregate with Eligibility Criteria" name="input2"
+                    onchange={handleChecked} field-level-help={checkboxHelpText}></lightning-input> 
+                
+
+            </lightning-layout-item>
+        </lightning-layout>
+        <p slot="footer">
+            <lightning-button data-id="update" label="Download JSON File " name="update" onclick={handleUpdate}
+                variant="brand" disabled={disable}></lightning-button>
+
+                <lightning-button data-id="cancel" label="Reset" name="cancel" onclick={handleCancel} class="slds-buttoncheck"
+                variant="brand" disabled={disableReset}></lightning-button>
+        </p>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="8" padding="around-small">
+                <h1><b class="easyDPE-b">Group Data </b></h1>
+                <h1 class="easyDPE-h1b1 "><b class="easyDPE-b1">{subAggHeader}</b></h1>
+            </lightning-layout-item>
+            
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="transaction" label="Transaction Journal Field" value={value}
+                    placeholder="Select a field…" options={optionsTransaction} onchange={handleChangeGroup}>
+                </lightning-combobox>
+                
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate" label="Rebate Aggregate Object Field" value={value}
+                    placeholder="Select a field…" options={optionsRebate} onchange={handleChangeGroup}>
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="transaction1" label="Transaction Journal Field" value={value} placeholder="Select a field…" options={optionsTransaction}
+                    onchange={handleChangeGroup}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate1" label="Rebate Aggregate Object Field" value={value} placeholder="Select a field…" options={optionsRebate}
+                    onchange={handleChangeGroup}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="transaction2" label="Transaction Journal Field" value={value} placeholder="Select a field…" options={optionsTransaction}
+                    onchange={handleChangeGroup}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item class="easyDPE-item">
+                <lightning-icon icon-name="utility:forward" size="small" alternative-text="left"></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" medium-device-size="4" padding="around-small">
+                <lightning-combobox name="rebate2" label="Rebate Aggregate Object Field" value={value} placeholder="Select a field…" options={optionsRebate}
+                    onchange={handleChangeGroup}>
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+
+</template>

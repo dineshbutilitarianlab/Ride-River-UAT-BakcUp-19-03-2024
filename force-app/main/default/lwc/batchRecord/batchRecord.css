@@ -1,0 +1,217 @@
+.record-page-container {
+    padding: 1.5rem;
+    background-color: #f4f6f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-header h1 {
+    font-size: 1.5rem;
+    color: #1589ee;
+}
+
+.form-header .sub-header {
+    font-size: 1rem;
+    color: #6b7c93;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.column {
+    flex: 1;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d8dde6;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.input-field:hover {
+    border-color: green;
+}
+
+.claim-section {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.instruction-text {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #6b7c93;
+}
+
+
+
+.primary-button {
+    --slds-c-button-brand-color-background:rgb(0,125,182);
+    
+    background-color: #1589ee;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+
+.primary-button:hover {
+    background-color: lightblue;
+}
+
+.secondary-button {
+    background-color: #d8dde6;
+    border: none;
+    border-radius: 6px;
+    color: #333;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.secondary-button:hover {
+    background-color: #c1c7d0;
+}
+
+/* Close button alignment */
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Centering */
+/* Centering modal */
+.modal-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%; /* Adjusted width */
+    max-height: 80%; /* Constrain height */
+    z-index: 1050;
+    background-color: #ffffff; /* Ensure white background */
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    overflow-y: auto; /* Allow scrolling for large content */
+    padding: 1rem;
+}
+
+/* Modal header alignment */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #d8dde6;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+/* Modal content with constrained height */
+.modal-content {
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    max-height: 300px; /* Constrain modal content height */
+    overflow-y: auto; /* Enable scrolling for table content */
+}
+
+/* Modal footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid #d8dde6;
+    gap: 1rem; /* Adds space between buttons */
+}
+
+/* Modal buttons */
+.modal-button {
+    padding: 0.4rem 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+
+/* Button alignment in footer */
+.footer-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+
+/* Hover effect for buttons */
+.modal-button:hover {
+    background-color: #136ed0;
+    color: #fff;
+}
+
+/* Adjust backdrop for better focus */
+.slds-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1049;
+}
+
+
+/* Footer buttons container for spacing */
+.footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem; /* Adjust padding as needed */
+}
+
+/* Add spacing between buttons */
+.button-container {
+    display: flex;
+    gap: 1rem; /* Space between Close and Select buttons */
+}
+
+.required-asterisk {
+    color: red;
+}
+.required-label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.required-field::before {
+  content: "*";
+  color: red;
+  float: right;
+}

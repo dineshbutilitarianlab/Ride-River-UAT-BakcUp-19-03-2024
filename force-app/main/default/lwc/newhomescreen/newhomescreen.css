@@ -1,0 +1,9 @@
+.custom-container{
+	color : black;
+}
+.slds-path__item .slds-icon_check {
+    display: none;
+}
+.hide-tick-mark .slds-is-complete .slds-path__icon {
+    display: none;
+}

@@ -1,0 +1,35 @@
+<template>
+    <template if:true={isLoading}>
+        <div class="slds-spinner_container">
+            <lightning-spinner alternative-text="Processing Transaction"></lightning-spinner>
+        </div>
+    </template>
+
+    <template if:false={isLoading}>
+        <div class="payment-header">
+            <div class="payment-title">
+                <lightning-icon icon-name="utility:money" size="large" alternative-text="Payment Icon"></lightning-icon>
+                <span>Transaction Status</span>
+            </div>
+        </div>
+
+        <div class="slds-p-around_large payment-container">
+            <template if:true={isSuccess}>
+                <div class="status-container">
+                    <div class="status-approved">
+                        <lightning-icon icon-name="utility:success" alternative-text="Success" size="large" class="slds-m-right_small"></lightning-icon>
+                        Transaction Successfully Canceled
+                    </div>
+                </div>
+            </template>
+            <template if:true={isError}>
+                <div class="status-container">
+                    <div class="status-rejected">
+                        <lightning-icon icon-name="utility:error" alternative-text="Error" size="large" class="slds-m-right_small"></lightning-icon>
+                        <span>Error: {errorMessage}</span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>

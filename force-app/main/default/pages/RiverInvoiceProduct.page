@@ -1,0 +1,71 @@
+<apex:page renderAs="pdf" standardStylesheets="true" sidebar="false">
+    
+    <apex:image url="{!URLFOR($Resource.RideRiverLogo)}" styleClass="logo"/>
+    <div class="header">TAX INVOICE</div>
+    <p>Customer Copy</p>
+
+    <table class="table">
+        <tr>
+            <td colspan="2"><b>River Mobility Private Limited</b><br/>
+                No. 25/3, KIADB EPIP Zone, Seetharampalya–Hoodi Road, Mahadevapura,<br/>
+                Whitefield, Bengaluru, Karnataka, India 560048<br/>
+                Email: kukkaply@riderver.com Phone: +91 7799 549 549<br/>
+                CIN: U3410KA2022PTC159872<br/>
+            </td>
+            <td colspan="2">
+                <b>Invoice Date:</b> 08/01/2025<br/>
+                <b>Invoice Number:</b> RV36200125001973<br/>
+                <b>Order No:</b> RV3620010240001<br/>
+                <b>Place of Supply:</b> Telangana
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>Billed From</b><br/>
+                River Store JP Nagar<br/>
+                No. 594, Srinidhi Infinity, 15th Cross Road, 1st Stage, JP Nagar, Bengaluru, Karnataka 560078<br/>
+                Email: jpnagar@riderver.com<br/>
+                Phone: 8197 424 814<br/>
+                GSTIN: 29AALCR1767F1ZU
+            </td>
+            <td colspan="2"><b>Billed To</b><br/>
+                Ashok Jarugula<br/>
+                #1, Samveda Apartment, Door No. 201 (2nd Floor), Bangalore, Karnataka 560049<br/>
+                Email: ashok.jarugula@outlook.com<br/>
+                Phone: 9701122970<br/>
+                GSTIN: XXXXXXXXXXXXXX
+            </td>
+        </tr>
+    </table>
+
+    <table class="table">
+        <tr>
+            <th>Item Description</th>
+            <th>Unit Price</th>
+            <th>Qty</th>
+            <th>Taxable Amount</th>
+            <th>IGST</th>
+            <th>CGST</th>
+            <th>SGST</th>
+            <th>Total Amount</th>
+        </tr>
+        <tr>
+            <td>River Indie 0211 - Model: G2<br/>
+                VIN: P7BAAXXX1FR000211<br/>
+                Motor Number: BAAIR20000211<br/>
+                Colour: Storm Grey<br/>
+                Battery: 4kWh<br/>
+                HSN Code: 87119091
+            </td>
+            <td>154667.00</td>
+            <td>10</td>
+            <td>154667.00</td>
+            <td>2.5%<br/>3866.68</td>
+            <td>2.5%<br/>3866.68</td>
+            <td>2.5%<br/>3866.68</td>
+            <td>154667.00</td>
+        </tr>
+    </table>
+
+    <p><b>Net to be collected:</b> 154667.00</p>
+    <p>Amount in words: One Lakh Eighty Four Thousand Five Hundred Seventy Three Rupees Only</p>
+</apex:page>

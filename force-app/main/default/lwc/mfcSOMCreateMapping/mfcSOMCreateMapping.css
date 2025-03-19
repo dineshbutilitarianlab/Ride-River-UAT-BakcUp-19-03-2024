@@ -1,0 +1,22 @@
+.slds-home {
+    padding-left: 1%;
+}
+
+.slds-oncheck{
+    margin-left: 1%;margin-top: 2%; font-weight:bold
+}
+
+.slds-buttoncheck{
+    margin-left: 12px; margin-top:-1%
+}
+
+.my-datatable{
+    padding-left: 0%;
+}
+.mydiv{
+    padding-top: 16px;
+}
+
+.myCustomDatatableIconColor{
+    color:var(--lwc-colorTextIconDefault,rgb(116, 116, 116));
+}

@@ -1,0 +1,85 @@
+<template>
+    <div class="dashboard-container">
+        <!-- Leads Card -->
+        <div if:false={isDisabled} class="card" >
+            <div class="card-title">Leads</div>
+            <div class="card-icon">
+                <img src={NoLeadimg} alt="Leads" />
+            </div>
+            <div class="card-description">No Leads yet.</div>
+            <div class="card-link">View All Open Leads</div>
+        </div>
+
+        <!-- Create Purchase Orders Card -->
+        <div class="card" onclick={navigateToPurchaseOrder}>
+            <div class="card-title">Create Purchase Orders</div>
+            <div class="card-icon">
+                <img src={NoPurchaseOrderimg} alt="Create Purchase Orders" />
+            </div>
+            <div class="card-description">No Purchase Orders yet.</div>
+        </div>
+
+
+        <!-- <div class="card" onclick={navigateToTask}>
+            <div class="card-title">All Tasks</div>
+            <div class="card-icon">
+                <img src={NoPurchaseOrderimg} alt="All Tasks" />
+            </div>
+            <div class="card-description">No Tasks Yet</div>
+        </div> -->
+
+
+                <!-- Add PO Payments Card -->
+                <!-- <div class="card" onclick={navigateToAddPoPayments}>
+                    <div class="card-title">Add PO Payments</div>
+                    <div class="card-icon">
+                        <img src={NoPurchaseOrderimg} alt="Add PO Payments" />
+                    </div>
+                    <div class="card-description">No PO Payments yet.</div>
+                </div> -->
+
+                
+                <!-- Add PO Payments Card -->
+                <div class="card" onclick={navigateToAddBatchRecords}>
+                    <div class="card-title">Create Batches</div>
+                    <div class="card-icon">
+                        <img src={NoPurchaseOrderimg} alt="Create Batches" />
+                    </div>
+                    <div class="card-description">No Batches yet.</div>
+                </div>
+
+                <div class="card" onclick={navigateToAddMerchandiseOrders}>
+                    <div class="card-title">Merchandise Orders</div>
+                    <div class="card-icon">
+                        <img src={NoPurchaseOrderimg} alt="Create MO" />
+                    </div>
+                    <div class="card-description">No Orders yet.</div>
+                </div>
+        
+                <div class="card" onclick={navigateToGetLeadDetails}>
+                    <div class="card-title">Lead Transfer Request</div>
+                    <div class="card-icon">
+                        <img src={NoPurchaseOrderimg} alt="Get Leads" />
+                    </div>
+                    <div class="card-description">No Leads yet.</div>
+                </div>
+
+        <!-- Create Job Cards Card -->
+        <div class="card" onclick={navigateToJobCards}>
+            <div class="card-title">Create Job Cards</div>
+            <div class="card-icon">
+                <img src={NoJobCardimg} alt="Create Job Cards" />
+            </div>
+            <div class="card-description">No Job Cards yet.</div>
+        </div>
+
+        <!-- Create Cases Card -->
+        <div class="card" onclick={navigateToCases}>
+            <div class="card-title">Create Cases</div>
+            <div class="card-icon">
+                <img src={Nocasesimg} alt="Create Cases" />
+            </div>
+            <div class="card-description">No Cases yet.</div>
+        </div>
+    </div>
+</template>

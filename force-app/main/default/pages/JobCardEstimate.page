@@ -1,0 +1,332 @@
+<apex:page renderAs="pdf" controller="JobCardEstimatationController" showHeader="false" standardStylesheets="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false">
+    <html>
+    <head>
+        <style>
+            @page {
+        size: A4;
+        margin: 3mm;
+    }
+            body {
+                font-family: 'Ariel Unicode MS';
+                font-size: 11px;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border:1px solid black;
+        }
+        td, th {
+            text-align: left;
+            padding: 6px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+            .header {
+                text-align: center;
+            }
+            .info table, .customer table {
+                width: 100%;
+            }
+            .cutsomer th {
+                width: 50%;
+            }
+            .terms {
+                clear: both;
+                font-size: 10px;
+                margin-top: 20px;
+            }
+            .signature {
+                text-align: center;
+                margin-top: 20px;
+            }
+            
+            tr{
+
+            page-break-inside: avoid;
+            border: 1px solid black;
+
+            }
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <img src="https://rivermobilityprivatelimited2--riverdev.sandbox.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&versionId=0680T0000025U2m&operationContext=DELIVERY&contentId=05T0T000006rUxr&page=0&d=/a/0T0000009wp9/yFYNT7wN42ZGE4fO2AjOkbtkiLPcKxiFQXYbUBybZR8&oid=00D0T0000000eGD&dpt=null&viewId=" alt="River Mobility Private Limited Logo"/>
+        </div>
+        <div class="header">
+            <h3>JOB CARD ESTIMATE</h3>
+        </div>
+        <b><hr style="width:100%;border:1px solid black"/></b>
+        <table class="info">
+            <tr>
+                <th>Dealer Name:</th>
+                <td>{!workOrder.Service_Center__r.Name}</td>
+                <th>Estimate No. :</th>
+                <td>{!workOrder.Estimate_No__c}</td>
+            </tr>
+            <tr>
+                <th>Dealer Coder :</th>
+                <td>{!workOrder.Service_Center__r.Center_Code__c}</td>
+                <th>Estimate Date :</th>
+                
+                <!--<td>{!workOrder.RR_Estimated_Delivery_Time__c}</td>-->
+                <td>
+                     <apex:outputText value="{0,date,d MMMM, yyyy}">
+                        <apex:param value="{!workOrder.RR_Estimated_Delivery_Time__c}" />
+                    </apex:outputText>
+                </td>
+            </tr>
+ 
+            <tr>
+                <th>Job Card No :</th>
+                <td>{!workOrder.WorkOrderNumber}</td>
+                <th>Repair Type :</th>
+                <td>{!workOrder.RR_Job_Type__c}</td>
+            </tr>
+            <tr>
+                <th>Job Card Date :</th>
+                <td>
+                    <apex:outputText value="{0,date,d MMMM, yyyy}">
+                        <apex:param value="{!workOrder.createdDate}" />
+                    </apex:outputText> 
+                </td>
+                <th>KM Reading :</th>
+                <td>{!lastOdoMeterReading}</td>
+                <!--<td><apex:outputText value="{!vehicle.LastOdometerReading}" format="#,###.00"/></td>-->
+            </tr>
+ 
+            <tr>
+                <th>Customer Name :</th>
+                <td>{!account.name}</td>
+                <th>Registration No. :</th>
+                <td>{!vehicle.VehicleRegistrationNumber}</td>
+                
+            </tr>
+            <tr>
+                <th >Address :</th>
+                <!--<td>{!account.ShippingStreet} <br/> {!account.ShippingCity} {!account.ShippingPostalCode}<br/> {!account.ShippingState}<br/> {!account.ShippingCountry}</td>-->
+                <td> <apex:outputText escape="false" value="{!formattedAddress}" /></td>
+                <th>VIN No. :</th>
+                <td>{!vehicle.VehicleIdentificationNumber}</td>
+
+            </tr>
+            <tr>
+                <th></th>
+                <td></td>
+                <th> Motor No. :</th>
+                <td>{!vehicle.EngineNumber}</td>
+            </tr>
+            <tr>
+                <th></th>
+                <td></td>
+                <th>Model Name :</th>
+                <td>{!vehicle.name}</td>
+            </tr>
+            <tr>
+                <th>Customer Mobile No. :</th>
+                <td>{!account.Phone}</td>
+                <th>Insurance Provider :</th>
+                <td>{!vehicle.Insurance__r.Name}</td>
+            </tr>
+            <tr>
+                <th>Customer Voice :</th>
+                
+                <td><apex:outputText value="{!customerVoices[0].Name}" rendered="{!customerVoices.size > 0}" /></td>
+                <th>Policy No. :</th>
+                <td>{!vehicle.Policy_Number__c}</td>
+                
+            </tr>
+        </table>
+        <br/><br/>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>S. No.</th>
+                    <th>LABOR CODE</th>
+                    <th colspan="2">LABOR NAME</th>
+                    <th>REPAIR TYPE</th>
+                    <th>QTY</th>
+                    <th>RATE</th>
+                    <th>IGST (%)</th>
+                    <th>IGST (T)</th>
+                    <th>CGST (%)</th>
+                    <th>CGST (T)</th>
+                    <th>SGST (%)</th>
+                    <th>SGST (T)</th>
+                    <th>HO Discount Tax Component</th>
+                    <th colspan="2">AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--<tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                </tr>-->
+                <apex:variable var="counter" value="{!0}" />
+                <apex:repeat value="{!workPlans}" var="data">
+                    
+                    <tr>
+                        <td>{!counter + 1}</td>
+                        <td>{!data.RR_Labour_Code__r.Code}</td>
+                        <td colspan="2">{!data.Name}</td>
+                        <td>{!data.RR_Labour_Category__c}</td>
+                        <td>{!data.Duration_Hour__C}H {!data.Duration_Min__C}M</td>
+                        <td>{!data.RR_Labour_Code__r.RR_Labour_Charge__c}</td>
+                        <!--<td>{!data.IGST_Percentage__c}</td>
+                        <td>{!data.IGST_Amount__c}</td>
+                        <td>{!data.CGST_Percentage__c}</td>
+                        <td>{!data.CGST_Amount__c}</td>
+                        <td>{!data.SGST_Percentage__c}</td>
+                        <td >{!data.SGST_Amount__c}</td>-->
+                        <td>{!IF(workOrder.Same_State__c, '0', data.RR_Labour_Code__r.IGST_Percentage__c)}</td>
+                        <td>{!IF(workOrder.Same_State__c, '0', data.IGST_Amount__c)}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.RR_Labour_Code__r.CGST_Percentage__c, '0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.CGST_Amount__c,'0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.RR_Labour_Code__r.SGST_Percentage__c,'0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.SGST_Amount__c,'0')}</td>
+                        <td><apex:outputText value="{0, number, ###,###,###,##0.00}"><apex:param value="{!IF(ISNULL(data.Discount__c), 0, data.Labour_Charge__c * data.Discount__c/100)}"/></apex:outputText></td>
+                        <td colspan="2">{!data.Amount__c}</td>
+                    </tr>
+                
+                    <apex:variable var="counter" value="{!counter + 1}" />
+                </apex:repeat>
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th style="text-align:right; border-bottom: hidden;border-left: hidden;font-weight:bold;" colspan="14">TOTAL</th>
+                    <td colspan="2">{!totalOfWorkPlans}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <br/><br/>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>S. No.</th>
+                    <th>PART CODE</th>
+                    <th>PART NAME</th>
+                    <th>REPAIR TYPE</th>
+                    <th>UOM</th>
+                    <th>QTY</th>
+                    <th>RATE</th>
+                    <th>IGST (%)</th>
+                    <th>IGST (T)</th>
+                    <th>CGST (%)</th>
+                    <th>CGST (T)</th>
+                    <th>SGST (%)</th>
+                    <th>SGST (T)</th>
+                    <th>HO Discount Tax Component</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:variable var="counter" value="{!0}" />
+                <apex:repeat value="{!workOrderLineItems}" var="data">
+                    
+                    <tr>
+                        <td>{!counter + 1}</td>
+                        <td>{!data.LineItemNumber}</td>
+                        <td>{!data.PricebookEntry.Product2.Name}</td>                        
+                        <td>{!data.RR_Parts_Category__c}</td>
+                        <td>{!data.Unit_of_Measurement__c}</td>
+                        <td>{!data.Quantity}</td>
+                        <td>{!data.UnitPrice}</td>
+                        <!--<td>{!data.CGST_Percentage__c}</td>
+                        <td>{!data.CGST_Amount__c}</td>
+                        <td>{!data.SGST_Percentage__c}</td>
+                        <td>{!data.SGST_Amount__c}</td>-->
+                        <td>{!IF(workOrder.Same_State__c, '0', data.PricebookEntry.Product2.IGST_Percentage__c)}</td>
+                        <td>{!IF(workOrder.Same_State__c, '0', data.IGST_Amount__c)}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.PricebookEntry.Product2.CGST_Percentage__c, '0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.CGST_Amount__c,'0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.PricebookEntry.Product2.SGST_Percentage__c,'0')}</td>
+                        <td>{!IF(workOrder.Same_State__c, data.SGST_Amount__c,'0')}</td>
+                        <td><apex:outputText value="{0, number, ###,###,###,##0.00}"><apex:param value="{!IF(ISNULL(data.Discount), 0, data.Subtotal * data.Discount/100)}"/></apex:outputText></td>
+                        <td>{!data.Amount__c}</td>
+                    </tr>
+                
+                    <apex:variable var="counter" value="{!counter + 1}" />
+                </apex:repeat>
+                <!--<tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td> 
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                </tr>-->
+               
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th style="text-align:right;border-bottom: hidden;border-left: hidden;font-weight:bold;" colspan="14">TOTAL</th>
+                    <td colspan="2">{!total}</td>
+                </tr>
+                <tr>
+                    <th style="text-align:right;border-bottom: hidden;border-left: hidden; font-weight:bold;" colspan="14">GRAND TOTAL</th>
+                    <td colspan="2">{!grandTotal}</td>
+                </tr>
+            </tfoot>
+        </table><br/><br/>
+        
+        <div >
+        <div style="page-break-inside: avoid;">
+            
+            
+        <b>Terms &#38; Conditions:</b>
+        <ol type="1">
+            <apex:repeat value="{!ol}" var="item">
+                <li><b><apex:outputText value="{!item}"/></b></li>
+            </apex:repeat>
+        </ol>
+        <b>Acceptance of Terms:</b>
+        <p><b>By accepting this estimation, the client acknowledges that they have read, understood, and agree to abide by the terms and conditions outlined herein.</b></p>
+            </div>
+        <div style="">
+                
+            
+        <div >
+            
+            <p style="text-align:right;"><b>For River Mobility Private Limited</b></p>
+           
+            <div style="padding-top:25px">
+                <div style='display: inline-block;border: 1px solid black;width:170px;'></div>
+                <div style='display: inline-block;border: 1px solid black;width:170px;float:right;'></div>
+            </div>
+            
+            <div style="padding-top:20px">
+                <div style='display: inline-block;'><b>Customer Signature and Date </b></div>
+                <div style='display: inline-block;float:right;'><b>Authorized Signature and Date</b></div>
+            </div>
+
+          
+        </div>
+            <b><hr style="width:100%;border:1px solid black"/></b>
+        <p style="text-align:center;"><b>THANKS FOR DOING BUSINESS WITH US</b></p>
+        </div>
+        </div>
+    </body>
+    </html>
+</apex:page>

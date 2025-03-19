@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Lead Conversion" icon-name="standard:lead">
+        <div class="slds-p-around_medium">
+           <!--  <lightning-input value={lead.Name} label="Lead Name" readonly></lightning-input>
+            <lightning-input value={lead.Company} label="Company" readonly></lightning-input> -->
+
+            <!-- Account Lookup -->
+            <lightning-input label="Account" value={accountName} onchange={handleAccountChange}></lightning-input>
+
+            <!-- Contact Lookup -->
+            <lightning-input label="Contact" value={contactName} onchange={handleContactChange}></lightning-input>
+
+            <!-- Create Opportunity Toggle -->
+            <lightning-input type="checkbox" label="Create Opportunity" checked={createOpportunity}
+                onchange={handleOpportunityToggle}></lightning-input>
+            <!-- Create Opportunity Toggle -->
+            <lightning-input label="Opportunity" value={opportunityName} onchange={handleOppChange} disabled={isDisable}></lightning-input>
+
+            <lightning-combobox label="Converted Status" value={convertValue} options={convertOptions}
+                onchange={handleConvertChange} ></lightning-combobox>
+            <!-- Convert Lead Button -->
+            <div class="slds-m-around_medium">
+                <lightning-button label="Convert Lead" onclick={handleConvertLead}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

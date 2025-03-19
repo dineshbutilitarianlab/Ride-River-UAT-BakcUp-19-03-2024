@@ -1,0 +1,67 @@
+.custom-provider-container {
+    display: flex;
+    flex-direction: row; /* Arrange items in a row */
+    align-items: center; /* Vertically center align label and combobox */
+    gap: 2rem; /* Add space between the label and combobox */
+    margin-top: -1rem;
+    margin-bottom: 1rem; /* Add spacing below the entire container */
+}
+
+.custom-provider-label {
+   /* font-weight: bold;  Optional: Make the label bold */
+    font-size: 0.875rem; /* Optional: Adjust label font size */
+    min-width: 100px; /* Set a minimum width to align label with other fields */
+    text-align: left; /* Right-align the label text */
+}
+
+.custom-provider-combobox {
+    width: 70%; /* Ensure combobox takes full width */
+    max-width: 300px; /* Optional: Set a maximum width for the combobox */
+}
+
+.contact-details-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgb(252, 117, 76);
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+}
+
+.contact-icon {
+    margin-right: 0.5rem;
+    color: #0070d2;
+}
+
+.contact-email {
+    color: #0070d2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.contact-email:hover {
+    text-decoration: underline;
+}
+
+.no-details-container {
+    padding: 1rem;
+    background-color: #fef2f2;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.no-details {
+    color: #d9534f;
+    font-size: 1rem;
+    font-weight: bold;
+}

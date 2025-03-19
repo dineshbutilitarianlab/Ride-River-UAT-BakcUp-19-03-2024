@@ -1,0 +1,83 @@
+<template>
+    <lightning-quick-action-panel header="Claim Approval">
+        <!-- <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="small"></lightning-spinner>
+        </template> -->
+
+        <template if:false={isLoading}>
+            <template if:true={flatClaimItems.length}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Claim Item Number</th>
+                            <th>Status</th>
+                            <template if:true={SpareUser}>
+                                <th>Approve</th>
+                                <th>Reject</th>
+                                <th>Feedback</th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={flatClaimItems} for:item="ClaimItemRec">
+                            <tr key={ClaimItemRec.Id}>
+                                <td class="slds-border_top">{ClaimItemRec.Name}</td>
+                                <td class="slds-border_top">{ClaimItemRec.Status__c}</td>
+                                <template if:true={SpareUser}>
+                                    <td class="slds-border_top">
+                                        <template if:true={ClaimItemRec.onLoadSpare}>
+                                            <lightning-icon icon-name="utility:check" alternative-text="Approve"
+                                                data-id={ClaimItemRec.Id} name="spareApprove" title="Approve"
+                                                onclick={iconClicked}>
+                                            </lightning-icon>
+                                        </template>
+                                        <template if:true={ClaimItemRec.SpareOnApprove}>
+                                            <lightning-icon icon-name="action:approval" alternative-text="Approved"
+                                                data-id={ClaimItemRec.Id} name="sparesApprove" title="Approved"
+                                                onclick={iconClicked}>
+                                            </lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td class="slds-border_top">
+                                        <template if:true={ClaimItemRec.onLoadReject}>
+                                            <lightning-icon icon-name="utility:close" alternative-text="Reject"
+                                                data-id={ClaimItemRec.Id} name="spareReject" title="Reject"
+                                                onclick={iconClicked}>
+                                            </lightning-icon>
+                                        </template>
+                                        <template if:true={ClaimItemRec.SpareOnReject}>
+                                            <lightning-icon icon-name="action:close" alternative-text="Rejected"
+                                                data-id={ClaimItemRec.Id} name="sparesReject" title="Rejected"
+                                                onclick={iconClicked}>
+                                            </lightning-icon>
+                                        </template>
+                                    </td>
+                                    <td class="slds-border_top">
+                                        <template if:true={ClaimItemRec.showFeedback}>
+                                            <lightning-input type="text" placeholder="Enter feedback"
+                                                data-id={ClaimItemRec.Id} value={ClaimItemRec.feedback}
+                                                onchange={handleFeedbackChange}>
+                                            </lightning-input>
+                                        </template>
+                                    </td>
+                                </template>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <template if:false={flatClaimItems.length}>
+                <div class="slds-p-around_medium">
+                    No Records Found.
+                </div>
+            </template>
+        </template>
+
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+            <lightning-button variant="brand" label="Save" class="slds-m-left_x-small"
+                onclick={handleSave}></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

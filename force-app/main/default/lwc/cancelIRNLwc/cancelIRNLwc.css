@@ -1,0 +1,166 @@
+/* Main Card with Glassmorphic UI */
+.card {
+    max-width: 53rem;
+    margin: auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent */
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Title */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(45deg, #ff8c00, #ff2e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+}
+
+/* Form Container */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+/* Form Elements - Styled Inputs */
+.styled-input {
+    background: rgba(255, 255, 255, 0.9); /* Ensure background is solid */
+    color: #000; /* Make text dark for better visibility */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+.styled-input:focus {
+    outline: none;
+    border-color: #ff2e63;
+    box-shadow: 0px 0px 10px rgba(255, 46, 99, 0.6);
+}
+
+/* Button Centered */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+/* Cancel Button with Glow Effect */
+.cancel-btn {
+    background: linear-gradient(45deg, #ff2e63, #ff8c00);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 15px rgba(255, 46, 99, 0.5);
+    width: 100%;
+    max-width: 280px;
+    text-transform: uppercase;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(45deg, #ff8c00, #ff2e63);
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px rgba(255, 46, 99, 0.8);
+}
+
+/* Success Message */
+.success-message {
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #28a745, #2ecc71);
+    border-radius: 8px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards, popUp 0.5s ease-in-out;
+}
+
+/* Checkmark Icon */
+.checkmark {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+/* Smooth Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Pop-up Animation */
+@keyframes popUp {
+    0% { transform: scale(0.7); }
+    100% { transform: scale(1); }
+}
+
+/* Remove blur effect from picklist dropdown */
+.slds-dropdown {
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 1) !important; /* Ensure background is solid */
+    color: #333 !important; /* Make text readable */
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+/* Success Toast */
+.success-toast {
+    background: linear-gradient(45deg, #4caf50, #2ecc71);
+    color: white;
+}
+
+/* Error Toast */
+.error-toast {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+/* Show Toast */
+.toast:not(.toast-hide) {
+    opacity: 1;
+    visibility: visible;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Hide Toast */
+.toast-hide {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+/* Slide-in Animation */
+@keyframes slideIn {
+    0% { transform: translateX(-50%) translateY(-30px); opacity: 0; }
+    100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+}

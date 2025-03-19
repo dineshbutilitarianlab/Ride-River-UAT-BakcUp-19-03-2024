@@ -1,0 +1,87 @@
+<apex:page renderAs="pdf" controller="WarrantyTagPDFController">
+    <div style="width: 100%; font-family: Arial, sans-serif; font-size: 12px; color: #333;">
+        <h2 style="text-align: center; margin-bottom: 20px; color: #2C3E50; font-size: 20px;">Warranty Tag</h2>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; font-size: 12px;">
+            <!-- Header Row -->
+            <tr style="background-color: #f4f4f4; color: #333; border: 1px solid #ddd;">
+                <th style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: left;">Field</th>
+                <th style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: left;">Value</th>
+                <th style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: left;">Field</th>
+                <th style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: left;">Value</th>
+            </tr>
+            <!-- Rows with Data -->
+            <tr style="background-color: #ffffff;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Warranty Claim</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!warrantyClaim}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Dealer Name</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!dealerName}</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Warranty Date</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">
+                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                        <apex:param value="{!warrantyDate}" />
+                    </apex:outputText>
+                </td>
+                <td style="border: 1px solid #ddd; padding: 10px;">Dealer Location</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!dealerLocation}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Model</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!modelName}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Vehicle Number</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!registrationNumber}</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Date of Sale</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">
+                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                        <apex:param value="{!purchaseDate}" />
+                    </apex:outputText>
+                </td>
+                <td style="border: 1px solid #ddd; padding: 10px;">VIN Number</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!vin}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Date of Failure</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">
+                    <apex:outputText value="{0,date,MMMM d',' yyyy}">
+                        <apex:param value="{!DOF}" /> </apex:outputText>
+
+                </td>
+                <td style="border: 1px solid #ddd; padding: 10px;">Motor Number</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!motorNumber}</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Vehicle Kms</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!vehicleKilometer}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Standard Value</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!ElectricalValue}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Part Number</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!partNumber}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Dealer Observation</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!dealerObs}</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Part Description</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!partDescription}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Replacement Type</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!ReplacementType}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+                <td style="border: 1px solid #ddd; padding: 10px;">Quantity</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{!Quantity}</td>
+                
+                <td style="border: 1px solid #ddd; padding: 10px;">Dealer WM Sign</td>
+                <td style="border: 1px solid #ddd; padding: 10px;"></td>
+            </tr>
+        </table>
+    </div>
+</apex:page>

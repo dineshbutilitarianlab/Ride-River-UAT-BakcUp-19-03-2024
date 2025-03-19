@@ -1,0 +1,20 @@
+<apex:page showHeader="false" sidebar="false" applyHtmlTag="false" lightningStylesheets="true">
+    <script src="/lightning/lightning.out.js"></script>
+    <div id="auraDiv"></div>
+    <script>
+        $Lightning.use(
+            "c:PurchaseOrderApp", 
+            function() {
+                $Lightning.createComponent(
+                    "c:PurchaseOrderWrapper", 
+                    {}, 
+                    "auraDiv",
+                    function(cmp) {
+                        console.log("Aura Component loaded successfully!");
+                    }
+                );
+            },
+            "https://rivermobilityprivatelimited2--rruat.lightning.force.com"
+        );
+    </script>
+</apex:page>

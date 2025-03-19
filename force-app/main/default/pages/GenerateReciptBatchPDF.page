@@ -1,0 +1,68 @@
+<apex:page standardController="Create_Batch__c" extensions="BatchRecordControllerPDF" renderAs="pdf" docType="html-5.0" standardStylesheets="true" sidebar="false">
+    <table style="width:100%; border:1px solid #e0e0e0; border-collapse:collapse; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
+        <!-- Header Section -->
+        <tr>
+            <td colspan="2" style="border-bottom: 2px solid #2196F3; padding: 20px; background-color: #fafafa;">
+<h2 style="margin: 0; font-size: 24px; color: #2196F3; font-weight: bold; display: flex; align-items: center;">
+    <img src="{!URLFOR($Resource.Ride_River_Logo)}" alt="Company Logo" style="height: 60px; margin-right: 10px;" />
+    {!dcPdf.CompanyName__c}
+</h2>
+
+
+                <p style="margin: 5px 0; font-size: 14px; font-weight: bold; color: #555;">{!dcPdf.Former_Address__c}</p>
+                <p style="margin: 5px 0; font-size: 14px; color: #555;"><strong>CIN: {!dcPdf.CIN__c} | GST: {!dcPdf.GST__c}</strong></p>
+                <p style="margin: 5px 0; font-size: 14px; color: #555;"><strong>Registered Office:</strong> {!dcPdf.Registered_Office__c}</p>
+                <p style="margin: 5px 0; font-size: 14px; color: #555;"><strong>Factory Address:</strong> {!dcPdf.Factory_Address__c}</p>
+            </td>
+        </tr>
+
+        <!-- Footer Section -->
+        <tr>
+            <td colspan="2" style="background-color: #2196F3; color: white; padding: 10px; text-align: center;">
+                <p style="margin: 0; font-size: 14px;">
+                    <span>{!dcPdf.Company_Website__c} &nbsp;&nbsp;&nbsp;</span>
+                    <span>{!dcPdf.Company_Email__c} &nbsp;&nbsp;&nbsp;</span>
+                    <span>{!dcPdf.Company_Phone__c}</span>
+                </p>
+            </td>
+        </tr>
+
+        <!-- Claim Items Section -->
+        <tr>
+            <td colspan="2" style="padding: 20px; border-top: 2px solid #2196F3;">
+                <h3 style="text-align: center; margin: 0; font-size: 20px; color: #2196F3; font-weight: bold;">Claim Items</h3>
+                <table style="width: 100%; border: 1px solid #e0e0e0; border-collapse: collapse; margin-top: 20px;">
+                    <thead style="background-color: #f2f2f2; font-size: 14px; color: #333;">
+                        <tr>
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Sl. No.</th>
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Part Number</th>
+                            <!-- <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Part Description</th> -->
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Product Name</th>
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">HSN Code</th>
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Quantity</th>
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; background-color: #f2f2f2;">Amount</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 14px; color: #555;">
+                        <apex:variable var="partIndex" value="{!0}" />
+                        <apex:repeat value="{!parts}" var="part">
+                            <apex:variable var="partIndex" value="{!partIndex + 1}" />
+                            <!-- Loop through claim items and render them -->
+                            <tr>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!partIndex}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.LineItemNumber}</td>
+                                <!-- <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.Part_Description}</td> -->
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.PricebookEntryId}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.HSN_Code}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.Quantity}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #e0e0e0;">{!part.Grand_Total}</td>
+                            
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</apex:page>

@@ -1,0 +1,28 @@
+.easyDPE-b {
+    font-size: 1rem;
+    line-height: 1.25;
+    /*text-decoration-line: underline;*/
+
+}
+
+.easyDPE-b1 {
+    font-weight: normal;
+
+}
+.easyDPE-h1b1 {
+    margin-top: 10px;
+}
+.easyDPE-header {
+    margin-top: 10px;
+    padding-left: 1%;
+}
+.easyDPE-item {
+    margin-top: 40px;
+}
+.easyDPE-padding{
+    padding-top: 10%;
+}
+
+.slds-buttoncheck{
+    margin-left: 12px; margin-top:-1%
+}

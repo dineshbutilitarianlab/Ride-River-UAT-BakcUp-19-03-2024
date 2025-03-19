@@ -1,0 +1,218 @@
+<apex:page renderAs="pdf" controller="Check_pdi_item_screen_pdf_controller" standardStylesheets="false"  applyBodyTag="false" applyHtmlTag="false" showHeader="false" >
+    <html>
+        <head>
+            <style type="text/css" media="print">
+                @page {
+                /* <!--size: 9.27in 12.69in;--> */
+                    padding-top: 20px;
+                    @top-center {
+                        content: element(header);
+                    }
+                    @bottom-left {
+                        content: element(footer);
+                    }
+                }
+
+                table { page-break-inside:auto }
+                tr    { page-break-inside:avoid; page-break-after:auto }
+                
+                div.header {
+                    padding: 10px;
+                    position: running(header);
+                	text-Align:Center;
+                }
+                div.footer {
+                    display: block;
+                    padding: 5px;
+                    position: running(footer);
+                }
+                .pagenumber:before {
+                    content: counter(page);
+                }
+                .pagecount:before {
+                    content: counter(pages);
+                }
+                div.content {
+                	padding: 10px;
+                }
+                div.content .heading {
+                	margin-bottom: 10px;
+                }
+                div.content .profile-pic {
+                	margin-bottom: 10px;
+                }
+                div.content .content-footer {
+                	margin-bottom: 10px;
+                    padding: 10px;
+                    margin-top: 20px;
+                }
+                div.content .instruction {
+                	margin-top: 20px;
+                }
+            </style>
+        </head>
+        
+        <body style="font-family:sans-serif;font-size:13px;">
+            <div class="content">
+                <div style="display: flex;flex-wrap: nowrap;align-items: center;">
+                    <div style="width: 100%">
+                        <table style="border-color: #000000;font-size: 12px;border-bottom: 0px" border="1" cellpadding ="2" cellspacing ="0" width="100%">
+                            <tbody>
+                                <tr>
+                                    <th style="border-color: #000000;height: 35px;" width="30%;margin: auto;"><img src="{!$Resource.RideRiverLogo}" width="80%" height="32px"/></th>
+                                    <td style="text-align: center;background-color: #cccccc;border-color: #000000;height: 35px;" colspan="3" width="70%">Pre Delivery Inspection (PDI) Check Sheet</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="30%">Customer Name :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!customer.Name}</td>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="15%">Date :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">
+                                        <apex:outputText value="{0,date,dd/MM/yyyy HH:mm:ss}">
+                                            <apex:param value="{!NOW()+offset}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="30%">VIN Number :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!vehicleRecord.VehicleIdentificationNumber}</td>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="15%">Reg. Number:</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!vehicleRecord.VehicleRegistrationNumber}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="30%">Booking ID/ Customer ID :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!customer.Customer_ID__c}</td>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="15%"> Model :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!vehicleRecord.VehicleDefinition.ModelCode}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="30%">Charger PC Number:</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!vehicleRecord.Charger_PC_Number__c}</td>
+                                    <th style="text-align: left;border-color: #000000;height: 35px;" width="15%">Color :</th>
+                                    <td style="text-align: left;border-color: #000000;height: 35px;" width="30%">{!vehicleRecord.Colour__c}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <apex:variable var="count" value="{!0}"/>
+                        <table style="border-left: 0px;border-right: 0px;border-bottom: 0px;border-top: 0px;border-color: #000000;font-size: 12px" border="1" cellpadding ="2" cellspacing ="0" width="100%">
+                            <!-- <thead>
+                                <tr>
+                                    <th style="border:none;background-color: #cccccc;border-left: 0px solid #000000;text-align: center;border-color: #000000" width="5%" scope="col">S.No.</th>
+                                    <th style="border:none;background-color: #cccccc;border-left: 0px solid;border-color: #000000;text-align: center;" width="20%" scope="col">Attribute</th>
+                                    <th style="border:none;background-color: #cccccc;border-left: 0px solid;border-color: #000000;text-align: center;" width="30%" scope="col">Parameter</th>
+                                    <th style="border:none;background-color: #cccccc;border-left: 0px solid;border-color: #000000;text-align: center;" width="15%" scope="col">Check</th>
+                                    <th style="border:none;background-color: #cccccc;border-left: 0px solid;border-color: #000000;text-align: center;" width="30%" scope="col">Description</th>
+                                </tr>
+                            </thead> -->
+                            <tbody>
+                                <tr>
+                                    <td style="background-color: #cccccc;font-weight: bold;border-left: 1px solid #000000;padding: 0px;text-align: center;border-color: #000000;border-bottom: 1px solid #000000;" width="5%" scope="col">S.No.</td>
+                                    <td style="background-color: #cccccc;font-weight: bold;padding: 0px;text-align: center;border-color: #000000;border-bottom: 1px solid #000000;" width="20%" scope="col">Attribute</td>
+                                    <td style="background-color: #cccccc;font-weight: bold;padding: 0px;text-align: center;border-color: #000000;border-bottom: 1px solid #000000;" width="30%" scope="col">Parameter</td>
+                                    <td style="background-color: #cccccc;font-weight: bold;padding: 0px;text-align: center;border-color: #000000;border-bottom: 1px solid #000000;" width="15%" scope="col">Check</td>
+                                    <td style="background-color: #cccccc;font-weight: bold;padding: 0px;text-align: center;border-color: #000000;border-bottom: 1px solid #000000;" width="30%" scope="col">Description</td>
+                                </tr>
+                                <apex:repeat value="{!pdiItemWrapList}" var="pdi">
+                                    <tr key="{!pdi.header}">
+                                        <td style="padding: 0px;text-align: center;border-color: #000000;border-bottom: 0px;" width="5%">
+                                            <div style="height: 100%;width: 100%;">
+                                                <table style="border-collapse: collapse;" cellpadding ="2" cellspacing ="0" class="slds-no-row-hover" width="100%">
+                                                    <apex:repeat value="{!pdi.data}" var="item">
+                                                        <apex:variable var="count" value="{!count+1}"/>
+                                                        <tr style="" key="{!item.Name}">
+                                                            <td style="text-align: center;height: 35px;border-bottom: 1px solid #000000;border-left: 1px solid #000000;font-size: 10px;">{!count}</td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td style="padding-block: 0;padding: 0px;border-left: 0px solid;border-color: #000000;text-align: center;" width="25%">{!pdi.header}</td>
+                                        <td style="padding-block: 0;padding: 0px;border-left: 0px solid;border-color: #000000;border-bottom: 0px;text-align: center;" width="30%">
+                                            <div style="height: 100%;width: 100%;">
+                                                <table style="border-collapse: collapse;" cellpadding ="2" cellspacing ="0" class="slds-no-row-hover" width="100%">
+                                                    <apex:repeat value="{!pdi.data}" var="item">
+                                                        <tr style="" key="{!item.Name}">
+                                                            <td style="text-align: center;height: 35px;border-bottom: 1px solid #000000;font-size: 10px;" width="30%">{!item.Pre_Delivery_Inspection__r.Parameter__c}</td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td style="padding-block: 0;padding: 0px;border-left: 0px solid;border-color: #000000;border-bottom: 0px;text-align: center;" width="5%">
+                                            <div style="height: 100%;width: 100%;">
+                                                <table style="border-collapse: collapse;text-align: center;" cellpadding ="2" cellspacing ="0" class="slds-no-row-hover" width="100%">
+                                                    <apex:repeat value="{!pdi.data}" var="item">
+                                                        <tr style="" key="{!item.Name}">
+                                                            <td style="text-align: center;height: 35px;border-bottom: 1px solid #000000;font-size: 10px;" width="10%">
+                                                                <img src="/img/checkbox_checked.gif"/>
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td style="padding-block: 0;padding: 0px;border-left: 0px solid;border-color: #000000;border-bottom: 0px;text-align: center;" width="40%">
+                                            <div style="height: 100%;width: 100%;">
+                                                <table style="border-collapse: collapse;" cellpadding ="2" cellspacing ="0" class="slds-no-row-hover" width="100%">
+                                                    <apex:repeat value="{!pdi.data}" var="item">
+                                                        <tr style="" key="{!item.Name}">
+                                                            <td style="text-align: center;height: 35px;border-bottom: 1px solid #000000;font-size: 10px;" width="40%">{!item.Pre_Delivery_Inspection__r.Description__c}</td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <th colspan="5" style="border-left: 1px solid #000000;text-align: left;border-color: #000000;height: 35px;" width="100%">Remarks :</th>
+                                </tr>
+                            </tbody>                   
+                        </table>
+                        <br/>
+                        <br/>
+                        <table style="border-top: 0px;border-color: #000000;font-size: 12px" border="0" cellpadding ="2" cellspacing ="0" width="100%">
+                            <tbody>                                
+                                <tr>
+                                    <td colspan="2" style="vertical-align: top;" width="50%">
+                                        <p style="margin: 0px;font-weight: bold">Terms and Condition</p>
+                                    </td>
+                                </tr>
+                                <apex:variable var="term" value="{!0}"/>
+                                <apex:repeat value="{!conditions}" var="condition">
+                                    <apex:variable var="term" value="{!term+1}"/>
+                                    <tr>
+                                        <td colspan="2" style="vertical-align: top;" width="50%">
+                                            <p style="margin: 0px;">{!term}.  {!condition}</p>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="2" style="vertical-align: top;" width="50%">
+                                        <p style="margin: 0px;">I understand my responsibilities as the owner of the bike and agree to comply with all legal requirements and safety guidelines while operating it.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="vertical-align: top;" width="50%">
+                                        <p style="margin: 0px;">I acknowledge that I have been briefed and accept the points mentioned in terms and conditions</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br/></td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;height: 35px;" width="55%">Technician Signature</th>
+                                    <th style="text-align: right;height: 35px;" width="45%">Customer Signature</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>   
+                </div>
+                <br/>
+            </div>
+        </body>       
+    </html>
+</apex:page>

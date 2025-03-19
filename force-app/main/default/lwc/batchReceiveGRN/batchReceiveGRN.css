@@ -1,0 +1,20 @@
+.table-container {
+    overflow-x: auto; /* Enable horizontal scroll */
+    display: block;
+    white-space: nowrap; /* Prevent text wrapping */
+    max-width: 100%; /* Ensure it fits within the card */
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Ensures a minimum width for scrolling */
+}
+
+/* Ensure the table headers remain fixed while scrolling */
+.table-container thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}

@@ -1,0 +1,76 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.section {
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  background-color: #e3f2fd;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.section-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #0070d2;
+}
+
+.form-layout {
+  display: flex;
+  gap: 20px;
+}
+
+.flex-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.data-table {
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid #dcdcdc;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+.custom-yellow-button {
+  --slds-c-button-brand-color-background: yellow;  /* Background color */
+   
+  --slds-c-button-brand-text-color: black !important; /* Force black text */
+  --slds-c-button-brand-text-color-hover: black !important;
+  --slds-c-button-brand-text-color-active: black !important;
+
+}

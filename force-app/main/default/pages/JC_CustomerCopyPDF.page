@@ -1,0 +1,734 @@
+<!---------------------------------------------------------------------------------------------
+
+* Class Name: JC_CustomerCopy.vfp
+* Created by : Sudarshan N B - 17/04/24
+* Last Modified By : Sudarshan N B - 9/09/24
+* Description : To generate a JC for Vehicle service 
+
+------------------------------------------------------------------------------------------------->
+
+<!--apex:page standardController="WorkOrder" showHeader="true" sidebar="false" standardStylesheets="false" docType="html-5.0" controller="JC_CustomerCopyPdfController" renderAs="pdf" applyBodyTag="false"-->
+
+<apex:page standardController="WorkOrder" extensions="JC_CustomerCopyPdfController" applyHtmlTag="false"  showheader="false" renderAs="Pdf" docType="html-5.0">
+    
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+            size: A4 landscape;
+            }
+            .grid-container {
+            font-size:9px;
+            font-family: sans-serif;
+            }
+            .rectangle {
+            border: 1px solid #000;
+            background-color: #fff;
+            padding:1px;
+            margin:1px
+            }
+            td{
+            padding:2px 2px;
+            } 
+            .page-break {
+            page-break-before: always;     
+            }
+            .option {
+            display: inline-block;
+            border: 1px solid #ccc;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            }
+            p{margin-top:0px; margin-bottom:0px;} 
+            table{margin-top:0px; margin-bottom:0px;}
+            ul,ui{margin: 0; padding: 10px;}
+            
+        </style>
+        
+    </head>
+    
+    <body>
+        <apex:form >   
+            <div class="grid-container">
+                <div style="width:100%;height:100%">
+                    <table style="border-collapse:collapse;border:1px solid;table-layout: fixed;" width="100%">
+                        <tr style="border:1px solid;border-collapse:collapse;">
+                            <td style="border-top:1px solid;border-left:1px solid;border-collapse:collapse;" rowspan="2">
+                                <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="30px" width="60px"/>
+                            </td>  
+                            <td style="border-top:1px solid;border-collapse:collapse;" colspan="3" rowspan="2">
+                                {!Jobcard.Service_Center__r.Name}<br/>
+                                {!Jobcard.Service_Center__r.BillingStreet}, {!Jobcard.Service_Center__r.BillingCity}<br/>
+                                {!Jobcard.Service_Center__r.BillingState}, {!Jobcard.Service_Center__r.BillingCountry} - {!Jobcard.Service_Center__r.BillingPostalCode}<br/>
+                            </td>
+                            <td style="border: 1px solid;border-collapse:collapse; background-color: #dfe0e0;text-align:center;" width="50%">
+                                <b>Scratches/Damages</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;"  rowspan="16">
+                                <apex:image value="{!URLFOR($Resource.JoCardCCImage)}" height="190px" width="100%"/>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border: 1px solid;">
+                            <td style="border: 1px solid;border-collapse:collapse;">Job Card No.</td>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.WorkOrderNumber}
+                            </td>    
+                            <td  style="border: 1px solid;border-collapse:collapse;">Date</td>
+                            <td  style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                    <apex:param value="{!currentdate}" />
+                                </apex:outputText>
+                                
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td  style="border: 1px solid;border-collapse:collapse;">Chassis No.(VIN No.)</td>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.VehicleIdentificationNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Product(Model)</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.ModelName}
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Reg No.</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.VehicleRegistrationNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Kms Covered</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Odometer_Reading__c}
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Motor No.</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!Jobcard.Vehicle__r.EngineNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Date of Sale</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                    <apex:param value="{!Jobcard.Vehicle__r.Purchased_Date__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <td colspan="4" style="text-align:center;border: 1px solid;border-collapse:collapse;background-color: #dfe0e0;"><b>Customer Details</b></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Name</td>
+                            <td colspan="3" style="border: 1px solid;border-collapse:collapse;">
+                                {!conDetails.Name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Address</td>
+                            <td colspan="3" style="border: 1px solid;border-collapse:collapse;">
+                                {!conDetails.MailingStreet}, {!conDetails.MailingCity}<br/>
+                                {!conDetails.MailingState}, {!conDetails.MailingCountry} - {!conDetails.MailingPostalCode}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid; border-collapse: collapse;" rowspan="2">Contact Details</td>
+                            <td colspan="3" style="border: 1px solid; border-collapse: collapse;">(Mob): 
+                                {!conDetails.Phone}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid; border-collapse: collapse;" colspan="3">(Email Id): 
+                                {!conDetails.Email}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;text-align:center;background-color: #f2f2f2;"><b>Bike Inventory</b></td> 
+                            <td style="border: 1px solid;border-collapse:collapse;text-align:center;background-color: #f2f2f2;"><b>Accessories</b></td>
+                            <td style="border: 1px solid;border-collapse:collapse;" rowspan="2">Type of Job</td>
+                            <td style="border: 1px solid;border-collapse:collapse;" rowspan="2">{!Jobcard.RR_Job_Type__c}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;width:50px;">
+                                <div style="display: inline-block;width:auto">Rear View Mirror</div>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Rear_View_Mirror__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                            <td style="border: 1px solid;border-collapse:collapse;">Non OE Acc. Fitted 
+                                <apex:outputText value="No" style="float:right;" styleClass="option" rendered="{!NOT(jobcard.RR_Non_OE_Acc_Fitted_checkbox__c)}" />
+                                <apex:outputText value="Yes" style="float:right;" styleClass="option" rendered="{!jobcard.RR_Non_OE_Acc_Fitted_checkbox__c}" />
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse; text-align: left;">
+                                <label for="tk">Tool Kit</label>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Tool_Kit__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="border: 1px solid; border-collapse: collapse; vertical-align: top;" rowspan="7">
+                                <!--div class="rectangle" style="height:30px;"-->
+                                <apex:outputText value="{!jobcard.RR_Non_OE_Acc_Fitted__c}" escape="false"/>
+                                <!--/div-->
+                                
+                            </td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">Estimated Delivery Time</td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy} {0,time,h:mm a}">
+                                    <apex:param value="{!jobcard.RR_Estimated_Delivery_Time__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Battery No
+                                <div class="rectangle" style="height:auto;min-height:7px;width:50%;min-width:30px;float:right;">
+                                    {!jobcard.Vehicle__r.RR_Battery_Number__c}
+                                </div>
+                            </td>
+                      	</tr>
+                        
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Key Code
+                                
+                                <div class="rectangle" style="height:auto;min-height:7px;width:50%;float:right;white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;">
+                                    {!jobcard.Vehicle__r.IgnitionKeyCode}
+                                </div>
+                            </td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">Estimated Cost</td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">{!jobcard.RR_Estimated_Cost__c}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                <label for="vd">Vehicle Document</label>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Vehicle_Document__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;width: 100px !important;">
+                                <label for="fak">First Aid Kit</label>
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_First_Aid_Kit__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            
+                            <td rowspan="2"  style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                Technician
+                                
+                            </td>
+                            <td rowspan="2" style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                
+                                <apex:outputText value="{!Jobcard.RR_Technician__r.Name}">
+                                    
+                                </apex:outputText>
+                                <!--/div-->
+                            </td>
+                            
+                            <td style="border: 1px solid;border-collapse:collapse;height:50px;vertical-align:top;" rowspan="3"><b>Any other observations:-</b><br/>
+                                <apex:outputText value="{!jobCard.RR_Other_Observations__c}" escape="false"></apex:outputText>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                <label for="Charger">Charger</label>
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Charger__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Personal Belonging
+                                <div class="rectangle" style="height:auto;min-height:10px;">
+                                    {!jobcard.RR_Personal_Belongings__c}
+                                </div>
+                            </td>
+                            
+                            <td  style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                SOC
+                                
+                            </td>
+                            <td style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                
+                                <apex:outputText value="{0, number, percent}">
+                                    <apex:param value="{!jobcard.RR_SOC__c/100}" />
+                                </apex:outputText>
+                                <!--/div-->
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    
+                    <!--********************************************************************************************-->
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;" width="100%">
+                        <tr style="border: 1px solid;">
+                            <td style="border: 1px solid;border-collapse:collapse;background-color: #dfe0e0;text-align:center;" colspan="4"><b>Customer Voice</b></td>
+                            <td style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;" width="50%">
+                                <center><b><apex:outputText value="TERMS & CONDITIONS"></apex:outputText></b></center>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;" width="100%">
+                        
+                        <tr style="border: 1px solid;">
+                            <td width="3%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>S.No.</b></td>
+                            <td width="13%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Concern Category</b></td>
+                            <td width="13%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Concern Sub Category</b></td>    
+                            <td width="21%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Description</b></td>
+                            
+                            <td rowspan="11" style="border: 1px solid;border-collapse:collapse;padding:0px; margin:0px;font-size:8px;" width="50%">
+                                
+                                <table style="text-align:left; vertical-align: top;padding:0px; margin:0px;" width="100%">
+                                    <apex:variable value="{!1}" var="rowNumber" />
+                                    <apex:repeat value="{!terms}" var="term">
+                                        <tr style="border-collapse:collapse;vertical-align:top; ">
+                                            
+                                            <td style="padding: 0px; margin: 0px; vertical-align: center;">
+                                                {!rowNumber})<apex:outputText value=" {! term.Term_Condition__c}" escape="false"/><br/>
+                                            </td>
+                                        </tr>
+                                        <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
+                                    </apex:repeat>
+                                </table>
+							</td>
+                        </tr>
+                        
+                        <apex:variable value="{!1}" var="rowNumber" />
+                        <apex:repeat value="{!numbers}" var="num">
+                            <tr style="border: 1px solid;">
+                                <td style="border: 1px solid;border-collapse:collapse;text-align:center;">
+                                    {!num+1}
+                                </td>
+                                <td width="10%" style="border: 1px solid;border-collapse:collapse;min-height:10px;height:auto;">
+                                    {!voices[num].RR_Concern_Category__c}
+                                    
+                                </td>
+                                <td width="15%" style="border: 1px solid;border-collapse:collapse;min-height:10px;height:auto;">
+                                    {!voices[num].RR_Sub_Category__c}
+                                </td>    
+                                <td width="10%" style="border: 1px solid;border-collapse:collapse;">
+                                    <apex:outputField value="{!voices[num].RR_Description__c}" style="margin: 0; padding: 0;"/>
+                                </td>
+                            </tr>
+                            <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
+                        </apex:repeat>
+                    </table>
+                    
+                    <!--********************************************************************************************-->
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;">
+                        <tr style="border: 1px solid;">
+                            <td  style="border-left: 1px solid;vertical-align:top;" rowspan="3" colspan="2"><apex:outputText value="I acknowledge the information goven above is correct & I accept all the terms & conditions"></apex:outputText></td>
+                            <td  style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2;text-align:center;" ><b>Working Hours</b><br/>
+                                 <!-- Display totalDurationHours here 
+                               
+                          Duration in Hours:  <apex:outputText value="{!totalDurationHours}" />-->
+                                
+                            </td>
+                            <td width="50%" style="border-left: 1px solid;border: 1px solid;text-align:center;" rowspan="4">
+                                In case of any query, Please contact us at :-<br/>
+                                <b>Dealership</b><br/>
+                                Customer Helpline Number :- {!jobcard.Service_Center__r.RR_Customer_Care_Email__c}<br/>
+                                Customer Care Email id :- {!jobcard.Service_Center__r.RR_Customer_HelpLine_Number__c}<br/>
+                                <b>{!compDetails.Company_Name__c}</b><br/>
+                                Customer Care Helpine Number :- {!compDetails.Customer_HelpLine_Number__c} ({!compDetails.Timings__c})<br/>
+                                Customer Care Email id :- {!compDetails.Customer_Care_Email__c}
+                                
+                            </td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;height:20px;">
+                                {!jobcard.Service_Center__r.OperatingHours.Description}
+                            </td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2;text-align:center;"><b>SA Contact Details:</b></td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border-left: 1px solid;border-bottom: 1px solid;"><b>Customer Signature</b></td>
+                            <td width="10%" style="border-bottom: 1px solid;"><b>SA Signature</b></td>
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">
+                                Name: {!Jobcard.RR_Service_Advisor__r.Name}<br/>
+                                Email: {!Jobcard.RR_Service_Advisor__r.RelatedRecord.Email}<br/>
+                                Phone: {!Jobcard.RR_Service_Advisor__r.RelatedRecord.Phone}
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>
+                
+            </div>
+        </apex:form>
+        
+        
+        
+        <!--   ##########################################################################################################################################################################-->
+        
+        <div class="page-break"></div>
+        
+        <apex:form >   
+            <div class="grid-container">
+                <div style="width:100%;height:100%">
+                    <table style="border-collapse:collapse;border:1px solid;table-layout: fixed;" width="100%">
+                        <tr style="border:1px solid;border-collapse:collapse;">
+                            <td style="border-top:1px solid;border-left:1px solid;border-collapse:collapse;" rowspan="2">
+                                <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="30px" width="60px"/>
+                            </td>  
+                            <td style="border-top:1px solid;border-collapse:collapse;" colspan="3" rowspan="2">
+                                {!Jobcard.Service_Center__r.Name}<br/>
+                                {!Jobcard.Service_Center__r.BillingStreet}, {!Jobcard.Service_Center__r.BillingCity}<br/>
+                                {!Jobcard.Service_Center__r.BillingState}, {!Jobcard.Service_Center__r.BillingCountry} - {!Jobcard.Service_Center__r.BillingPostalCode}<br/>
+                            </td>
+                            <td style="border: 1px solid;border-collapse:collapse; background-color: #dfe0e0;text-align:center;" width="50%">
+                                <b>Scratches/Damages</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;"  rowspan="16">
+                                <apex:image value="{!URLFOR($Resource.JoCardCCImage)}" height="190px" width="100%"/>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border: 1px solid;">
+                            <td style="border: 1px solid;border-collapse:collapse;">Job Card No.</td>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.WorkOrderNumber}
+                            </td>    
+                            <td  style="border: 1px solid;border-collapse:collapse;">Date</td>
+                            <td  style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                    <apex:param value="{!currentdate}" />
+                                </apex:outputText>
+                                
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td  style="border: 1px solid;border-collapse:collapse;">Chassis No.(VIN No.)</td>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.VehicleIdentificationNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Product(Model)</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.ModelName}
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Reg No.</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Vehicle__r.VehicleRegistrationNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Kms Covered</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!JobCard.Odometer_Reading__c}
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid;">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Motor No.</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                {!Jobcard.Vehicle__r.EngineNumber}
+                            </td>    
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">Date of Sale</td>
+                            <td width="15%" style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                    <apex:param value="{!Jobcard.Vehicle__r.Purchased_Date__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <td colspan="4" style="text-align:center;border: 1px solid;border-collapse:collapse;background-color: #dfe0e0;"><b>Customer Details</b></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Name</td>
+                            <td colspan="3" style="border: 1px solid;border-collapse:collapse;">
+                                {!conDetails.Name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Address</td>
+                            <td colspan="3" style="border: 1px solid;border-collapse:collapse;">
+                                {!conDetails.MailingStreet}, {!conDetails.MailingCity}<br/>
+                                {!conDetails.MailingState}, {!conDetails.MailingCountry} - {!conDetails.MailingPostalCode}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid; border-collapse: collapse;" rowspan="2">Contact Details</td>
+                            <td colspan="3" style="border: 1px solid; border-collapse: collapse;">(Mob): 
+                                {!conDetails.Phone}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid; border-collapse: collapse;" colspan="3">(Email Id): 
+                                {!conDetails.Email}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;text-align:center;background-color: #f2f2f2;"><b>Bike Inventory</b></td> 
+                            <td style="border: 1px solid;border-collapse:collapse;text-align:center;background-color: #f2f2f2;"><b>Accessories</b></td>
+                            <td style="border: 1px solid;border-collapse:collapse;" rowspan="2">Type of Job</td>
+                            <td style="border: 1px solid;border-collapse:collapse;" rowspan="2">{!Jobcard.RR_Job_Type__c}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;width:50px;">
+                                <div style="display: inline-block;width:auto">Rear View Mirror</div>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Rear_View_Mirror__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                            <td style="border: 1px solid;border-collapse:collapse;">Non OE Acc. Fitted 
+                                <apex:outputText value="No" style="float:right;" styleClass="option" rendered="{!NOT(jobcard.RR_Non_OE_Acc_Fitted_checkbox__c)}" />
+                                <apex:outputText value="Yes" style="float:right;" styleClass="option" rendered="{!jobcard.RR_Non_OE_Acc_Fitted_checkbox__c}" />
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse; text-align: left;">
+                                <label for="tk">Tool Kit</label>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Tool_Kit__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="border: 1px solid; border-collapse: collapse; vertical-align: top;" rowspan="7">
+                                <!--div class="rectangle" style="height:30px;"-->
+                                <apex:outputText value="{!jobcard.RR_Non_OE_Acc_Fitted__c}" escape="false"/>
+                                <!--/div-->
+                                
+                            </td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">Estimated Delivery Time</td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">
+                                <apex:outputText value="{0,date,dd/MM/yyyy} {0,time,h:mm a}">
+                                    <apex:param value="{!jobcard.RR_Estimated_Delivery_Time__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Battery No
+                                <div class="rectangle" style="height:auto;min-height:7px;width:50%;min-width:30px;float:right;">
+                                    {!jobcard.Vehicle__r.RR_Battery_Number__c}
+                                </div>
+                            </td>
+                      	</tr>
+                        
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Key Code
+                                
+                                <div class="rectangle" style="height:auto;min-height:7px;width:50%;float:right;white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;">
+                                    {!jobcard.Vehicle__r.IgnitionKeyCode}
+                                </div>
+                            </td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">Estimated Cost</td>
+                            <td rowspan="2" style="border: 1px solid;border-collapse:collapse;">{!jobcard.RR_Estimated_Cost__c}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                <label for="vd">Vehicle Document</label>
+                                
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Vehicle_Document__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;width: 100px !important;">
+                                <label for="fak">First Aid Kit</label>
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_First_Aid_Kit__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            
+                            <td rowspan="2"  style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                Technician
+                                
+                            </td>
+                            <td rowspan="2" style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                
+                                <apex:outputText value="{!Jobcard.RR_Technician__r.Name}">
+                                    
+                                </apex:outputText>
+                                <!--/div-->
+                            </td>
+                            
+                            <td style="border: 1px solid;border-collapse:collapse;height:50px;vertical-align:top;" rowspan="3"><b>Any other observations:-</b><br/>
+                                <apex:outputText value="{!jobCard.RR_Other_Observations__c}" escape="false"></apex:outputText>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">
+                                <label for="Charger">Charger</label>
+                                <div class="rectangle" style="width:8px;height:8px; display: inline-block; vertical-align:middle;float:right;">
+                                    <apex:outputPanel rendered="{!Jobcard.RR_Charger__c}">
+                                        <apex:image value="{!URLFOR($Resource.RightMark)}" height="8px" width="8px"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid;border-collapse:collapse;">Personal Belonging
+                                <div class="rectangle" style="height:auto;min-height:10px;">
+                                    {!jobcard.RR_Personal_Belongings__c}
+                                </div>
+                            </td>
+                            
+                            <td  style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                SOC
+                                
+                            </td>
+                            <td style="border: 1px solid; border-collapse: collapse; text-align: left;">
+                                
+                                <apex:outputText value="{0, number, percent}">
+                                    <apex:param value="{!jobcard.RR_SOC__c/100}" />
+                                </apex:outputText>
+                                <!--/div-->
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    
+                    <!--********************************************************************************************-->
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;" width="100%">
+                        <tr style="border: 1px solid;">
+                            <td style="border: 1px solid;border-collapse:collapse;background-color: #dfe0e0;text-align:center;" colspan="4"><b>Customer Voice</b></td>
+                            <td style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;" width="50%">
+                                <center><b><apex:outputText value="TERMS & CONDITIONS"></apex:outputText></b></center>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;" width="100%">
+                        
+                        <tr style="border: 1px solid;">
+                            <td width="3%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>S.No.</b></td>
+                            <td width="13%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Concern Category</b></td>
+                            <td width="13%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Concern Sub Category</b></td>    
+                            <td width="21%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2; text-align:center;"><b>Description</b></td>
+                            
+                            <td rowspan="11" style="border: 1px solid;border-collapse:collapse;padding:0px; margin:0px;font-size:8px;" width="50%">
+                                
+                                <table style="text-align:left; vertical-align: top;padding:0px; margin:0px;" width="100%">
+                                    <apex:variable value="{!1}" var="rowNumber" />
+                                    <apex:repeat value="{!terms}" var="term">
+                                        <tr style="border-collapse:collapse;vertical-align:top; ">
+                                            
+                                            <td style="padding: 0px; margin: 0px; vertical-align: center;">
+                                                {!rowNumber})<apex:outputText value=" {! term.Term_Condition__c}" escape="false"/><br/>
+                                            </td>
+                                        </tr>
+                                        <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
+                                    </apex:repeat>
+                                </table>
+							</td>
+                        </tr>
+                        
+                        <apex:variable value="{!1}" var="rowNumber" />
+                        <apex:repeat value="{!numbers}" var="num">
+                            <tr style="border: 1px solid;">
+                                <td style="border: 1px solid;border-collapse:collapse;text-align:center;">
+                                    {!num+1}
+                                </td>
+                                <td width="10%" style="border: 1px solid;border-collapse:collapse;min-height:10px;height:auto;">
+                                    {!voices[num].RR_Concern_Category__c}
+                                    
+                                </td>
+                                <td width="15%" style="border: 1px solid;border-collapse:collapse;min-height:10px;height:auto;">
+                                    {!voices[num].RR_Sub_Category__c}
+                                </td>    
+                                <td width="10%" style="border: 1px solid;border-collapse:collapse;">
+                                    <apex:outputField value="{!voices[num].RR_Description__c}" style="margin: 0; padding: 0;"/>
+                                </td>
+                            </tr>
+                            <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
+                        </apex:repeat>
+                    </table>
+                    
+                    <!--********************************************************************************************-->
+                    
+                    <table style="border-collapse:collapse;text-align:left; vertical-align: top;border: 1px solid; table-layout: fixed;">
+                        <tr style="border: 1px solid;">
+                            <td  style="border-left: 1px solid;vertical-align:top;" rowspan="3" colspan="2"><apex:outputText value="I acknowledge the information goven above is correct & I accept all the terms & conditions"></apex:outputText></td>
+                            <td  style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2;text-align:center;" ><b>Working Hours</b><br/>
+                                 <!-- Display totalDurationHours here 
+                               
+                          Duration in Hours:  <apex:outputText value="{!totalDurationHours}" />-->
+                                
+                            </td>
+                            <td width="50%" style="border-left: 1px solid;border: 1px solid;text-align:center;" rowspan="4">
+                                In case of any query, Please contact us at :-<br/>
+                                <b>Dealership</b><br/>
+                                Customer Helpline Number :- {!jobcard.Service_Center__r.RR_Customer_Care_Email__c}<br/>
+                                Customer Care Email id :- {!jobcard.Service_Center__r.RR_Customer_HelpLine_Number__c}<br/>
+                                <b>{!compDetails.Company_Name__c}</b><br/>
+                                Customer Care Helpine Number :- {!compDetails.Customer_HelpLine_Number__c} ({!compDetails.Timings__c})<br/>
+                                Customer Care Email id :- {!compDetails.Customer_Care_Email__c}
+                                
+                            </td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;height:20px;">
+                                {!jobcard.Service_Center__r.OperatingHours.Description}
+                            </td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;background-color: #f2f2f2;text-align:center;"><b>SA Contact Details:</b></td>
+                        </tr>
+                        <tr style="">
+                            <td width="10%" style="border-left: 1px solid;border-bottom: 1px solid;"><b>Customer Signature</b></td>
+                            <td width="10%" style="border-bottom: 1px solid;"><b>SA Signature</b></td>
+                            <td width="10%" style="border: 1px solid;border-collapse:collapse;">
+                              
+                                Name: {!Jobcard.RR_Service_Advisor__r.Name}<br/>                         
+                                Email: {!Jobcard.RR_Service_Advisor__r.RelatedRecord.Email}<br/>
+                                Phone: {!Jobcard.RR_Service_Advisor__r.RelatedRecord.Phone}
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>
+                
+            </div>
+        </apex:form>
+        
+        
+    </body>
+    
+</apex:page>

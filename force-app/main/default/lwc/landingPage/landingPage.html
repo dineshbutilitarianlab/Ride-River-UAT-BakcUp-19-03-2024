@@ -1,0 +1,32 @@
+<template>
+    <lightning-card footer="" title="">
+        <h1 class="slds-text-heading_medium">{app_welcome_text}</h1>
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <p class="c-description">{app_description}</p>
+
+                    <c-feature-child
+                    heading="Admin Home" 
+                    image="standard:people" 
+                    app="Automotive_Cloud_Inapp_Learning"
+                    app-text="Set up and configure foundational basics, including objects, Sales Agreements, Advanced Account Forecasting, and more." 
+                    url="/lightning/n/Admin_Home"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+
+
+                    <c-feature-child
+                    heading="Developer Home" 
+                    image="standard:apps_admin"
+                    app="Automotive_Cloud_Inapp_Learning"
+                    app-text="Work with, customize, and extend features for Automotive Cloud, including Sales Agreements, Vehicle Definitions, Warranties, and more." 
+                    url="/lightning/n/Developer_Home"
+                    link-in-new-tab={pass_false}
+                    link-reference="standard__webPage"></c-feature-child>
+                    
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

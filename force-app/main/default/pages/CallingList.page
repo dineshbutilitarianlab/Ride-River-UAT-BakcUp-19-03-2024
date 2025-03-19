@@ -1,0 +1,10 @@
+<apex:page standardController="Account" recordSetVar="records">
+    <script>
+        var objectName = 'Account';
+        var selectedRecordIds = [];
+        <apex:repeat value="{!selected}" var="rec">
+            selectedRecordIds.push('{!JSENCODE(rec.id)}');
+        </apex:repeat>
+    </script>
+    <tdc_360CTI:CallingListCmp />
+</apex:page>

@@ -1,0 +1,3 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:appHostable" access="global">
+	<c:rideRiverWarrantyRecord recordId="{!v.recordId}" />
+</aura:component>

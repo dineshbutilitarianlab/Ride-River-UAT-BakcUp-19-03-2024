@@ -1,0 +1,255 @@
+<!---------------------------------------------------------------------------------------------
+
+* Class Name: CreateReceiptRtoInsurance
+* Created by : Sudarshan N B - 23/11/23
+* Last Modified By : Sudarshan N B - 28/1/24
+* Description : To generate a Receipt for RTO charges and Insurance
+
+-------------------------------------------------------------------------------------------------> 
+
+
+<apex:page standardController="Order" renderAs="pdf" showheader="false" applyHtmlTag="false" readOnly="true" extensions="CreateReceiptRtoInsuranceController">
+    
+    <head>
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+            margin-left: 20mm;
+            margin-right: 12mm;
+            margin-top: 12mm;
+            margin-bottom: 12mm;
+            }
+            .data_Table{
+            border: 1px solid black;
+            margin-top:300px;
+            text-align: center; 
+            border-top: 0;
+            border-right: 0;
+            }
+            .totals{
+            border: 1px solid black;
+            color: grey !important;
+            border-top: 0;
+            border-right: 0; 
+            }
+            .rectangle {
+            width: 10px;
+            height: 10px;
+            border: 1px solid #000;
+            display: inline-block;
+            margin-right: 30px;
+            margin-left: 5px;
+            }
+            
+        </style>
+        
+        
+    </head>
+    <body style="font-family: sans-serif;font-size:10pt;">
+        
+        <table style="border-collapse:true;float:left;text-align:left; font-family: Arial, Helvetica, sans-serif;vertical-align: top;" width="40%">
+            <tr>
+                <td style="padding:0px;font-weight:bold;font-size:12px;" width="40%">
+                    <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="60px" width="170px"/>
+                    
+                    <p>
+                        CIN : {!order.Dealer__r.CIN__c}<br/>
+                        Contact : {!order.Dealer__r.Phone}<br/>
+                        Email : {!order.Dealer__r.Email__c}<br/>
+                    </p>
+                    
+                </td>   
+            </tr>
+        </table>
+        
+        <div style="padding:0px;vertical-align: top; text-align:left; font-weight:bold;float:right;width:59%; font-family: Arial, Helvetica, sans-serif;font-size:15px;">
+           	{!DealerName}
+        </div>
+        
+        <table style="vertical-align: top;border-collapse:true;float:right; text-align:left; width:60%; font-family: Arial, Helvetica, sans-serif;">
+            <tr>
+                <td width="60%" style="padding:5px;vertical-align: top;">
+                    <strong>Address:</strong><br/>
+                    {!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}<br/><br/>
+                    GST: {!order.Dealer__r.GSTIN_Number__c}
+                    
+                </td> 
+            </tr>
+        </table>
+        
+        <table style="vertical-align: top;border-collapse:true;float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;" width="100%">
+            <tr>
+                <td width="40%" style="vertical-align: top;">
+                    <div style="font-size:13pt;margin-bottom:0px;padding-bottom:0px;font-weight:bold;">
+                        RECEIPT<br/><br/>
+                    </div>
+                    <div>
+                        
+                        Date: <apex:outputText value=" {0,date,dd/MM/yyyy}"><apex:param value="{!currentDate}" /></apex:outputText><br/>
+                        Time: <apex:outputText value=" {0,time,h:mm a}"><apex:param value="{!currentTime}" /></apex:outputText><br/>
+                        Receipt Number: {!invoiceId}<br/>
+                        Amount: 
+                        <apex:outputText value="{0, number, #,##,###}">
+                            <apex:param value="{!TotalAmount}"/>
+                        </apex:outputText>
+                        <br/>
+                    </div>
+                    
+                </td>  
+                <td width="60%" style="vertical-align: top;padding:5px;">
+                    Received By:<br/><br/>
+                    Name: {!order.Account.Name}<br/>
+                    Address: {!order.BillingStreet} {!order.BillingCity}<br/>
+                    {!order.BillingState} {!order.BillingCountry} {!order.BillingPostalCode}<br/>               
+                    Email: {!IF(AND(NOT(ISNULL(contact)), NOT(ISNULL(contact.Email))), contact.Email, '')}<br/>
+                    Ph No: {!order.Account.Phone}<br/>
+                    Place of Supply: {!order.Dealer__r.BillingState}<br/><br/>
+                    Description : Insurance and RTO Smart card Charges
+                    
+                </td>
+            </tr>
+            
+        </table>
+        
+        <table style="vertical-align: top;display:inline-table;margin-top:10px; float:left;text-align:center; font-family: Helvetica, sans-serif; border-top:1px solid; border-bottom:1px solid; border-collapse:collapse;" width="100%" >
+            <tr>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse; font-weight: normal;" width="">No</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Item description</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Quantity</th>
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="20%">Amount</th>
+            </tr>        
+            
+            
+            <apex:panelGroup rendered="{!NOT(ISBLANK(order.Insurance_Amount__c))}">
+                <tr style="border-collapse: collapse; border: 1px solid; {!IF(rowCount != 2, 'height: '+height+';', 'height: auto;')}">
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid;vertical-align: top;"><apex:outputText value="1." escape="false"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid;text-align:left; vertical-align:top;"><apex:outputText value="Insurance(1Y OD + 5Y TP + ZD)"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid; text-align:center;vertical-align:top;"><apex:outputText value="Fixed"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid;text-align:center;vertical-align:top;">
+                        <apex:outputText value="{0, number, #,##,###}">
+                            <apex:param value="{!order.Insurance_Amount__c}"/>
+                        </apex:outputText>
+                    </td>
+                    
+                    
+                </tr>
+            </apex:panelGroup>           
+            
+            
+            <apex:panelGroup rendered="{!NOT(ISBLANK(order.RTO_Charges__c))}">            
+                <tr style="border-collapse: collapse; border: 1px solid; {!IF(rowCount != 1, 'height: '+height+';', 'height: 180px;')}">
+                    <td style="border-collapse: collapse;border-left:1px solid;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid; vertical-align: top;"><apex:outputText value="{!IF(rowCount != 1, '2.', '1.')}" escape="false"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solidtext-align:left;vertical-align: top;border-left:1px solid;text-align:left;"><apex:outputText value="RTO Smart Card"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid;vertical-align: top;"><apex:outputText value="Fixed"/></td>
+                    
+                    <td style="border-collapse: collapse;padding-top:8px;padding-right:5px;padding-left:8px;border-right:1px solid;vertical-align: top;border-left:1px solid;">
+                        <apex:outputText value="{0, number, #,##,###}">
+                            <apex:param value="{!order.RTO_Charges__c}"/>
+                        </apex:outputText>
+                    </td>
+                    
+                    
+                </tr>            
+            </apex:panelGroup>        
+            
+        </table>
+        
+        <table style="display:inline-table;border:1px solid;border-collapse:collapse; float:left;text-align:center; font-family: Arial, Helvetica, sans-serif;" width="100%">            
+            
+            <tr>          
+                <td width="80%" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px;padding:7px;">Total:</td>
+                <td width="20%" style="border-collapse: collapse;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-collapse:collapse;font-size:14px;">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!TotalAmount}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+        </table>
+        
+        <p style="margin-top:20px;float:left;width:100%;font-family: Helvetica, sans-serif; table-layout:fixed;">
+            Amount In Words: {!inWords}<br/><br/>
+        </p>
+        
+        <table style=" float:left;font-family: Arial, Helvetica, sans-serif;" width="100%">
+            <tr>          
+                <td width="13%" style="text-align:left;"><strong>Paid By:</strong></td>
+                <td width="30%" style=""></td>
+                <td width="22%" style=""></td>
+                <td width="45%" style=""></td>
+            </tr>
+            
+            <tr>          
+                <td width="13%" style="padding-top:8px;">Check No:</td>
+                <td width="30%" style="Border-bottom:1px dashed;padding-top:8px;"></td>
+                <td width="22%" style="padding-left:55px;padding-top:8px;">Total Amount:</td>
+                <td width="45%" style="Border-bottom:1px dashed;padding-top:8px;">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!order.Grand_Total__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+            
+            <tr>          
+                <td width="13%" style="padding-top:8px;">UPI ID:</td>
+                <td width="30%" style="Border-bottom:1px dashed;padding-top:8px;"></td>
+                <td width="22%" style="padding-left:55px;padding-top:8px;">Amount Paid:</td>
+                <td width="45%" style="Border-bottom:1px dashed;padding-top:8px;">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!order.Total_Amount_paid__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+            
+            <tr>          
+                <td width="13%" style="padding-top:8px;">Cash/Other:</td>
+                <td width="30%" style="Border-bottom:1px dashed;padding-top:8px;"></td>
+                <td width="22%" style="padding-left:55px;padding-top:8px;">Balance Due:</td>
+                <td width="45%" style="Border-bottom:1px dashed;padding-top:8px;">
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!order.Remaining_Amount__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+        </table>
+        
+        
+        <table style=" float:left;font-family: sans-serif;font-size:10pt;marging-top:10px;" width="100%">
+            <tr>          
+                <td style="text-align:left;padding-top:50px;">Received By:<br/>
+                    
+                </td>
+            </tr>
+            <tr>          
+                <td style="text-align:left;padding-bottom:10px;padding-top:8px;font-weight:bold;font-size:15px;">
+                    {!DealerName}
+                </td>
+            </tr>
+            
+            <tr>          
+                <td style="text-align:left;">
+                    <strong>Address:</strong> {!order.Dealer__r.BillingStreet}<br/>
+                    {!order.Dealer__r.BillingCity}<br/>
+                    {!order.Dealer__r.BillingState}<br/>
+                    {!order.Dealer__r.BillingCountry} - {!order.Dealer__r.BillingPostalCode}<br/>
+                </td>
+                <td  style="text-align:right;Vertical-align:bottom;padding:right:20px;margin-right:0;">Authorized Signature</td>
+            </tr>
+        </table>
+        
+        <div style="margin-left: 5mm;position: fixed;bottom: 0; width: 100%; text-align: left;font-size: 12px;font-family: Arial, Helvetica, sans-serif;">
+            Customer Copy <div class="rectangle"></div>    Duplicate Copy <div class="rectangle"></div>   Triplicate Copy <div class="rectangle"></div>
+            
+        </div> 
+        
+    </body>
+    
+</apex:page>
