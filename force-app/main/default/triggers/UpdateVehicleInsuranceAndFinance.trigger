@@ -54,11 +54,23 @@ trigger UpdateVehicleInsuranceAndFinance on Order (before insert, before update,
             }catch(Exception e){
                 System.debug('Error Message ==>'+e.getMessage()+' && Error Line == >'+e.getLineNumber());
             }
+
+            // Create Invoice
+            try {
+                Order oldOrder = trigger.oldMap.get(ord.Id);
+                if (oldOrder.Status != 'Pre Invoice' && ord.Status == 'Pre Invoice') {
+                    List<Order> singleOrderList = new List<Order>{ ord };
+                    OrderStatusHandler.ceateInvoiceRecords(singleOrderList, trigger.oldMap);
+                    System.debug('Invoice created for Order Id: ' + ord.Id);
+                }
+            } catch (Exception e) {
+                System.debug('Error while creating Invoice ==> ' + e.getMessage() + ' at line ' + e.getLineNumber());
+            }
             
         }
         
         // method to create the invoice records
-        OrderStatusHandler.ceateInvoiceRecords(trigger.new, trigger.oldMap);
+      //  OrderStatusHandler.ceateInvoiceRecords(trigger.new, trigger.oldMap);
         
         if (Test.isRunningTest()){
          // For Code coverage- No Logic

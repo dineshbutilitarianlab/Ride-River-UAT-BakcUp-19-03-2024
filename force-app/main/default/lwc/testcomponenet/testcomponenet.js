@@ -1515,7 +1515,7 @@ handleNext() {
                         this.todayfollowupchooseoptionsvalue = null;
                         const message = 'New Follow up Created Successfully';
                         this.handleSuccessClick(message);
-                        this.updatefollowupcomplete();
+                        //this.updatefollowupcomplete();
                         this.getFollowupdetails(this.fromDate,this.toDate);
 
                     })
@@ -1798,13 +1798,14 @@ handleNext() {
             console.log('null value');
         } else {
             if (this.newfollowupdate < this.todaysDate) {
-                //this.todaysDate
+                //this.todaysDate 
             } else {
-                createnewfollowup({ leadid: this.selectedrow.Id, followupdate: this.newfollowupdate, feedbackvalue: this.newFollowupfeedbck })
+                let leadIdValue = this.selectedrow.Lead__c ? this.selectedrow.Lead__c : this.selectedrow.Id;
+                createnewfollowup({ leadid: leadIdValue, followupdate: this.newfollowupdate, feedbackvalue: this.newFollowupfeedbck })
                     .then(result => {
                         console.log('sucess+++=' + this.selectedrow.TestRideId);
                         this.updatedtestridecomplete();
-                        this.handlenewfollowupcancelClick();
+                        this.handlenewfollowupcancelClick(); 
                         this.newfollowupdate = null;
                         this.newfollowupname = null;
                         this.newfollowuptrue = false;

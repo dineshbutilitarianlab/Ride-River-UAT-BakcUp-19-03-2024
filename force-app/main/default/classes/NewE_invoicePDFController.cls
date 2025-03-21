@@ -1,3 +1,11 @@
+/**
+ * @author Dinesh Baddawar
+ * @email dinesh.butilitarianlab@gmail.com
+ * @create date 2025-03-20 17:27:15
+ * @modify date 2025-03-20 17:27:15
+ * @desc [Controller for New E-Invoice PDF]
+ */
+
 public class NewE_invoicePDFController {
     Public List<OrderItem> orderItemList{get;set;}
     Public Date currentDate {get;set;}
@@ -43,7 +51,6 @@ public class NewE_invoicePDFController {
     public string cocoBillEmail { get; set; }
     public String cocoPhone { get; set; }
     public String cocoCIN { get; set; }
-    public Terms_and_Condition__mdt dodoTC { get; set; }
     public Terms_and_Condition__mdt cocoTC { get; set; }
     public String formatedIRNNumber { get; set; }
     public ContentVersion  cv {get;set;}
@@ -79,11 +86,10 @@ public class NewE_invoicePDFController {
                     Dealer__r.CIN__c, Dealer__r.RR_Customer_Care_Email__c, Dealer__r.RR_Customer_HelpLine_Number__c,  
                     Dealer__r.Beneficiary_Name__c, Dealer__r.Account_Number__c, Dealer__r.Bank_Name__c, Dealer__r.Swift_Code__c, Dealer__r.IFSC__c, Dealer__r.PAN_Number__c,
                     IRN_No__c, Dealer__r.Store_Type__c, Dealer__r.Email__c, Dealer__r.Phone, Account.GSTIN_Number__c, Dealer__r.GSTIN_Number__c FROM Order  WHERE Id=:orderId ]; 
-            system.debug(' order.Dealer__r.Name === >'+ order.Dealer__r.Name);
-            cocoTC = [SELECT Id, Terms_and_Condition__c FROM Terms_and_Condition__mdt WHERE DeveloperName = 'Coco_TC' LIMIT 1];
-                    if (cocoTC.Terms_and_Condition__c != null) {
-                        cocoTC.Terms_and_Condition__c = cocoTC.Terms_and_Condition__c.replace('\n', '<br/>');
-                    }
+        cocoTC = [SELECT Id, Terms_and_Condition__c,DeveloperName FROM Terms_and_Condition__mdt WHERE DeveloperName = 'Coco_TC' LIMIT 1];
+            if (cocoTC.Terms_and_Condition__c != null) {
+                cocoTC.Terms_and_Condition__c = cocoTC.Terms_and_Condition__c.replace('\n', '<br/>');
+            }
             if (order.Dealer__r.Store_Type__c != null) {
                 if (order.Dealer__r.Store_Type__c == 'DODO') {
                     storeType = 'DODO';
@@ -104,6 +110,15 @@ public class NewE_invoicePDFController {
                     cocoCIN = System.label.COCOCIN;
                 }
             }
+
+            QRAtt = [SELECT Id,Name FROM Attachment WHERE ParentId = :orderId AND Name LIKE '%QRCode%' Order BY CreatedDate DESC LIMIT 1];
+            if(QRAtt != null){
+                IsQrGenerated = QRAtt.size() > 0 ? true : false;
+                System.debug('IsQrGenerated==>'+IsQrGenerated);
+            }else{
+                System.debug('No QRAtt Record Found');
+            }
+          
             
             if(order.IRN_No__c != null){
                 Integer midPoint = Math.ceil(order.IRN_No__c.length() / 2).intValue();

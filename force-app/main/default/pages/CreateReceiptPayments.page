@@ -123,30 +123,37 @@
         
         
         <!-- Received By Section -->
-        <div style="position: fixed;bottom: 0;left: 0; width: 100%; text-align: center; padding-Bottom:20px; margin-top:25px;">
+        <div style="position: fixed;bottom: 0;left: 0; width: 100%; text-align: center; padding-Bottom:20px; margin-top:25px;"><br/>
             <table style="float:left;" width="100%" cellspacing="12">
                 <td width="10%">Received By :-</td>
-                <td style="text-align:center; line-height:20px adding-top:30px;"><strong>{!DealerName}</strong><br/>
+                <td style="text-align:center; margin-top:10px; line-height:20px adding-top:30px;"><strong>{!DealerName}</strong><br/>
                     {!op.Order__r.Dealer__r.BillingStreet}<br/>
                     {!op.Order__r.Dealer__r.BillingCity}, {!op.Order__r.Dealer__r.BillingState}, {!op.Order__r.Dealer__r.BillingCountry} - {!op.Order__r.Dealer__r.BillingPostalCode}<br/>
                     Ph Number: {!op.Order__r.Dealer__r.Phone}<br/>
                 </td>
             </table>
-            <table  width="100%" style="margin-top:15px;float:left;">
+            <table  width="100%" style="margin-top:5px;float:left;">
                 <td width="10%"></td>
                 <td width="100%" style="text-decoration: solid underline purple 4px; text-align:center;margin-bottom:20px;">___________________<br/><strong>Signature</strong></td>
             </table>
             	
             <!-- Note Section -->
-        <table width="100%" style="margin-top:10px; float:left;">
+        <table width="100%" style="float:left;">
             <tr>
                 <td style="text-align:left; padding: 2px; font-size:10pt;">
                     <ul>
-                        <div style="text-align:center;">
-                            <strong>The advance payment received is exclusively towards the purchase of goods (vehicle) and does not include any services.</strong><br/>
-                            <strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; As per Notification No. 66/2017 - Central Tax dated 15-11-2017, tax payment on advances received for supply of goods is exempt.</strong><br/>
-                            <apex:outputPanel rendered="{!AND(ISNULL(op.Order__r.RTO_Charges__c), ISNULL(op.Order__r.Handling_Charges__c), ISNULL(op.Order__r.Insurance_Amount__c))}">
-                                <strong>This payment receipt is exclusive of RTO, Insurance, and Handling charges, which will be billed separately.</strong>
+                        <span style="font-family: Georgia, 'Times New Roman', serif; font-size: 14px; color: #333; font-weight: bold; text-align: left; display: block; margin-bottom: 4px;">
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Note:
+                            </span>
+                        <div style="text-align:center; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; color: #333; line-height: 1.5;">
+                            
+                            *** The advance payment received is exclusively towards the purchase of goods (vehicle) and does not include any services.<br/>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;As per Notification No. 66/2017 - Central Tax dated 15-11-2017, tax payment on advances received for supply of goods is exempt.
+                            <apex:outputPanel rendered="{!OR(NOT(ISNULL(op.Order__r.RTO_Charges__c)), NOT(ISNULL(op.Order__r.Handling_Charges__c)), NOT(ISNULL(op.Order__r.Insurance_Amount__c)))}">
+                                <br/>This payment receipt is exclusive of RTO, Insurance, and Handling charges, which will be billed separately. ***
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(OR(NOT(ISNULL(op.Order__r.RTO_Charges__c)), NOT(ISNULL(op.Order__r.Handling_Charges__c)), NOT(ISNULL(op.Order__r.Insurance_Amount__c))))}">
+                                ***
                             </apex:outputPanel>
                         </div>
                     </ul>
@@ -154,10 +161,12 @@
             </tr>
         </table>
             
-            <table  width="100%" style="margin-top:10px;float:left;">
+            <!--<table  width="100%" style="margin-top:2px;float:left;"> -->
+            <table  width="100%" style="float:left;">
                 <td width="10%"></td>
-                <td width="100%" style="text-decoration: solid underline purple 4px; text-align:center;margin-bottom:20px;"><br/><strong>Terms and Condition : Advance received is only towards goods i.e. vehicle and not towards any services.</strong></td>
+                <td width="100%" style="text-decoration: solid underline purple 4px; text-align:center; margin-bottom:20px;"><br/><strong>Terms and Condition : Advance received is only towards goods i.e. vehicle and not towards any services.</strong></td>
             </table>
+            
         </div> 
         
     </body> 

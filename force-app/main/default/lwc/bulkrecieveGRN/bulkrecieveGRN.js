@@ -89,6 +89,7 @@ export default class BulkrecieveGRN extends LightningElement {
                  this.requestLineItems = data.map((res) => ({
                      Id: res.Id,
                      Name: res.Product2?.Name,
+                     ProductId:res.Product2Id,
                      ProductName: res.Product2?.Name || 'N/A',
                      PartName: res.Product2?.ProductCode || 'N/A',
                      Product2Id: res.Product2?.Id || null,
@@ -103,6 +104,7 @@ export default class BulkrecieveGRN extends LightningElement {
                  }));
                  this.showSpinner = false;
                  this.error = undefined;
+                 console.log('Fetched Data==>',data);
              } else if (error) {
                  this.error = error;
                  this.requestLineItems = [];
@@ -188,10 +190,18 @@ export default class BulkrecieveGRN extends LightningElement {
         const updatedValue = fieldName === 'remarks' ? event.target.value : parseFloat(event.target.value) || 0;
     
         console.log(`Field Updated: ${fieldName}, Value: ${updatedValue}`);
+        //added by Aniket
+        let selectedItem = this.requestLineItems.find(item => item.Id === rowId);
+    if (!selectedItem) {
+        console.warn(`No matching item found for rowId: ${rowId}`);
+        return; // Avoid further execution if no matching item is found
+    }
+        //upto here
         
         if (!this.updatedValues[rowId]) {
             this.updatedValues[rowId] = {
                 Id: rowId,
+                ProductId: selectedItem?.Product2Id || null,//added by Aniket to capture producId
                 receivedQuantity: null,
                 MIT: null,
                 DIT: null,

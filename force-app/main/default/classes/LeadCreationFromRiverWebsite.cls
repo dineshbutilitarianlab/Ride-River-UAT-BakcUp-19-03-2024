@@ -21,9 +21,7 @@ global class LeadCreationFromRiverWebsite {
         Boolean instoreTestdrive = (Boolean) requestBodyMap.get('InstoreTestdrive');
         String utm_source = (String) requestBodyMap.get('utm_source'); 
         Boolean verified = (Boolean) requestBodyMap.get('verified');  
-      
-        
-         
+ 
         // Retrieve date/time values from the request body  
         String startDateTimeStr = (String) requestBodyMap.get('startDateTimeStr');  
         String endDateTimeStr = (String) requestBodyMap.get('endDateTimeStr');  
@@ -54,6 +52,11 @@ global class LeadCreationFromRiverWebsite {
                             FROM Lead WHERE Phone = :phone LIMIT 1];  
 
         Lead leadToUpdate;  
+        Map<String, Id> queueMap = new Map<String, Id>();
+        for (Group grp : [SELECT Id, DeveloperName FROM Group WHERE Type = 'Queue']) {
+                queueMap.put(grp.DeveloperName, grp.Id);
+            }
+            System.debug('queueMap populated =========>' + queueMap);
 
         try {
             if (!leads.isEmpty()) {  
@@ -75,7 +78,8 @@ global class LeadCreationFromRiverWebsite {
             leadToUpdate.PostalCode = postalCode;  
             leadToUpdate.Test_ride_Start_date__c = startDateTime;  
             leadToUpdate.Test_ride_end_date__c = endDateTime;  
-            leadToUpdate.Dealer_Code__c = dealerCode;   
+            //leadToUpdate.Dealer_Code__c = dealerCode;  
+            leadToUpdate.ownerId = queueMap.get('Head_Quarter'); 
             leadToUpdate.Utm_Source__c = utm_source;
             Boolean isValue;
            
@@ -91,7 +95,8 @@ global class LeadCreationFromRiverWebsite {
                 // Insert new lead  
                 insert leadToUpdate;  
             }
-
+            System.debug('leadToUpdate ===> ' + leadToUpdate);
+			
             // Log success
             Integration_Log__c logObj = new Integration_Log__c(
                Integration_Type__c = ' Lead Creation',

@@ -88,7 +88,7 @@
         
         <hr />
         
-        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;" width="100%">
+        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;font-size:12px;" width="100%">
             <tr>
                 <td>
                     Invoice Date:
@@ -99,7 +99,7 @@
                     Hypothecation: &nbsp;
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Yes', 'No')}" /> 
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Bank Name: ' + order.Finance__r.Name, '')}" /> <br /><br />
-                    Place of Supply: <span style="white-space: nowrap;">{!order.Account.BillingState}</span> 
+                    Place of Supply: <span style="white-space: nowrap;">{!order.Dealer__r.BillingState}</span> 
                 </td>
                 
                 <td style="padding:5px;vertical-align: top; margin-left:10px;">

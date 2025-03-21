@@ -66,7 +66,6 @@
                         </p>
                     </td>
                     
-                    <!-- Right Column: Tax Invoice and QR Code -->
                     <td style="padding: 10px; width: 15%; vertical-align: top; text-align: left;">
                         
                         <div style="font-size: 13pt; font-weight: bold;">
@@ -85,18 +84,18 @@
         
         <hr />
         
-        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;" width="100%">
+        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;font-size:12px;" width="100%">
             <tr>
                 <td>
                     Invoice Date:
                     <apex:outputText value="{0,date,dd/MM/yyyy}"><apex:param value="{!currentDate}" /></apex:outputText><br />
                     <br />
-                    Invoice Number: <span style="white-space: nowrap;">{!invoiceId}</span><br /><br />
+                    Invoice No: <span style="white-space: nowrap;">{!invoiceId}</span><br /><br />
                     Order Id: <span style="white-space: nowrap;">{!order.Website_Order_Id__c}</span><br /><br />
                     Hypothecation: &nbsp;
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Yes', 'No')}" /> 
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Bank Name: ' + order.Finance__r.Name, '')}" /> <br /><br />
-                    Place of Supply: <span style="white-space: nowrap;">{!order.Account.BillingState}</span> 
+                    Place of Supply: <span style="white-space: nowrap;">{!order.Dealer__r.BillingState}</span> 
                 </td>
                 
                 <td style="padding:5px;vertical-align: top; margin-left:10px;">
@@ -160,7 +159,7 @@
             <apex:variable value="{!1}" var="rowNumber" />
             
             <apex:repeat value="{!orderItemList}" var="OrderItem">            
-                <tr style="border-collapse: collapse;height:170px;font-size:15px;page-break-inside:avoid; page-break-after:auto">
+                <tr style="border-collapse: collapse;height:160px;font-size:12px;page-break-inside:avoid; page-break-after:auto">
                     
                     <td style="padding:7px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;"><br/> 
                         
@@ -249,37 +248,37 @@
                 </td>
             </tr>
             
-            <tr>            
+            <!-- <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: Discount on EX-Showroom Price</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid;border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!DiscountOnEx}"/>
                     </apex:outputText>
                 </td>
-            </tr>
+            </tr> -->
             
-            <tr>            
+            <!-- <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less:PM E-Drive Incentive from Govt. of India</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!Fame}"/>
                     </apex:outputText>
                 </td>
-            </tr>
+            </tr> -->
             
-            <tr>            
+            <!-- <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: State Government Subsidy</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!sSubsidy}"/>
                     </apex:outputText>
                 </td>
-            </tr>
+            </tr> -->
             
             <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: Offer Amount</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
-                       0
+                      {!MerchandiseAdditionalDiscount}
                 </td>
             </tr>
             
@@ -287,7 +286,7 @@
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Net to be collected from Customer</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,##0.00}">
-                        <apex:param value="{!totalValueAfterAllTaxes}"/>
+                        <apex:param value="{!totalValueAfterAllTaxes - MerchandiseAdditionalDiscount}"/>
                     </apex:outputText>
                 </td>
             </tr>                  
@@ -301,8 +300,8 @@
            
         <div style="width: 100%; text-align: left;font-family: Helvetica, sans-serif;margin-top:5px;float:left;">
             <p style="width:30%;text-align:left;float:left;">
-                Authorized Signature	<br />
-                For River Mobility Private Limited		
+                For River Mobility Private Limited	 <br/> <br/>
+                Authorized Signature	<br />	
             </p>
             <p style="float:right; width:60%;text-align:left; width:25%">
                 Thank You for Choosing River 

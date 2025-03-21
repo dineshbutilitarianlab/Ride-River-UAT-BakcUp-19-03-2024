@@ -1,184 +1,79 @@
-<apex:page showHeader="false" renderAs="pdf" applyHtmlTag="false" standardController="Vehicle">
+<apex:page showHeader="false" renderAs="pdf" showheader="false" applyHtmlTag="false" readOnly="true" standardController="Order" extensions="Form22pdfController">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <style type="text/css">
             @page {
-                size: A4 portrait;
-                margin: 20mm;
+            size: A4 portrait;
+            margin: 20mm;
             }
             body {
-                font-family: Arial, sans-serif;
-                font-size: 10pt;
-                color: #000;
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt;
+            color: #000;
             }
             .form-title {
-                font-size: 14pt;
-                font-weight: bold;
-                text-align: center;
-                margin-bottom: 15px;
+            font-size: 12pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
             }
-             .sub-text, .certify-text {
-                font-size: 10pt;
-                text-align: center;
-                margin-bottom: 15px;
-            }
-            .section-title {
-                font-size: 12pt;
-                font-weight: bold;
-                margin-top: 10px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 10px;
-            }
-            td, th {
-                border: 1px solid #000;
-                padding: 5px;
-                text-align: left;
-            }
-            .no-border {
-                border: none;
+            .sub-title {
+            font-size: 12pt;
+            text-align: center;
+            margin-bottom: 10px;
             }
             .signature {
-                margin-top: 30px;
-                text-align: right;
-                font-size: 10pt;
-                font-weight: bold;
+            margin-top: 40px;
+            text-align: right;
+            font-size: 12pt;
             }
             .note {
-                font-size: 9pt;
-                margin-top: 20px;
-            }
-            .bold {
-                font-weight: bold;
+            font-size: 11pt;
+            margin-top: 30px;
             }
             .center {
-                text-align: center;
+            text-align: center;
             }
-            .footer {
-                margin-top: 20px;
-                font-size: 9pt;
-                text-align: center;
-            }
-        </style>
+            
+        </style> 
     </head>
     <body>
         <div class="form-title">
-            FORM 22<br/>
-            [See Rules 47(1)(g), 115, 124(2) and 127]<br/>
-            INITIAL CERTIFICATE OF COMPLIANCE WITH POLLUTION STANDARDS,<br/>
-            SAFETY STANDARDS OF COMPONENTS AND ROAD-WORTHINESS
-        </div>
-        <div class="sub-text">
-            (To be issued by the manufacturer or registered E-rickshaw<br/>
-            or E-cart Association (in case of E-rickshaw or E-cart))
-        </div>
-         <div class="certify-text">
-            It is certified that the following vehicle complies with the emission values, including mass<br/>
-            emission norms and noise standard including noise level under the provisions of the Motor<br/>
-            Vehicles Act,1988, and the rules made thereunder as specified below:
-        </div>
-
-        <div class="section-title">
-            Vehicle Details:
+            <div Style= 'margin-bottom:9px;'>
+                FORM 22<br/>
             </div>
-            <div>
-        <strong>1. Brand name of the vehicle:</strong> {!Vehicle.Name}<br/>
-        <strong>2. Chassis number:</strong> {!Vehicle.ChassisNumber}<br/>
-        <strong>3. Engine number/ motor number:</strong> {!Vehicle.Name}<br/>
-        <strong>4. Emission norms applicable:</strong> {!Vehicle.Name}<br/>
-    </div>
-
-        <div class="section-title">
-            Emission Values:
+            <div Style= 'margin-bottom:9px;'>
+                [See Rules 47(1)(g), 115, 124(2) and 127]<br/>
+            </div>
+            INITIAL CERTIFICATE OF COMPLIANCE WITH POLLUTION STANDARDS, SAFETY STANDARDS OF COMPONENTS AND ROAD-WORTHINESS
         </div>
-        <table>
-            <tr>
-                <th class="center">Sl. No</th>
-                <th class="center">Pollutant</th>
-                <th class="center">Mass in Gram / Kilometer or gram / kilowatt per hour</th>
-            </tr>
-            <tr>
-                <td class="center">1</td>
-                <td>Carbon Monoxide</td>
-                <td>0.5</td>
-            </tr>
-            <tr>
-                <td class="center">2</td>
-                <td>Hydro Carbon</td>
-                <td>0.3</td>
-            </tr>
-            <tr>
-                <td class="center">3</td>
-                <td>Non-Methane HC</td>
-                <td>0.2</td>
-            </tr>
-            <tr>
-                <td class="center">4</td>
-                <td>NOx</td>
-                <td>0.15</td>
-            </tr>
-            <tr>
-                <td class="center">5</td>
-                <td>HC + NOx</td>
-                <td>0.35</td>
-            </tr>
-            <tr>
-                <td class="center">6</td>
-                <td>PM</td>
-                <td>0.025</td>
-            </tr>
-        </table>
-
-        <div class="section-title">
-            Noise Level:
+        <div class="sub-title">
+            (To be issued by the manufacturer or registered E-rickshaw or E-cart Association<br/> (in case of E-rickshaw or E-cart))
         </div>
-        <table>
-            <tr>
-                <td class="bold">Horn</td>
-                <td>85 dB(A)</td>
-            </tr>
-            <tr>
-                <td class="bold">Bystander’s position</td>
-                <td>78 dB(A)</td>
-            </tr>
-            <tr>
-                <td class="bold">Operator’s ear level</td>
-                <td>80 dB(A)</td>
-            </tr>
-        </table>
-
-        <div class="section-title">
-            Safety and Performance Compliance:
-        </div>
-        <table>
-            <tr>
-                <td>Braking System</td>
-                <td>Compliant as per IS:11852</td>
-            </tr>
-            <tr>
-                <td>Steering System</td>
-                <td>Compliant as per IS:12222</td>
-            </tr>
-            <tr>
-                <td>Lighting System</td>
-                <td>Compliant as per IS:12510</td>
-            </tr>
-        </table>
-
+        <p>It is certified that the following vehicle complies with the emission values, including mass emission norms and noise standard including noise level under the provisions of the Motor Vehicles Act,1988, and the rules made thereunder as specified below:</p><br/>
+        <p>1. Brand name of the vehicle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : RIVER INDIE</p>
+        <p>2. Chassis number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : {!IF(vehicle.VehicleIdentificationNumber != null, vehicle.VehicleIdentificationNumber, '')}</p>
+        <span style="line-height:1.5;">3. Engine number/ motor number<br/>
+            (in case of battery operated vehicles)&nbsp;&nbsp; : {!IF(vehicle.EngineNumber != null, vehicle.EngineNumber, '')}</span>
+        <p>4. CMVR certificate : AATB 0377 dated 04th November 2024</p><br/>
+        <p>5. The emission, sound level for horn and pass by noise values of the above vehicle model, obtained during Type Approval as per Central Motor Vehicle Rules, 1989 are given below:</p>
+        <span style="line-height:1.5;">&nbsp;(i) &nbsp;&nbsp;&nbsp;Noise level (refer rules 119 and 120)<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a) horn (for all vehicles other than agricultural tractors and construction equipment vehicles)  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;as installed on the vehicle.....  97 &nbsp;&nbsp;&nbsp;&nbsp;dB(A);<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(b) Bystander’s position (for all vehicles other than agricultural tractors and construction &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;equipment vehicles).....  65 &nbsp;&nbsp;&nbsp;&nbsp;dB(A);
+            
+        </span>
         <div class="signature">
             ___________________________<br/>
-            (Signature of Manufacturer or Authorised Signatory)<br/>
+            (Signature of Manufacturer or of authorised <br/> Signatory of registered E- rickshaw or<br/>
+            E- cart Association)
         </div>
-
+        <br/>
+        <br/>
         <div class="note">
             <strong>Note 1:</strong> This form shall be issued with the signature of the manufacturer duly printed in the Form itself by affixing facsimile signature in ink under the hand and the seal of the manufacturer.<br/>
+            <br/>
             <strong>Note 2:</strong> In the case of E-rickshaw or E-cart, this Form shall be issued with the signature of an authorized signatory of registered E-rickshaw or E-cart Association duly printed in the Form itself by affixing facsimile signature in ink under the hand and seal of such signatory.
-        </div>
-
-        <div class="footer">
-            <strong>Terms and Conditions:</strong> This certificate is issued as per the applicable rules and regulations.
         </div>
     </body>
 </apex:page>

@@ -42,7 +42,6 @@ public class NewDealerInvoiceControllerPdf {
     public string cocoBillEmail { get; set; }
     public String cocoPhone { get; set; }
     public String cocoCIN { get; set; }
-    public Terms_and_Condition__mdt dodoTC { get; set; }
     public Terms_and_Condition__mdt cocoTC { get; set; }
     public String formatedIRNNumber { get; set; }
     public String storeType { get; set; }
@@ -77,10 +76,10 @@ public class NewDealerInvoiceControllerPdf {
                     Dealer__r.Beneficiary_Name__c, Dealer__r.Account_Number__c, Dealer__r.Bank_Name__c, Dealer__r.Swift_Code__c, Dealer__r.IFSC__c, Dealer__r.PAN_Number__c,
                     IRN_No__c, Dealer__r.Store_Type__c, Dealer__r.Email__c, Dealer__r.Phone, Account.GSTIN_Number__c, Dealer__r.GSTIN_Number__c FROM Order  WHERE Id=:orderId ]; 
             
-                    cocoTC = [SELECT Id, Terms_and_Condition__c FROM Terms_and_Condition__mdt WHERE DeveloperName = 'Coco_TC' LIMIT 1];
-                    if (cocoTC.Terms_and_Condition__c != null) {
-                        cocoTC.Terms_and_Condition__c = cocoTC.Terms_and_Condition__c.replace('\n', '<br/>');
-                    }
+            cocoTC = [SELECT Id, Terms_and_Condition__c,DeveloperName FROM Terms_and_Condition__mdt WHERE DeveloperName = 'Coco_TC' LIMIT 1];
+            if (cocoTC.Terms_and_Condition__c != null) {
+                cocoTC.Terms_and_Condition__c = cocoTC.Terms_and_Condition__c.replace('\n', '<br/>');
+            }
                     if (order.Dealer__r.Store_Type__c != null) {
                         if (order.Dealer__r.Store_Type__c == 'DODO') {
                             storeType = 'DODO';

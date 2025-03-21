@@ -127,17 +127,53 @@ public  class homecontroller{
     //     return existingFollowUp.Id;
     // }
 
-     Follow_Up__c crfollowup=new Follow_Up__c();
-        if(followupdate!=null&&feedbackvalue!=null){
-            system.debug('enter'+leadid+followupdate+feedbackvalue);
+    List<Follow_Up__c> existingFollowUps = [
+        SELECT Id, Follow_Up_Date__c, Feedback__c, Status__c 
+        FROM Follow_Up__c 
+        WHERE Lead__c = :leadId AND Status__c != 'Completed' 
+        ORDER BY CreatedDate DESC 
+        LIMIT 1
+    ];
 
-        crfollowup.Lead__c=leadid;
-        crfollowup.Follow_Up_Date__c=followupdate;
-        crfollowup.Feedback__c =feedbackvalue;
+    Follow_Up__c followUpRecord;
+
+    if (!existingFollowUps.isEmpty()) {
+        // Update the existing Follow-Up
+        followUpRecord = existingFollowUps[0];
+        followUpRecord.Follow_Up_Date__c = followUpDate;
+        followUpRecord.Feedback__c = feedbackValue;
+        System.debug('Updating existing Follow-Up: ' + followUpRecord.Id);
+        update followUpRecord;
+    } else {
+        // Create a new Follow-Up if none exists
+        followUpRecord = new Follow_Up__c(
+            Lead__c = leadId,
+            Follow_Up_Date__c = followUpDate,
+            Feedback__c = feedbackValue
+        );
+        insert followUpRecord;
+        System.debug('Created new Follow-Up: ' + followUpRecord.Id);
+    }
+
+    // Update Lead Status to "Follow Up"
+    Lead leadToUpdate = [SELECT Id, Status FROM Lead WHERE Id = :leadId LIMIT 1];
+    leadToUpdate.Status = 'Follow Up';
+    update leadToUpdate;
+    System.debug('Updated Lead Status to Follow Up: ' + leadId);
+
+    return followUpRecord.Id;
+
+    //  Follow_Up__c crfollowup=new Follow_Up__c();
+    //     if(followupdate!=null&&feedbackvalue!=null){
+    //         system.debug('enter'+leadid+followupdate+feedbackvalue);
+
+    //     crfollowup.Lead__c=leadid;
+    //     crfollowup.Follow_Up_Date__c=followupdate;
+    //     crfollowup.Feedback__c =feedbackvalue;
             
-        }
-        insert crfollowup;
-        return crfollowup.Id;
+    //     }
+    //     insert crfollowup;
+    //     return crfollowup.Id;
     }
     
    /* @AuraEnabled
@@ -156,19 +192,53 @@ public  class homecontroller{
     } */
     @auraenabled
     public static void createstoreride(Id leadid,string testridename,datetime ridedate){
-        
-        system.debug('hhh'+ridedate);
-        String formattedDate = ridedate.format('dd-MMM-yyyy hh:mm:ss a', 'en_IN');
-        system.debug(formattedDate);
-        if(ridedate!=null){
-            Test_Drive__c td=new Test_Drive__c();
-            td.Lead__c=leadid;
-            td.Name=testridename;
-            td.Test_Ride_Date__c=ridedate;
-            td.Ride_Type__c='Store Ride'; 
+            // Check if there is an existing Store Ride Test Drive for this Lead
+    List<Test_Drive__c> existingTestDrives = [
+        SELECT Id, Name, Test_Ride_Date__c, Ride_Type__c 
+        FROM Test_Drive__c 
+        WHERE Lead__c = :leadId
+        ORDER BY CreatedDate DESC 
+        LIMIT 1
+    ];
+
+    Test_Drive__c testDriveRecord;
+
+    if (!existingTestDrives.isEmpty()) {
+        // Update the existing Test Drive
+        testDriveRecord = existingTestDrives[0];
+        testDriveRecord.Name = testRideName;
+        testDriveRecord.Test_Ride_Date__c = rideDate;
+        System.debug('Updating existing Test Drive: ' + testDriveRecord.Id);
+        update testDriveRecord;
+    } else {
+        // Create a new Test Drive if none exists
+        testDriveRecord = new Test_Drive__c(
+            Lead__c = leadId,
+            Name = testRideName,
+            Test_Ride_Date__c = rideDate,
+            Ride_Type__c = 'Store Ride'
+        );
+        insert testDriveRecord;
+        System.debug('Created new Test Drive: ' + testDriveRecord.Id);
+    }
+
+    // Update Lead Status to "Test Drive"
+    Lead leadToUpdate = [SELECT Id, Status FROM Lead WHERE Id = :leadId LIMIT 1];
+    leadToUpdate.Status = 'Test Ride';
+    update leadToUpdate;
+    System.debug('Updated Lead Status to Test Ride: ' + leadId);
+        // system.debug('hhh'+ridedate);
+        // String formattedDate = ridedate.format('dd-MMM-yyyy hh:mm:ss a', 'en_IN');
+        // system.debug(formattedDate);
+        // if(ridedate!=null){
+        //     Test_Drive__c td=new Test_Drive__c();
+        //     td.Lead__c=leadid;
+        //     td.Name=testridename;
+        //     td.Test_Ride_Date__c=ridedate;
+        //     td.Ride_Type__c='Store Ride'; 
             
-            insert td;
-        }
+        //     insert td;
+        // }
         
     }
      @auraenabled

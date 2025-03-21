@@ -351,7 +351,7 @@ public class ProductRequestLineController {
     public static List<ShipmentItem> getPOrelatedPLI(String recordId) {
         try {
             if (String.isNotBlank(recordId) && recordId != null) {
-                return [ SELECT Id, Quantity, Product2.Name, ShipmentId,Shipment.DestinationLocationId,Shipment.SourceLocationId, Product2.ProductCode FROM ShipmentItem  WHERE ShipmentId  =:recordId];
+                return [ SELECT Id, Quantity, Product2.Name,Product2Id, ShipmentId,Shipment.DestinationLocationId,Shipment.SourceLocationId, Product2.ProductCode FROM ShipmentItem  WHERE ShipmentId  =:recordId];
             }
         } catch (Exception e) {
             System.debug('Error in getPOrelatedPLI == > ' + e.getMessage() + ' && at Line == > ' + e.getLineNumber());
@@ -728,6 +728,9 @@ public class ProductRequestLineController {
                 Object itemDetails = updatedItemsMap.get(shipmentItemId);
                 if (itemDetails instanceof Map<String, Object>) {
                     Map<String, Object> itemData = (Map<String, Object>) itemDetails;
+                    //added by Aniket for Product lookup
+                    
+                    //upto here
                     if (itemData.containsKey('receivedQuantity')) {
                         Integer receivedQty = Integer.valueOf(String.valueOf(itemData.get('receivedQuantity')));
                         disRec.Received_Quantity__c = receivedQty;
@@ -908,7 +911,21 @@ public class ProductRequestLineController {
                         lineItem.Quantity__c = quantity;
                         lineItem.Type__c = fieldName;
                         lineItem.status__c = 'New';
+                        //added by Aniket for Product__c Lookup
+                        if (data.containsKey('ProductId')) {
+                            try {
+                                Id productId = Id.valueOf(String.valueOf(data.get('ProductId')));
+                                lineItem.Product__c = productId;
+                                System.debug('Assigned Product__c: ' + productId + ' to Discrepancy Line Item for Shipment Item ID: ' + shipmentItemId);
+                            } catch (Exception e) {
+                                System.debug('Error parsing ProductId for Shipment Item ID ' + shipmentItemId + ': ' + e.getMessage());
+                            }
+                        }
+                         //upto here
                         disLineItemsToInsert.add(lineItem);
+                        
+                        
+                        
                     }
                 } catch (Exception e) {
                     System.debug('Error parsing quantity for ' + shipmentItemId + ': ' + e.getMessage());
@@ -1027,6 +1044,27 @@ public class ProductRequestLineController {
             PORecToUpdate = [SELECT Id,Status FROM ProductRequest WHERE Id=:POId];
             if (!newOrderItems.isEmpty()) {
                 insert newOrderItems;
+                //
+    // newly code     //
+    Set<Id> orderIds = new Set<Id>();
+    for (OrderItem oi : newOrderItems) {
+        if (oi.OrderId != null) {
+            orderIds.add(oi.OrderId);
+        }
+    }
+
+    // Fetch and update related Orders
+    if (!orderIds.isEmpty()) {
+        List<Order> ordersToUpdate = [SELECT Id, Status FROM Order WHERE Id IN :orderIds];
+        for (Order ord : ordersToUpdate) {
+            ord.Status = 'Submitted to Finance'; // Set the desired status
+        }
+        update ordersToUpdate;
+        System.debug('Updated Order Status to Submitted to Finance for Orders: ' + orderIds);
+    }
+
+    // newly code     //
+                
                 if(PORecToUpdate !=null){
                     PORecToUpdate.Status = 'Processing';
                     update PORecToUpdate;

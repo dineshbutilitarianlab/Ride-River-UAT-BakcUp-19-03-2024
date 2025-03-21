@@ -50,6 +50,7 @@ public class MerchandiseInvoicePdfController {
     public String storeType { get; set; }
     public Decimal totalValueAfterGST { get; set; }
     public Decimal totalValueAfterAllTaxes { get; set; } // New coded Dinesh - 18/03/2025
+    public Decimal MerchandiseAdditionalDiscount { get; set; }
     
     public String getFormattedBillingStreet() {
                 return order.Dealer__r.BillingStreet != null ? order.Dealer__r.BillingStreet.replace('\n', '<br/>') : '';
@@ -74,6 +75,7 @@ public class MerchandiseInvoicePdfController {
             igstPercentage = 5;
             totalValueAfterGST = 0;
             totalValueAfterAllTaxes = 0;
+            MerchandiseAdditionalDiscount = 0;
             
             Id orderId = controller.getId();
             system.debug('orderId==>'+orderId); 
@@ -86,10 +88,12 @@ public class MerchandiseInvoicePdfController {
                     Assigned_Vehicle__r.VehicleDefinition.Battery_Name__c,Assigned_Vehicle__r.VehicleDefinition.Battery_Quantity__c,Assigned_Vehicle__r.VehicleDefinition.BatteryCapacity,
                     Assigned_Vehicle__r.Name, Finance__r.Name, Assigned_Vehicle__r.VehicleDefinition.Battery_Capacity__c, Assigned_Vehicle__r.Vehicle_Details__c, Dealer__r.Name, Dealer__r.Center_Code__c,
                     Dealer__r.BillingCity,Dealer__r.BillingCountry, Dealer__r.BillingPostalCode, Dealer__r.BillingState, Dealer__r.BillingStreet,	Transportation_Charges__c,Internal_Purchase__c,
-                    Discount_on_Ex_Showroom_Price__c, Subsidy_Amount__c, State_Govt_Subsidy__c, Offers_Amount__c,
+                    Discount_on_Ex_Showroom_Price__c, Subsidy_Amount__c, State_Govt_Subsidy__c, Offers_Amount__c,Merchandise_Additional_Discount__c,
                     Dealer__r.CIN__c, Dealer__r.RR_Customer_Care_Email__c, Dealer__r.RR_Customer_HelpLine_Number__c, Dealer__r.Email__c,  Dealer__r.GSTIN_Number__c,  Dealer__r.Phone,
                     Dealer__r.Beneficiary_Name__c, Dealer__r.Account_Number__c, Dealer__r.Bank_Name__c, Dealer__r.Swift_Code__c, Dealer__r.IFSC__c, Dealer__r.PAN_Number__c,
                     IRN_No__c, Account.GSTIN_Number__c, Dealer__r.Store_Type__c FROM Order  WHERE Id=:orderId ]; 
+
+                    MerchandiseAdditionalDiscount = order.Merchandise_Additional_Discount__c != null ? order.Merchandise_Additional_Discount__c : 0;
                  
             if (order.Dealer__r.Store_Type__c != null) {
                 if (order.Dealer__r.Store_Type__c == 'DODO') {
@@ -197,9 +201,9 @@ public class MerchandiseInvoicePdfController {
             //totalAmountInvoice = (orderItemList[0].UnitPrice - preGstInvoice + discountInvoice)  * orderItemList[0].Quantity;
             //totalAmountInvoice = (orderItemList[0].UnitPrice - discountInvoice)  * orderItemList[0].Quantity;
             tValueAftGST = orderItemList != null && orderItemList.size() > 0 ? orderItemList[0].UnitPrice + trpCharges- discountInvoice : 0;
-            DiscountOnEx = order.Discount_on_Ex_Showroom_Price__c != null ? order.Discount_on_Ex_Showroom_Price__c : 0;
-            Fame = order.Subsidy_Amount__c != null ? order.Subsidy_Amount__c : 0;
-            sSubsidy = order.State_Govt_Subsidy__c != null ? order.State_Govt_Subsidy__c : 0;
+            DiscountOnEx =0; // order.Discount_on_Ex_Showroom_Price__c != null ? order.Discount_on_Ex_Showroom_Price__c : 0;
+            Fame =0; // order.Subsidy_Amount__c != null ? order.Subsidy_Amount__c : 0;
+            sSubsidy = 0; //order.State_Govt_Subsidy__c != null ? order.State_Govt_Subsidy__c : 0;
             offerAmount = order.Offers_Amount__c != null ? order.Offers_Amount__c : 0;
             //NetAmount = tValueAftGST.round() - DiscountOnEx - Fame - sSubsidy - offerAmount;
             calculatedPercentageAmount = 0;
@@ -296,7 +300,9 @@ public class MerchandiseInvoicePdfController {
             }
             
             //taxableAmount = TotalAmount.setScale(2) - Gst.setScale(2) - Gst.setScale(2);
+            NetAmount = totalValueAfterAllTaxes - MerchandiseAdditionalDiscount;
             inWords = CurrencyToWordsInRupees.convertToWords(NetAmount);
+
         }
         catch(Exception e){
             System.debug('Error Occured===>>'+e.getMessage()+'And Error occured in Line Number====>'+e.getLineNumber());

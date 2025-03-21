@@ -77,9 +77,16 @@ public class MissedTestDriveEmailService implements Schedulable {
         }
 
         // Send Emails in Bulk
-        sendEmails(storeTestDrives, 'Team');
-        sendEmails(asmTestDrives, 'Team');
-        sendHQEmail(hqTestDrives);
+        if (Label.Enable_Store_Email == 'True') {
+            sendEmails(storeTestDrives, 'Team');
+        }
+        if (Label.Enable_ASM_Email == 'True') {
+            sendEmails(asmTestDrives, 'Team');
+        }
+        if (Label.Enable_HQ_Email == 'True') {
+            sendHQEmail(hqTestDrives);
+        }
+
     }
 
     /** Sends emails for Stores & ASMs */
@@ -106,12 +113,24 @@ public class MissedTestDriveEmailService implements Schedulable {
     /** Sends HQ email with all missed test drives */
     private static void sendHQEmail(List<Test_Drive__c> hqTestDrives) {
         List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
-        List<String> hqEmails = new List<String>{'rohit.bisht@utilitarianlabs.com'}; 
+        List<HQ_Email_Settings__mdt> hqEmailRecords = [SELECT Email__c FROM HQ_Email_Settings__mdt WHERE Active__c = TRUE];
+
+        List<String> hqEmails = new List<String>();
+        for (HQ_Email_Settings__mdt record : hqEmailRecords) {
+            if (record.Email__c != null) {
+                hqEmails.add(record.Email__c);
+            }
+        }
+
+        if (hqEmails.isEmpty()) {
+            System.debug('No active HQ emails found in metadata.');
+            return;
+        }
 
         for (String email : hqEmails) {
             Messaging.SingleEmailMessage mail = prepareEmail(
                 email, 
-                '🚗 Yesterday’s Missed Test Ride List for All Stores – ' + Date.today().format(),
+                '🛵 Yesterday’s Missed Test Ride List for All Stores – ' + Date.today().format(),
                 formatTestRideData(hqTestDrives, 'Team')
             );
             emailList.add(mail);
@@ -130,7 +149,7 @@ public class MissedTestDriveEmailService implements Schedulable {
         mail.setHtmlBody(htmlBody);
 
         // Set Org-Wide Email Address
-        OrgWideEmailAddress[] orgWideEmail = [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'support@rideriver.com' LIMIT 1];
+        OrgWideEmailAddress[] orgWideEmail = [SELECT Id FROM OrgWideEmailAddress WHERE Address = :System.Label.OrgWideEmailAddress LIMIT 1];
         if (!orgWideEmail.isEmpty()) {
             mail.setOrgWideEmailAddressId(orgWideEmail[0].Id);
         }
@@ -166,7 +185,7 @@ public class MissedTestDriveEmailService implements Schedulable {
 
         html += '</table>' +
                 '<p>🔹 Please follow up accordingly.</p>' +
-                '<p>🚘 <b>Thank you,</b><br><b></b></p></body></html>';
+                '<p><b>Thank you,</b><br><b></b></p></body></html>';
 
         return html;
     }

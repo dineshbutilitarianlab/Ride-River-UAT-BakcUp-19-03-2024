@@ -253,30 +253,29 @@ export default class RiverJobCard extends NavigationMixin(LightningElement) {
         this.concernNoList = this.concernNoList.map((item, index) => {
             let updatedItem = { ...item };
     
-            // For VAS Purchase, set concern category to 'General' and update subcategory options
+            
             if (this.TypeOfJob === 'VAS Purchase') {
                 updatedItem.RR_Concern_Category__c = 'General';
                 updatedItem.RRConcernCategory = 'General';
                 updatedItem.isDisabled = true;
-                this.updateSubCategoryOptions(updatedItem); // Update subcategory options for VAS Purchase
+                this.updateSubCategoryOptions(updatedItem); 
             } else {
-                // Preserve the existing RR_Concern_Category__c for non-VAS Purchase
-                /*updatedItem.RR_Concern_Category__c = updatedItem.RR_Concern_Category__c || '';
-                updatedItem.RRConcernCategory = updatedItem.RRConcernCategory || '';
-                updatedItem.isDisabled = false; */
-                updatedItem.RR_Concern_Category__c = '';
-                updatedItem.RRConcernCategory = '';
-                updatedItem.subCategoryOptions = '';
-                updatedItem.isDisabled = false;
+                
+            updatedItem.RR_Concern_Category__c = [];
+            updatedItem.RRConcernCategory = '';
+            updatedItem.RR_Sub_Category__c = '';
+            updatedItem.RRSubCategory = '';
+            updatedItem.subCategoryOptions = [];
+            updatedItem.isDisabled = false;
             }
     
-            // If it's a new row, reset subCategoryOptions
+            
             const isNewRow = updatedItem.id === undefined || updatedItem.id === null;
     
             if (isNewRow) {
-                updatedItem.subCategoryOptions = [];  // Initialize empty subCategoryOptions for new rows
+                updatedItem.subCategoryOptions = [];  
             } else {
-                // Preserve subcategory options for existing rows
+                
                 updatedItem.subCategoryOptions = updatedItem.subCategoryOptions || [];
             }
     
@@ -291,12 +290,12 @@ export default class RiverJobCard extends NavigationMixin(LightningElement) {
                 }
             };
     
-            this.handleChange(eventMock);  // Trigger handleChange to update the UI
+            this.handleChange(eventMock);
     
             return updatedItem;
         });
     
-        this.concernNoList = [...this.concernNoList];  // Ensure reactivity
+        this.concernNoList = [...this.concernNoList];  
     
         console.log('Updated concernNoList after job type change:', JSON.stringify(this.concernNoList));
     }
@@ -682,79 +681,11 @@ export default class RiverJobCard extends NavigationMixin(LightningElement) {
         this.dispatchEvent(event);
     }
 
-    //adding row for the concerns
-    /*addRow() {
-         const newId = this.concernNoList.length; // Generate a new id for the new row
-         this.concernNoList = [
-             ...this.concernNoList,
-             { id: newId, serialNumber: this.concernNoList.length + 1, Name: '', RR_Concern_Category__c: '', RR_Sub_Category__c: '', RR_Description__c: '', haserror:false }
-         ];
-     } */
-
-    //Added BY RAM 11-03-2025
-    /* addRow() {
-         debugger;
-         const newId = this.concernNoList.length;
-     
-         const newRow = {
-             id: newId,
-             serialNumber: this.concernNoList.length + 1,
-             Name: '',
-             RR_Concern_Category__c: this.TypeOfJob === 'VAS Purchase' ? 'General' : '',
-             RR_Sub_Category__c: '',
-             RR_Description__c: '',
-             haserror: false,
-             subCategoryOptions: [],
-             isDisabled: this.TypeOfJob === 'VAS Purchase'
-         };
-     
-         this.concernNoList = [...this.concernNoList, newRow];
-     
-         if (this.TypeOfJob === 'VAS Purchase') {
-             this.concernNoList.forEach((item, index) => {
-                 item.RR_Concern_Category__c = 'General';
-                 item.isDisabled = true;
-     
-                 console.log(`Updated RR_Concern_Category__c to General for index ${index}`);
-     
-                 const eventMock = {
-                     target: {
-                         dataset: {
-                             name: 'RRConcernCategory',
-                             index: index
-                         },
-                         value: 'General'
-                     }
-                 };
-                 this.handleChange(eventMock);
-             });
-         } else {
-             // Reset values when TypeOfJob is not 'VAS Purchase'
-             this.concernNoList.forEach((item, index) => {
-                 item.RR_Concern_Category__c = '';
-                 item.isDisabled = false;
-     
-                 const eventMock = {
-                     target: {
-                         dataset: {
-                             name: 'RRConcernCategory',
-                             index: index
-                         },
-                         value: ''
-                     }
-                 };
-                 this.handleChange(eventMock);
-             });
-         }
-     
-         console.log('Updated concernNoList after adding new row:', JSON.stringify(this.concernNoList));
-     } */
-
-    //added by Ram 13-03-2025
+    
     addRow() {
         debugger;
         const newId = this.concernNoList.length;
-
+    
         const newRow = {
             id: newId,
             serialNumber: this.concernNoList.length + 1,
@@ -766,16 +697,56 @@ export default class RiverJobCard extends NavigationMixin(LightningElement) {
             subCategoryOptions: [],
             isDisabled: this.TypeOfJob === 'VAS Purchase'
         };
-
+    
         this.concernNoList = [...this.concernNoList, newRow];
-
+    
         console.log('add row list==>' + JSON.stringify(this.concernNoList));
-
-        this.updateConcernNoListBasedOnJobType();
+    
+       
+        this.updateSingleConcernNoBasedOnJobType(newRow, this.concernNoList.length - 1);
     }
+    
+    
+    updateSingleConcernNoBasedOnJobType(item, index) {
+        let updatedItem = { ...item };
+    
+        if (this.TypeOfJob === 'VAS Purchase') {
+            updatedItem.RR_Concern_Category__c = 'General';
+            updatedItem.RRConcernCategory = 'General';
+            updatedItem.isDisabled = true;
+            this.updateSubCategoryOptions(updatedItem);
+        } else {
+            updatedItem.RR_Concern_Category__c = '';
+            updatedItem.RRConcernCategory = '';
+            updatedItem.RR_Sub_Category__c = '';
+            updatedItem.RRSubCategory = '';
+            updatedItem.subCategoryOptions = [];
+            updatedItem.isDisabled = false;
+        }
+    
+        
+        this.concernNoList[index] = updatedItem;
+    
+        
+        const eventMock = {
+            target: {
+                name: 'RRConcernCategory',
+                value: updatedItem.RR_Concern_Category__c,
+                dataset: {
+                    name: 'RRConcernCategory',
+                    index: index
+                }
+            }
+        };
+    
+        this.handleChange(eventMock);
+    
+        this.concernNoList = [...this.concernNoList]; 
+    }
+    
 
 
-    //Added By RAM 13-03-2025
+    
     updateSubCategoryOptions(item) {
         if (item.RR_Concern_Category__c) {
 

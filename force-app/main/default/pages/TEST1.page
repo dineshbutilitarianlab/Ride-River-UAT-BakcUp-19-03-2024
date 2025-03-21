@@ -94,6 +94,13 @@
                         TAX INVOICE<br/><br/>
                     </div>
                     <div>
+                        <apex:outputPanel rendered="{!IsQrGenerated == false}">
+                            <apex:image value="{!URLFOR($Resource.DefaultQRCode)}" alt="QR Code" styleClass="qr-code" />
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IsQrGenerated == true}">
+                            <apex:image value="{!URLFOR('/servlet/servlet.FileDownload?file=' + QRAtt[0].Id)}" alt="QR Code" styleClass="qr-code" />
+                        </apex:outputPanel>
+                        <br/><br/>
                         Invoice Number: {!invoiceId}<br/>
                         Invoice Date: <apex:outputText value=" {0,date,dd/MM/yyyy}"><apex:param value="{!currentDate}" /></apex:outputText><br/>
                         Order Id: {!order.Website_Order_Id__c}<br/>
@@ -160,20 +167,22 @@
             
             <apex:repeat value="{!orderItemList}" var="OrderItem">            
                 <tr style="border-collapse: collapse;height:170px;">
+                    
                     <td style="border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;padding:5px;"><apex:outputText value="{!rowNumber}." escape="false"/></td>
                     
                     <td style="padding:7px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;">{!order.Assigned_Vehicle__r.Name}<br/> 
-                        Model- {!order.Assigned_Vehicle__r.VehicleDefinition.ModelCode}<br/>VIN Details- {!order.Assigned_Vehicle__r.VehicleIdentificationNumber}<br/>Motor No- {!order.Assigned_Vehicle__r.EngineNumber}<br/>Colour- {!order.Assigned_Vehicle__r.Colour__c}<br/>Battery Details- {!order.Assigned_Vehicle__r.Vehicle_Details__c}<br/>Battery Qty- {!order.Assigned_Vehicle__r.VehicleDefinition.Battery_Quantity__c}<br/>Battery Capacity- {!order.Assigned_Vehicle__r.VehicleDefinition.Battery_Capacity__c}<br/>
+                        Model- {!order.Assigned_Vehicle__r.VehicleDefinition.ModelCode}<br/>VIN Details- {!order.Assigned_Vehicle__r.VehicleIdentificationNumber}<br/>Motor No- {!order.Assigned_Vehicle__r.EngineNumber}<br/>Colour- {!order.Assigned_Vehicle__r.Colour__c}<br/>Battery Details- {!order.Assigned_Vehicle__r.Vehicle_Details__c}
                     </td>
+                    
                     
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="{!OrderItem.HSN_Code__c}"/></td>
                     
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
                         <apex:outputText value="{0, number, #,##,###}">
-                        <apex:param value="{!OrderItem.Quantity}"/>    
+                            <apex:param value="{!OrderItem.Quantity}"/>    
                         </apex:outputText>
                     </td>
-                        
+                    
                     
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
                         <apex:outputText value="{0, number, #,##,###}">
@@ -186,8 +195,6 @@
                             <apex:param value="{!IF(NOT(order.Internal_Purchase__c),calcValue, OrderItem.UnitPrice*OrderItem.Quantity)}"/>
                         </apex:outputText>
                     </td>
-                    
-                    
                     
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
                         <apex:outputText value="{!IF(
@@ -232,66 +239,66 @@
             </apex:repeat>
             
             <!--Date : 12/08/2024 : takenout transport charges as per Sukanth - Finance team.- by Prathap-->
-          <!--  <tr style="border-collapse: collapse;  padding:7px;">
-               <td style="border-collapse:collapse;padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:8px;border-right:1px solid;border-left:1px solid;vertical-align: top;"><apex:outputText value="2." escape="false"/></td>
-                
-            <td style="border-collapse:collapse;padding-top:10px;padding-bottom:10px;padding-right:5px;padding-left:8px;border-right:1px solid;text-align:left;border-left:1px solid; vertical-align:top;"><apex:outputText value="Transportation Charges"/></td>
-                
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="-"/></td>
-                
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="-"/></td>
-                
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    
-                    <apex:outputText value="-">
-                    </apex:outputText>
-                </td>
-                
-               <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{0, number, #,##,###}">
-                        <apex:param value="{!IF(NOT(order.Internal_Purchase__c), trcalcValue, order.Transportation_Charges__c)}"/>
-                    </apex:outputText>
-                </td>
-                
-                
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{!IF(
-                                            NOT(order.Internal_Purchase__c),
-                                            IF(NOT(sameState), TEXT(trigstPercentage)+'%', '-'),
-                                            '-'
-                                            )}"/>
-                </td>
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{0, number, #,##,###}">
-                        <apex:param value="{!trcalcValue1}"/>
-                    </apex:outputText>
-                </td>
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{!IF(
-                                            NOT(order.Internal_Purchase__c),
-                                            IF(sameState, TEXT(trcgstPercentage)+'%', '-'),
-                                            '-'
-                                            )}"/>
-                </td>
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{0, number, #,##,###}">
-                        <apex:param value="{!trcalcValue2}"/>
-                    </apex:outputText>
-                </td>
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    <apex:outputText value="{!IF(
-                                            NOT(order.Internal_Purchase__c),
-                                            IF(sameState, TEXT(trsgstPercentage)+'%', '-'),
-                                            '-'
-                                            )}"/>
-                </td>
-                <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
-                    
-                    <apex:outputText value="{0, number, #,##,###}">
-                        <apex:param value="{!trcalcValue3}"/>
-                    </apex:outputText>
-                </td>                    
-            </tr>    -->       
+            <!--  <tr style="border-collapse: collapse;  padding:7px;">
+<td style="border-collapse:collapse;padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:8px;border-right:1px solid;border-left:1px solid;vertical-align: top;"><apex:outputText value="2." escape="false"/></td>
+
+<td style="border-collapse:collapse;padding-top:10px;padding-bottom:10px;padding-right:5px;padding-left:8px;border-right:1px solid;text-align:left;border-left:1px solid; vertical-align:top;"><apex:outputText value="Transportation Charges"/></td>
+
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="-"/></td>
+
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;"><apex:outputText value="-"/></td>
+
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;padding-bottom:10px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+
+<apex:outputText value="-">
+</apex:outputText>
+</td>
+
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{0, number, #,##,###}">
+<apex:param value="{!IF(NOT(order.Internal_Purchase__c), trcalcValue, order.Transportation_Charges__c)}"/>
+</apex:outputText>
+</td>
+
+
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{!IF(
+NOT(order.Internal_Purchase__c),
+IF(NOT(sameState), TEXT(trigstPercentage)+'%', '-'),
+'-'
+)}"/>
+</td>
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{0, number, #,##,###}">
+<apex:param value="{!trcalcValue1}"/>
+</apex:outputText>
+</td>
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{!IF(
+NOT(order.Internal_Purchase__c),
+IF(sameState, TEXT(trcgstPercentage)+'%', '-'),
+'-'
+)}"/>
+</td>
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{0, number, #,##,###}">
+<apex:param value="{!trcalcValue2}"/>
+</apex:outputText>
+</td>
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+<apex:outputText value="{!IF(
+NOT(order.Internal_Purchase__c),
+IF(sameState, TEXT(trsgstPercentage)+'%', '-'),
+'-'
+)}"/>
+</td>
+<td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-collapse:collapse;vertical-align: top;">
+
+<apex:outputText value="{0, number, #,##,###}">
+<apex:param value="{!trcalcValue3}"/>
+</apex:outputText>
+</td>                    
+</tr>    -->       
             
             <!--/table>
 
@@ -300,7 +307,7 @@
             <tr>            
                 <td colspan="6" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Total Value After GST(Ex-Showroom Price)</td>
                 <td colspan="5" style="border-bottom:1px solid;border-top:1px solid;border-collapse:collapse;;" width="17%"></td><td width="15%" style="border-bottom:1px solid;border-top:1px solid;border-right:1px solid;border-collapse:collapse;">
-                 <apex:outputText value="{0, number, #,##,##0.00}">
+                <apex:outputText value="{0, number, #,##,##0.00}">
                     <apex:param value="{!tValueAftGST}"/>
                 </apex:outputText>
                 </td>
@@ -341,7 +348,7 @@
                 </apex:outputText>
                 </td>
             </tr>
-
+            
             
             <tr>            
                 <td colspan="6" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Net to be collected from Customer</td>
@@ -445,16 +452,12 @@
             </tr>
             <tr>          
                 <td width="2%" style="vertical-align: top; text-align: left;">10. </td>
-                <td width="68%">I acknowledge the ownership of this vehicle/accessories in this invoice and will take physical possession of the vehicle/accessories once registration is complete in all respects</td>
-            </tr>
-            <tr>          
-                <td width="2%" style="vertical-align: top; text-align: left;">11. </td>
                 <td width="68%">E and O.E.</td>
             </tr>
         </table>
         
         <table style="float:right;margin-Top:20px;text-align:left; font-family: Arial, Helvetica, sans-serif;" width="70%">
-            <td>“I give River Mobility Private Limited. (RMPL) and its agents/partners consent to contact me for any marketing or promotional communications through any medium and enable WhatsApp assistance. I understand RMPL privacy policy as mentioned on www.rideriver.com”.</td>
+            <td>â€œI give River Mobility Private Limited. (RMPL) and its agents/partners consent to contact me for any marketing or promotional communications through any medium and enable WhatsApp assistance. I understand RMPL privacy policy as mentioned on www.rideriver.comâ€.</td>
         </table>
         
         <div style="margin-left: 2mm;position: fixed;bottom: 0; width: 100%; text-align: left;font-size: 12px;font-family: Arial, Helvetica, sans-serif;">

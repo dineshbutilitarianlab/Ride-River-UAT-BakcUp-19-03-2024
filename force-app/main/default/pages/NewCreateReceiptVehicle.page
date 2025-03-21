@@ -1,9 +1,9 @@
-<apex:page standardController="Order" extensions="AccessoriesInvoicePdfController" applyHtmlTag="false" docType="html-5.0" showheader="false" renderAs="Pdf" standardStylesheets="true" sidebar="false">
+<apex:page standardController="Order" extensions="NewCreateReceiptVehicleController" applyHtmlTag="false" docType="html-5.0" showheader="false" renderAs="Pdf" standardStylesheets="true" sidebar="false">
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <style type="text/css">
             @page {
-            size: 10.5in 11.5in; 
+            size: 10.5in 12in; 
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-top: 0.5cm;
@@ -33,17 +33,7 @@
             .page-break {
             page-break-after: always;
             }
-            .footer {
-            width: 100%;
-            text-align: left;
-            font-family: Helvetica, sans-serif;
-            margin-top: 20px; 
-            }
-            .footer p:last-child {
-            width: 25%;
-            text-align: left;
-            float: right;
-            }
+            
         </style>
     </head>
     
@@ -52,12 +42,13 @@
             <table style="border-collapse: collapse; text-align: left; font-family: Arial, Helvetica, sans-serif; vertical-align: top;" width="100%">
                 <tr>
                     <!-- Left Column: Logo and Dealer Information -->
-                    <td style="padding: 10px; font-size: 12px; width: 40%; vertical-align: top;">
-                        <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="100px" width="230px" />
+                    <td style="padding: 8px; font-size: 12px; width: 40%; vertical-align: top;">
+                        <apex:image value="{!URLFOR($Resource.RideRiverLogo)}" height="100px" width="230px" style="display: block; margin-bottom: 0; padding-bottom: 0;" />
+                        
                         <p style="margin-top: 2px;">
                             
                             <apex:outputPanel rendered="{!storeType = 'DODO'}">
-                                <b><span style="font-size: 16px;"> {!dodoAccName} </span></b> <br/>
+                                <b><span style="font-size: 15px;"> {!dodoAccName} </span></b> <br/>
                                 <apex:outputText value="{!formattedBillingStreet}" escape="false"/>,
                                 {!order.Dealer__r.BillingCity}<br/>
                                 {!order.Dealer__r.BillingState}-{!order.Dealer__r.BillingPostalCode}
@@ -66,30 +57,40 @@
                             </apex:outputPanel>
                             
                             <apex:outputPanel rendered="{!storeType = 'COCO'}">
-                                <b><span style="font-size: 16px;"> {!dcPdf.CompanyName__c} </span></b> 
+                                <b><span style="font-size: 15px;"> {!dcPdf.CompanyName__c} </span></b> 
                                 <br /> <span style="font-size: 14px;"> No. 25/3, KIADB EPIP Zone, Seetharampalya–Hoodi Road, Mahadevapura, </span>
                                 <br /> <span style="font-size: 14px;"> Whitefield, Bengaluru, Bengaluru Urban, Karnataka, India 560048 </span>
                                 <br /> <span style="font-size: 14px;"> Email: {!cocoBillEmail}, &nbsp; Phone: +91 {!cocoPhone} </span>
                                 <br /> <span style="font-size: 14px;"> CIN: {!cocoCIN} </span>
                             </apex:outputPanel>
+                            
                         </p>
+                        
                     </td>
                     
-                    <td style="padding: 10px; width: 15%; vertical-align: top; text-align: left;">
-                        <div style="font-size: 13pt; font-weight: bold;">   TAX INVOICE  </div>
-                        <div style="font-size: 10pt; font-weight: bold;"> Customer Copy </div>
+                    <!-- Right Column: Tax Invoice and QR Code -->
+                    <td style="padding: 8px; width: 15%; vertical-align: top; text-align: left;">
+                        <div style="font-size: 13pt; font-weight: bold;">
+                            TAX INVOICE
+                        </div>
+                        <div style="font-size: 10pt; font-weight: bold;">
+                            Customer Copy
+                        </div>
                     </td>
                 </tr>
             </table>
         </div>
         
         <hr />
+        
         <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;font-size:12px;" width="100%">
             <tr>
-                <td> 
-                    Invoice Date:
-                    <apex:outputText value="{0,date,dd/MM/yyyy}"><apex:param value="{!currentDate}" /></apex:outputText><br />
-                    <br />
+                <td>
+                    Invoice Date: &nbsp;
+                    <apex:outputText value="{0,date,dd/MM/yyyy}">
+                        <apex:param value="{!currentDate}" />
+                    </apex:outputText>
+                    <br /><br />
                     Invoice No: <span style="white-space: nowrap;">{!invoiceId}</span><br /><br />
                     Order Id: <span style="white-space: nowrap;">{!order.Website_Order_Id__c}</span><br /><br />
                     Hypothecation: &nbsp;
@@ -99,14 +100,15 @@
                 </td>
                 
                 <td style="padding:5px;vertical-align: top; margin-left:10px;">
+                    
                     <b>Billed From:</b><br/>
                     <b>{!dodoAccName}</b><br/>
                     <apex:outputText value="{!formattedBillingStreet}" escape="false"/>
                     <br/>
-                    {!order.Dealer__r.BillingCity}<br/>
-                    {!order.Dealer__r.BillingState}-{!order.Dealer__r.BillingPostalCode}<br/>
-                    Email: {!order.Dealer__r.Email__c}, <br/>
-                    Phone: {!order.Dealer__r.Phone}
+                    {!dodoBillCityName}<br/>
+                    {!dodoBillStateName}-{!dodoBillPostalCode}<br/>
+                    Email: {!dodoBillEmail}, <br/>
+                    Phone: {!dodoPhone}
                     <br/>
                     <div style="padding-top:10px;">
                         GSTIN: {!order.Dealer__r.GSTIN_Number__c}<br/>
@@ -130,16 +132,19 @@
         
         <table style="vertical-align: top;display:inline-table;margin-top:5px; float:left;text-align:center; font-family: Helvetica, sans-serif; border-top:1px solid; border-bottom:1px solid; border-collapse:collapse;page-break-inside:auto" width="100%" >
             <tr>
+                
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal; min-width: 130px;width:130px !important; ">Item description</th>
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Unit Price</th>
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Qty</th>
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Pre GST <br />Discount</th>                
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="7%">Taxable <br />Amount</th>
+                
                 <th colspan="2" style="padding:5px;border:1px solid;border-collapse:collapse; font-weight: normal;">IGST</th>
                 <th colspan="2" style="padding:5px;border:1px solid;border-collapse:collapse; font-weight: normal;">CGST</th>
                 <th colspan="2" style="padding:5px;border:1px solid;border-collapse:collapse; font-weight: normal;">SGST</th>
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" >Post <br />GST <br /> Discount</th>
                 <th rowspan="2" style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" >Total <br />Amount</th>
+                
             </tr>
             
             <tr>
@@ -148,23 +153,28 @@
                 <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">%</th>
                 <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Amount</th>
                 <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">%</th>
-                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Amount</th>                
+                <th style="padding:5px;border:1px solid;border-collapse:collapse;font-weight: normal;" width="">Amount</th>
+                
             </tr>
             
-            <apex:variable value="{!1}" var="rowNumber" />  
+            <apex:variable value="{!1}" var="rowNumber" />
+            
             <apex:repeat value="{!orderItemList}" var="OrderItem">            
-                <tr style="border-collapse: collapse;height:160px;font-size:12px;page-break-inside:avoid; page-break-after:auto">
+                <tr style="border-collapse: collapse;height:160px;font-size:13px;page-break-inside:avoid; page-break-after:auto">  
                     <!--1.Item description  -->
-                    <td style="padding:7px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;">
-                        {!OrderItem.Product2.Name}  <br /> <br/>HSN Code: {!OrderItem.HSN_Code__c}
+                    <td style="padding:7px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;">{!order.Assigned_Vehicle__r.Name}<br/> 
+                        <br/>VIN<br /> {!order.Assigned_Vehicle__r.VehicleIdentificationNumber} <br/>
+                        <br/>Motor Number <br/>{!order.Assigned_Vehicle__r.EngineNumber}<br/> <br/>Colour: {!order.Assigned_Vehicle__r.Colour__c}
+                        <br/><br/>Battery Details<br/> {!order.Assigned_Vehicle__r.Vehicle_Details__c} <br/><br/> Battery Qty: {!order.Assigned_Vehicle__r.VehicleDefinition.Battery_Quantity__c}
+                        <br/>Battery Capacity: {!order.Assigned_Vehicle__r.VehicleDefinition.Battery_Capacity__c}<br/>
+                        <br/>HSN Code: {!OrderItem.HSN_Code__c}<br/>
                     </td>
                     
                     <!--2. Unit Price -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <apex:outputText value="{0, number, #,##0.00}">
-                          <apex:param value="{!OrderItem.UnitPrice}"/> 
+                        <apex:outputText value="{0, number, #,##,###}">
+                            <apex:param value="{!OrderItem.UnitPrice}"/>
                         </apex:outputText>
-                        <!-- <apex:param value="{!IF(NOT(order.Internal_Purchase__c), OrderItem.UnitPrice, OrderItem.UnitPrice)}"/> -->
                     </td>
                     
                     <!--3. Qty -->
@@ -176,63 +186,54 @@
                     
                     <!--4. Pre GST Discount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        {!OrderItem.Discounted_Amount_on_Merchandise__c} 
-                        <!-- {!OrderItem.Order.Accessories_Discount_Amount__c} -->
-                     </td>
+                        0
+                    </td>
                     
                     <!--5. Taxable Amount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <apex:outputText value="{0, number, #,##0.00}">
-                            <!-- <apex:param value="{!IF(NOT(order.Internal_Purchase__c),calcValue, OrderItem.UnitPrice*OrderItem.Quantity)}"/> -->
-                            <!-- <apex:param value="{!IF(NOT(order.Internal_Purchase__c), (OrderItem.UnitPrice*OrderItem.Quantity)-OrderItem.Discounted_Amount_on_Merchandise__c, (OrderItem.UnitPrice*OrderItem.Quantity)-OrderItem.Discounted_Amount_on_Merchandise__c)}"/> -->
-                            <apex:param value="{!OrderItem.Taxable_Amount__c}"/> 
+                        <apex:outputText value="{0, number, #,##,###}">
+                            <apex:param value="{!OrderItem.Taxable_Amount__c}"/>
                         </apex:outputText>
                     </td>
                     
                     <!--Igst % -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF( NOT(order.Internal_Purchase__c),   IF(   NOT(sameState),   TEXT(OrderItem.Product2.IGST_Percentage__c) + '%',   '-'  ),  '-'  )}"/> -->
-                        <!-- <apex:param value="{!OrderItem.Product_IGST__c}"/> -->
                         <!-- {!TEXT(OrderItem.Product_IGST__c)}% --> -
                     </td>
                     
                     <!--Igst Amount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF(   NOT(order.Internal_Purchase__c),   IF(  NOT(sameState),    TEXT(ROUND(  (OrderItem.Product2.IGST_Percentage__c *    ((OrderItem.UnitPrice * OrderItem.Quantity) - OrderItem.Discounted_Amount_on_Merchandise__c)) / 100,   2)),   '-'  ),  '-'  )}"/>      -->
-                         <!-- {!OrderItem.Product_IGST_Amount__c} --> -
+                        <!-- {!OrderItem.Product_IGST_Amount__c} --> -
                     </td>
                     
                     <!--Cgst % -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF(  NOT(order.Internal_Purchase__c),  IF( NOT(sameState),  '-' , TEXT(OrderItem.Product2.CGST_Percentage__c) + '%'  ), '-'  )}"/> -->
                         {!TEXT(OrderItem.Product_CGST__c)}%
                     </td>
                     
+                    
                     <!--Cgst Amount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-right:1px solid;border-left:1px solid;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF(  NOT(order.Internal_Purchase__c), IF(   NOT(sameState),   '-',   TEXT(ROUND((OrderItem.Product2.CGST_Percentage__c *  ((OrderItem.UnitPrice * OrderItem.Quantity) - OrderItem.Discounted_Amount_on_Merchandise__c)) / 100, 2)) ), '-' )}"/> -->
                         {!OrderItem.Product_CGST_Amount__c}
                     </td>
                     
                     <!-- Sgst %-->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF(  NOT(order.Internal_Purchase__c), IF( NOT(sameState),  '-' , TEXT(OrderItem.Product2.SGST_Percentage__c) + '%'  ),  '-' )}"/> -->
                         {!TEXT(OrderItem.Product_SGST__c)}%
                     </td>                    
                     <!--Sgst Amount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF( NOT(order.Internal_Purchase__c), IF(  NOT(sameState),    '-',    TEXT(ROUND((OrderItem.Product2.SGST_Percentage__c *  ((OrderItem.UnitPrice * OrderItem.Quantity) - OrderItem.Discounted_Amount_on_Merchandise__c)) / 100, 2))  ),  '-' )}"/> -->
                         {!OrderItem.Product_SGST_Amount__c}
                     </td>
                     
                     <!--Post GST Discount -->
-                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">  0 </td>     
+                    <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
+                        {!discountInvoice}
+                    </td>     
                     
                     <!--Total Amount -->
                     <td style="padding-top:10px;padding-right:5px;padding-left:8px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;vertical-align: top;">
-                        <!-- <apex:outputText value="{!IF( NOT(order.Internal_Purchase__c), IF(  NOT(sameState),  TEXT(ROUND(  (OrderItem.UnitPrice * OrderItem.Quantity) - OrderItem.Discounted_Amount_on_Merchandise__c +   ((((OrderItem.UnitPrice * OrderItem.Quantity)- OrderItem.Discounted_Amount_on_Merchandise__c)  * OrderItem.Product2.IGST_Percentage__c) / 100),  2)),  TEXT(ROUND( (OrderItem.UnitPrice * OrderItem.Quantity) - OrderItem.Discounted_Amount_on_Merchandise__c +   ((OrderItem.UnitPrice * OrderItem.Quantity * OrderItem.Product2.CGST_Percentage__c) / 100) +  ((OrderItem.UnitPrice * OrderItem.Quantity * OrderItem.Product2.SGST_Percentage__c) / 100), 2)) ), '-' )}"/> -->
                         {!OrderItem.Product_Total_Amount__c}
-                        
                     </td>     
                 </tr>
                 <apex:variable value="{!rowNumber + 1}" var="rowNumber" />
@@ -243,43 +244,43 @@
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Total Value After GST(Ex-Showroom Price)</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid;border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,##0.00}">
-                        <apex:param value="{!totalValueAfterAllTaxes}"/>
+                        <apex:param value="{!tValueAftGST}"/>
                     </apex:outputText>
                 </td>
             </tr>
             
-            <!-- <tr>            
+            <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: Discount on EX-Showroom Price</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid;border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!DiscountOnEx}"/>
                     </apex:outputText>
                 </td>
-            </tr> -->
+            </tr>
             
-            <!-- <tr>            
+            <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less:PM E-Drive Incentive from Govt. of India</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!Fame}"/>
                     </apex:outputText>
                 </td>
-            </tr> -->
+            </tr>
             
-            <!-- <tr>            
+            <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: State Government Subsidy</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
                     <apex:outputText value="{0, number, #,##,###}">
                         <apex:param value="{!sSubsidy}"/>
                     </apex:outputText>
                 </td>
-            </tr> -->
+            </tr>
             
             <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Less: Offer Amount</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
-                    <apex:outputText value="{0, number, #,##,##0.00}">
-                        <apex:param value="{!AccessoriesDiscountAmountOnOrder}"/>
+                    <apex:outputText value="{0, number, #,##,###}">
+                        <apex:param value="{!offerAmount}"/>
                     </apex:outputText>
                 </td>
             </tr>
@@ -287,11 +288,8 @@
             <tr>            
                 <td colspan="12" style="text-align:right;border:1px solid;border-collapse:collapse;padding-right:12px; padding:7px;">Net to be collected from Customer</td>
                 <td colspan="1" style="border-bottom:1px solid;border-top:1px solid; border-right:1px solid; border-collapse:collapse;" width="17%">
-                    <!-- <apex:outputText value="{0, number, #,##,##0.00}">
-                        <apex:param value="{!NetAmount}"/>
-                    </apex:outputText> -->
                     <apex:outputText value="{0, number, #,##,##0.00}">
-                        <apex:param value="{!totalValueAfterAllTaxes - AccessoriesDiscountAmountOnOrder}"/>
+                        <apex:param value="{!NetAmount}"/>
                     </apex:outputText>
                 </td>
             </tr>                  
@@ -300,19 +298,56 @@
         <div style="margin-top:15px;float:left;width:100%;font-family: Helvetica, sans-serif;">
             <span>Amount In Words: {!inWords}</span>
             <hr style="margin: 5px 0; border: 1px solid black;" />
-            <span>Whether tax is payable on reverse charge basis - No</span>
+            <span>Whether tax is payable on reverse charge basis - No</span> <br/>
+            <br /> 
+            
+            <apex:outputPanel rendered="{!storeType == 'DODO'}">
+                For {!dodoAccName}
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!storeType == 'COCO'}">
+                For River Mobility Private Limited
+            </apex:outputPanel>
+            
         </div>
         
-        <div class="footer">
-            <p style="width:30%; text-align:left; float:left;">
-                For River Mobility Private Limited <br/> <br/> <br/>
-                Authorized Signature <br />
-
+        <div style="width: 100%; text-align: left;font-family: Helvetica, sans-serif;margin-top:5px;float:left;">
+            <p style="width:30%;text-align:left;float:left;">
+                Authorized Signature                        
             </p>
-            <p style="float:right; width:25%; text-align:left;">
-                Thank You for Choosing River
-            </p>
-        </div>        
+            <p style="float:right; width:60%;text-align:left; width:25%">
+                Thank You for Choosing River 
+            </p>         
+        </div>
+        
+        <div style="page-break-before: always;"></div>
+        
+        <div style="text-align: center; width: 100%;">
+            <apex:outputPanel rendered="{!NOT(ISBLANK(cocoTC.DeveloperName))}">
+                <table style="margin: 50px auto; text-align: center; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" width="70%">
+                    <tr>
+                        <td><strong>TERMS AND CONDITIONS</strong></td>
+                    </tr>
+                </table>
+            </apex:outputPanel>
+            
+            <table style="display: inline-table; text-align: center; margin: 5px auto; font-family: Arial, Helvetica, sans-serif;" width="70%">
+                <tr>          
+                    <td width="100%" style="vertical-align: top; text-align: left;">
+                        <apex:outputText value="{!cocoTC.Terms_and_Condition__c}" escape="false"/> <br/>
+                        <span>12. All disputes are subjected to the exclusive jurisdiction of courts of
+                            <apex:outputPanel rendered="{!storeType == 'COCO'}">
+                                Bengaluru.
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!storeType == 'DODO'}">
+                                {!dodoBillCityName}.
+                            </apex:outputPanel>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
         
     </body>
+    
 </apex:page>

@@ -18,6 +18,7 @@ Trigger OrderTrigger on Order (before insert, after update, after insert, before
         OrderTriggerHandler.createProductTransferForBackOrder(Trigger.oldMap, Trigger.newMap);
         OrderTriggerHandler.afterUpdate(Trigger.new,Trigger.oldMap);
         OrderTriggerHandler.sendWhatsAppAfterOrderCreation(Trigger.new,Trigger.oldMap);
+        form22Controller.handleOrderUpdate(Trigger.new, Trigger.oldMap);
        // OrderTriggerHandler.sendPDFAfterRTO(Trigger.new,Trigger.oldMap);
        // OrderTriggerHandler.processOrderMilestones(Trigger.new, Trigger.oldMap);
         //OrderTriggerHandler.sendWhatsAppAfterOrderCreation(Trigger.new);

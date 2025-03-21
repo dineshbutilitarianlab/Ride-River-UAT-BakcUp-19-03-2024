@@ -25,7 +25,6 @@ public with sharing class ClearTaxApiHelper {
         request.setHeader('x-clear-client-secret', clearTaxDetails.Client_Secret__c);
         try {
             HttpResponse response = http.send(request);
-            // ExceptionHelper.createAPICalloutLog(request,response,'');
             if (response.getStatusCode() == 200) {
                 System.debug('Response #1 == > ' + response.getBody());
                 Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
@@ -49,251 +48,394 @@ public with sharing class ClearTaxApiHelper {
     }
     
     // =============================================================================================================================================================================================================
-    // Method to Generate IRN & SignedQRCode  ##1
-    @AuraEnabled
-    public static String generateEInvoice(String recordId) {
-        String returnResponse;
-        String attachmentId;
-        Order orderRecord = [ SELECT Id, Name, AccountId, Dealer__c,Dealer__r.GSTIN_Number__c, TotalAmount,Is_IGST_on_Intrastate__c,OrderNumber  FROM Order WHERE Id = :recordId ];
-        try{
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint(clearTaxDetails.E_Invoice_Base_URL__c);
-            request.setMethod('PUT');
-            request.setHeader('Content-Type', 'application/json');
-            request.setHeader('X-Cleartax-Auth-Token', getAccessToken());
-            request.setHeader('gstin', orderRecord.Dealer__r.GSTIN_Number__c); // Seller GSTIN
-            String payload = generatePayloadForIRN(recordId);
-            System.debug('payload === >'+payload);
-            request.setBody(payload);
-            HttpResponse response = http.send(request);
-            ExceptionHelper.createAPICalloutLog(request,response,'IRN');
-            if (response.getStatusCode() == 200) {
-                System.debug('Response #2 == > ' + response.getBody());
-                List<Object> responseList = (List<Object>) JSON.deserializeUntyped(response.getBody());
-                if (!responseList.isEmpty()) {
-                    Map<String, Object> firstItem = (Map<String, Object>) responseList[0];
-                    if (firstItem.containsKey('govt_response')) {
-                        Map<String, Object> govtResponse = (Map<String, Object>) firstItem.get('govt_response');
-                        System.debug('govtResponser == > ' + govtResponse);
-                        if (govtResponse.containsKey('Irn') && (String) govtResponse.get('Success') == 'Y') {
-                            System.debug('IRN Created Successfully ==> ' + govtResponse.get('Irn'));
-                            String IrnNumber = (String) govtResponse.get('Irn');
-                            System.debug('IrnNumber == > ' + IrnNumber);
-                            ClearTaxTagIrnNumber.TagIRNnumberToOrder(orderRecord.Id,IrnNumber);
-                            String signedQRCode = (String) govtResponse.get('SignedQRCode');
-                            System.debug('SignedQRCode == > ' + signedQRCode);
-                            ClearTaxTagIrnNumber.generateAndStoreQRCode(signedQRCode,recordId);
-                            //  String responsedata = genereteE_invoicePDF(recordId);
-                            //  System.debug('responsedata == >'+responsedata);
-                            return returnResponse = 'SUCCESS';
-                        }
-                        
-                        if (govtResponse.containsKey('ErrorDetails')) {
-                            List<Object> errorDetails = (List<Object>) govtResponse.get('ErrorDetails');
-                            if (!errorDetails.isEmpty()) {
-                                Map<String, Object> firstError = (Map<String, Object>) errorDetails[0];
-                                System.debug('Error Details == > ' + firstError);
-                                String errorMessage = (String) firstError.get('error_message');
-                                System.debug('Error while Generating IRN === >' + errorMessage);
-                                return returnResponse = 'Error: ' + errorMessage;
+        // Method to Generate IRN & SignedQRCode  ##1
+        @AuraEnabled
+        public static String generateEInvoice(String recordId) {
+            String returnResponse;
+            String attachmentId;
+            Order orderRecord = [ SELECT Id, Name, AccountId, Dealer__c,Dealer__r.GSTIN_Number__c, TotalAmount,Is_IGST_on_Intrastate__c,OrderNumber  FROM Order WHERE Id = :recordId ];
+            try{
+                Http http = new Http();
+                HttpRequest request = new HttpRequest();
+                request.setEndpoint(clearTaxDetails.E_Invoice_Base_URL__c);
+                request.setMethod('PUT');
+                request.setHeader('Content-Type', 'application/json');
+                request.setHeader('X-Cleartax-Auth-Token', getAccessToken());
+                request.setHeader('gstin', orderRecord.Dealer__r.GSTIN_Number__c); // Seller GSTIN
+                String payload = generatePayloadForIRN(recordId);
+                System.debug('payload === >'+payload);
+                request.setBody(payload);
+                HttpResponse response = http.send(request);
+                ExceptionHelper.createAPICalloutLog(request,response,'IRN');
+                if (response.getStatusCode() == 200) {
+                    System.debug('Response #2 == > ' + response.getBody());
+                    List<Object> responseList = (List<Object>) JSON.deserializeUntyped(response.getBody());
+                    if (!responseList.isEmpty()) {
+                        Map<String, Object> firstItem = (Map<String, Object>) responseList[0];
+                        if (firstItem.containsKey('govt_response')) {
+                            Map<String, Object> govtResponse = (Map<String, Object>) firstItem.get('govt_response');
+                            System.debug('govtResponser == > ' + govtResponse);
+                            if (govtResponse.containsKey('Irn') && (String) govtResponse.get('Success') == 'Y') {
+                                System.debug('IRN Created Successfully ==> ' + govtResponse.get('Irn'));
+                                String IrnNumber = (String) govtResponse.get('Irn');
+                                System.debug('IrnNumber == > ' + IrnNumber);
+                                ClearTaxTagIrnNumber.TagIRNnumberToOrder(orderRecord.Id,IrnNumber);
+                                String signedQRCode = (String) govtResponse.get('SignedQRCode');
+                                System.debug('SignedQRCode == > ' + signedQRCode);
+                                ClearTaxTagIrnNumber.generateAndStoreQRCode(signedQRCode,recordId);
+                                //  String responsedata = genereteE_invoicePDF(recordId);
+                                //  System.debug('responsedata == >'+responsedata);
+                                return returnResponse = 'SUCCESS';
+                            }
+                            
+                            if (govtResponse.containsKey('ErrorDetails')) {
+                                List<Object> errorDetails = (List<Object>) govtResponse.get('ErrorDetails');
+                                if (!errorDetails.isEmpty()) {
+                                    Map<String, Object> firstError = (Map<String, Object>) errorDetails[0];
+                                    System.debug('Error Details == > ' + firstError);
+                                    String errorMessage = (String) firstError.get('error_message');
+                                    System.debug('Error while Generating IRN === >' + errorMessage);
+                                    return returnResponse = 'Error: ' + errorMessage;
+                                }
                             }
                         }
                     }
+                } else {
+                    System.debug('Error Code  = > ' + response.getStatusCode() + ' && Response Body ==>' + response.getBody());
                 }
-            } else {
-                System.debug('Error Code  = > ' + response.getStatusCode() + ' && Response Body ==>' + response.getBody());
+            }catch(Exception e){
+                ExceptionHelper.createExceptionLog(e);
+                System.debug('Error Message ==>'+e.getMessage()+' && Error Line == >'+e.getLineNumber());
             }
-        }catch(Exception e){
-            ExceptionHelper.createExceptionLog(e);
-            System.debug('Error Message ==>'+e.getMessage()+' && Error Line == >'+e.getLineNumber());
+            return null;
         }
-        return null;
-    }
-    
+
     // Method to Generate Payload for Order Record ##2
-    @AuraEnabled
-    public static String generatePayloadForIRN(Id orderId) {
+        @AuraEnabled
+        public static String generatePayloadForIRN(Id orderId) {
         List<Map<String, Object>> payloadList = new List<Map<String, Object>>();
         Map<String, String> stateCodeMap = new Map<String, String>();
         for (State_Code_Mapping__mdt stateMapping : [SELECT MasterLabel, State_Code__c FROM State_Code_Mapping__mdt]) {
             stateCodeMap.put(stateMapping.MasterLabel, stateMapping.State_Code__c);
         }
-        
-        try {
-            Order orderRecord = [SELECT Id, Name, AccountId, Dealer__c, TotalAmount, Is_IGST_on_Intrastate__c, OrderNumber FROM Order WHERE Id = :orderId];
-            System.debug('orderRecord == >' + orderRecord);
-            if (orderRecord != null) {
-                Account buyer = [SELECT Id, Name, BillingStreet, BillingCity, BillingPostalCode, BillingState, BillingCountry, GSTIN_Number__c, Phone, Email__c FROM Account WHERE Id = :orderRecord.AccountId];
-                System.debug('buyer == >' + buyer);
-                Account seller = [SELECT Id, Name, BillingStreet, BillingCity, BillingPostalCode, BillingState, GSTIN_Number__c, Phone, Email__c, Center_Code__c FROM Account WHERE Id = :orderRecord.Dealer__c];
-                System.debug('seller == >' + seller);
-                
-                List<OrderItem> orderItems = [SELECT Product2.Name, Quantity, Product2.HSN_Code__c, UnitPrice, Discounted_Amount_on_Merchandise__c FROM OrderItem WHERE OrderId = :orderId];
-                System.debug('orderItems == >' + orderItems);
-                
-                // Determine if the transaction is intrastate
-                System.debug('buyer.BillingState == >' + buyer.BillingState);
-                System.debug('seller.BillingState == >' + seller.BillingState);
-                Boolean isIntrastate = buyer.BillingState == seller.BillingState;
-                System.debug('isIntrastate == >' + isIntrastate);
-                String IgstOnIntraValue;
-                if(isIntrastate){
-                    IgstOnIntraValue = 'Y';
-                    
-                }else{
-                    IgstOnIntraValue = 'N';
-                }
-                System.debug('IgstOnIntraValue == >' + IgstOnIntraValue);
-                // Create Transaction Map
-                Map<String, Object> transactionMap = new Map<String, Object>();
-                transactionMap.put('Version', '1.1');
-                
-                // Transaction Details
-                transactionMap.put('TranDtls', new Map<String, Object>{
-                    'TaxSch' => 'GST',
-                        'SupTyp' => 'B2B',
-                        'RegRev' => 'N',
-                        'EcmGstin' => null,
-                        'IgstOnIntra' => 'N' // IgstOnIntraValue   //isIntrastate ? 'N' : (orderRecord.Is_IGST_on_Intrastate__c ? 'Y' : 'N') // Ensure IGST is not applied for intrastate
-                        });
-                
-                // Document Details
-                String formattedDateTime = System.now().format('dd') + System.now().format('MM') + System.now().format('HH') + System.now().format('mm');
-                
-                Date today = System.today();
-                String formattedDate = (today.day() < 10 ? '0' + String.valueOf(today.day()) : String.valueOf(today.day())) + '/' + (today.month() < 10 ? '0' + String.valueOf(today.month()) : String.valueOf(today.month())) + '/' + today.year();
-                transactionMap.put('DocDtls', new Map<String, Object>{
-                    'Typ' => 'INV',
-                        'No' => 'INR' + orderRecord.OrderNumber.substring(Math.max(0, orderRecord.OrderNumber.length() - 4)) + formattedDateTime,
-                        'Dt' => formattedDate
-                        });
-                
-                transactionMap.put('SellerDtls', new Map<String, Object>{
-                    'Gstin' => seller.GSTIN_Number__c,
-                        'LglNm' => seller.Name,
-                        'TrdNm' => seller.Name,
-                        'Addr1' => seller.BillingStreet,
-                        'Loc' => seller.BillingCity,
-                        'Pin' => Integer.valueOf(seller.BillingPostalCode),
-                        'Stcd' => seller.Center_Code__c.substring(0, 2),
-                        'Ph' => seller.Phone,
-                        'Em' => seller.Email__c
-                        });
-                
-                Boolean isInternational = buyer.BillingCountry != 'India';
-                String buyerStateCode;
-                if (isInternational) {
-                    buyerStateCode = '96'; // POS for international transactions
-                } else {
-                    buyerStateCode = stateCodeMap.get(buyer.BillingState);
-                }
-                transactionMap.put('BuyerDtls', new Map<String, Object>{
-                    'Gstin' => buyer.GSTIN_Number__c,
-                        'LglNm' => buyer.Name,
-                        'TrdNm' => buyer.Name,
-                        'Addr1' => buyer.BillingStreet,
-                        'Pos' => seller.Center_Code__c.substring(0, 2),
-                        'Loc' => buyer.BillingCity,
-                        'Pin' => Integer.valueOf(buyer.BillingPostalCode),
-                        'Stcd' => seller.Center_Code__c.substring(0, 2), // As per Rivers State Code
-                        'Ph' => buyer.Phone,
-                        'Em' => buyer.Email__c
-                        });
-                
-                // Item List and Totals Calculation
-                List<Map<String, Object>> itemList = new List<Map<String, Object>>();
-                Decimal totalIgstAmt = 0;
-                Decimal totalCgstAmt = 0;
-                Decimal totalSgstAmt = 0;
-                Decimal sumTotItemVal = 0;
-                Decimal totalAmountOrderItem = 0;
-                
-                for (OrderItem item : orderItems) {
-                    Decimal totAmt = item.Quantity * item.UnitPrice;
-                    totalAmountOrderItem += totAmt;
-                    
-                    Decimal discount = item.Discounted_Amount_on_Merchandise__c != null ? item.Discounted_Amount_on_Merchandise__c : 0;
-                    Decimal gstRate = clearTaxDetails.GST_Rate__c; // Default GST Rate
-                    
-                    if (isIntrastate == false) {
-                        System.debug('Intrastate Transaction ===');
-                        // Intrastate: Split GST into CGST and SGST
-                        Decimal cgstAmt = (totAmt * (gstRate / 100)) / 2;
-                        Decimal sgstAmt = cgstAmt;
-                        totalCgstAmt += cgstAmt;
-                        totalSgstAmt += sgstAmt;
-                        itemList.add(new Map<String, Object>{
-                            'SlNo' => String.valueOf(itemList.size() + 1),
-                                'PrdDesc' => item.Product2.Name,
-                                'IsServc' => 'N',
-                                'HsnCd' => item.Product2.HSN_Code__c,
-                                'Qty' => item.Quantity,
-                                'Unit' => 'BAG',
-                                'UnitPrice' => item.UnitPrice,
-                                'TotAmt' => totAmt,
-                                'Discount' => discount,
-                                'AssAmt' => totAmt,
-                                'GstRt' => gstRate,
-                                'IgstAmt' => 0, // IGST should be 0 for intrastate
-                                'CgstAmt' => cgstAmt,
-                                'SgstAmt' => sgstAmt,
-                                'OthChrg' => 0,
-                                'TotItemVal' => totAmt + cgstAmt + sgstAmt
-                                });
-                    } else {
-                        System.debug('Interstate Transaction ===');
-                        // Interstate: Apply IGST
-                        Decimal igstAmt = totAmt * (gstRate / 100);
-                        totalIgstAmt += igstAmt;
-                        itemList.add(new Map<String, Object>{
-                            'SlNo' => String.valueOf(itemList.size() + 1),
-                                'PrdDesc' => item.Product2.Name,
-                                'IsServc' => 'N',
-                                'HsnCd' => item.Product2.HSN_Code__c,
-                                'Qty' => item.Quantity,
-                                'Unit' => 'BAG',
-                                'UnitPrice' => item.UnitPrice,
-                                'TotAmt' => totAmt,
-                                'Discount' => discount,
-                                'AssAmt' => totAmt,
-                                'GstRt' => gstRate,
-                                'IgstAmt' => igstAmt,
-                                'CgstAmt' => 0,
-                                'SgstAmt' => 0,
-                                'OthChrg' => 0,
-                                'TotItemVal' => totAmt + igstAmt
-                                });
-                    }
-                    sumTotItemVal += totAmt;
-                }
-                
-                // Corrected Total Invoice Value Calculation
-                Decimal totalInvoiceValue = sumTotItemVal + totalIgstAmt + totalCgstAmt + totalSgstAmt;
-                transactionMap.put('ItemList', itemList);
-                transactionMap.put('ValDtls', new Map<String, Object>{
-                    'AssVal' => totalAmountOrderItem,
-                        'CgstVal' => totalCgstAmt,
-                        'SgstVal' => totalSgstAmt,
-                        'IgstVal' => totalIgstAmt,
-                        'CesVal' => 0,
-                        'StCesVal' => 0,
-                        'Discount' => 0,
-                        'OthChrg' => 0,
-                        'RndOffAmt' => 0.3, // Consider dynamic rounding logic
-                        'TotInvVal' => totalInvoiceValue,
-                        'TotInvValFc' => totalInvoiceValue
-                        });
-                
-                payloadList.add(new Map<String, Object>{ 'transaction' => transactionMap });
-                return JSON.serialize(payloadList);
-            }
-        } catch (Exception e) {
-            ExceptionHelper.createExceptionLog(e);
-            System.debug('Error Message ==>' + e.getMessage() + ' && Error Line == >' + e.getLineNumber());
+        Order orderRecord = [   SELECT Id, AccountId, Dealer__c, Is_IGST_on_Intrastate__c, OrderNumber    FROM Order  WHERE Id = :orderId ];
+        Account buyer = [  SELECT BillingStreet, BillingCity, BillingPostalCode, BillingState,  GSTIN_Number__c, Phone, Email__c,Name,BillingCountry   FROM Account  WHERE Id = :orderRecord.AccountId ];
+        Account seller = [SELECT BillingStreet, BillingCity, BillingPostalCode, BillingState,   GSTIN_Number__c, Phone, Email__c, Center_Code__c,Name  FROM Account  WHERE Id = :orderRecord.Dealer__c ];
+        List<OrderItem> orderItems = [SELECT Product2.Name, Quantity, Product2.HSN_Code__c,  UnitPrice, Discounted_Amount_on_Merchandise__c  FROM OrderItem  WHERE OrderId = :orderId ];
+
+        //Determine if the transaction is intrastate
+        System.debug('buyer.BillingState == >' + buyer.BillingState);
+        System.debug('seller.BillingState == >' + seller.BillingState);
+        Boolean isIntrastate = buyer.BillingState == seller.BillingState;
+        System.debug('isIntrastate # 1 == >' + isIntrastate);
+        String IgstOnIntraValue;
+        if(isIntrastate){
+            IgstOnIntraValue = 'Y';
+            
+        }else{
+            IgstOnIntraValue = 'N';
         }
-        return null;
-    }
+        System.debug('IgstOnIntraValue # 2 == >' + IgstOnIntraValue);
+        Decimal gstRate = clearTaxDetails.GST_Rate__c; 
+        // Build transaction structure
+        Map<String, Object> transactionMap = new Map<String, Object>{
+            'Version' => '1.1',
+            'TranDtls' => new Map<String, Object>{
+                'TaxSch' => 'GST',
+                'SupTyp' => 'B2B',
+                'RegRev' => 'N',
+                'IgstOnIntra' => orderRecord.Is_IGST_on_Intrastate__c ? 'Y' : 'N'
+            },
+            'DocDtls' => new Map<String, Object>{
+                'Typ' => 'INV',
+                'No' => 'INV-' + orderRecord.OrderNumber,
+                'Dt' => System.now().format('dd/MM/yyyy')
+            },
+            'SellerDtls' => new Map<String, Object>{
+                'Gstin' => seller.GSTIN_Number__c,
+                'LglNm' => seller.Name,
+                'Addr1' => seller.BillingStreet,
+                'Loc' => seller.BillingCity,
+                'Pin' => Integer.valueOf(seller.BillingPostalCode),
+                'Stcd' => seller.Center_Code__c.substring(0, 2)
+            },
+            'BuyerDtls' => new Map<String, Object>{
+                'Gstin' => buyer.GSTIN_Number__c,
+                'LglNm' => buyer.Name,
+                'Pos' => seller.Center_Code__c.substring(0, 2),
+                'Addr1' => buyer.BillingStreet,
+                'Loc' => buyer.BillingCity,
+                'Pin' => Integer.valueOf(buyer.BillingPostalCode),
+                'Stcd' => stateCodeMap.get(buyer.BillingState)
+            }
+        };
+
+        Boolean isInternational = buyer.BillingCountry != 'India';
+        String buyerStateCode;
+        if (isInternational) {
+            buyerStateCode = '96';
+        } else {
+            buyerStateCode = stateCodeMap.get(buyer.BillingState);
+        }
+
+        // Calculate item values and taxes
+        List<Map<String, Object>> itemList = new List<Map<String, Object>>();
+        Decimal totalAssVal = 0, totalCgst = 0, totalSgst = 0, totalIgst = 0;
+
+        for (OrderItem item : orderItems) {
+            Decimal grossAmount = item.UnitPrice * item.Quantity;
+            Decimal discount = item.Discounted_Amount_on_Merchandise__c != null ?  item.Discounted_Amount_on_Merchandise__c : 0;
+            Decimal assAmt = grossAmount - discount; // Correct taxable value
+            
+            // GST calculations
+            Decimal cgstAmt = 0, sgstAmt = 0, igstAmt = 0;
+            if (isIntrastate == false) {
+                cgstAmt = (assAmt * gstRate / 100) / 2; // Split CGST/SGST
+                sgstAmt = cgstAmt;
+                totalCgst += cgstAmt;
+                totalSgst += sgstAmt;
+
+                System.debug('Intrastate different State Transaction ===');
+                itemList.add(new Map<String, Object>{
+                    'SlNo' => String.valueOf(itemList.size() + 1),
+                    'IsServc' => 'N',
+                    'PrdDesc' => item.Product2.Name,
+                    'HsnCd' => item.Product2.HSN_Code__c,
+                    'Qty' => item.Quantity,
+                    'Unit' => 'BAG',
+                    'UnitPrice' => item.UnitPrice,
+                    'TotAmt' => grossAmount,
+                    'Discount' => discount,
+                    'AssAmt' => assAmt,
+                    'GstRt' => gstRate,
+                    'CgstAmt' => cgstAmt,
+                    'SgstAmt' => sgstAmt,
+                    'IgstAmt' =>0,
+                    'TotItemVal' => (assAmt + cgstAmt + sgstAmt )
+                });
+                totalAssVal += assAmt;
+            } else {
+                System.debug('Interstate  Same State Transaction ===');
+                igstAmt = assAmt * gstRate / 100; // Full IGST
+                totalIgst += igstAmt;
+
+                itemList.add(new Map<String, Object>{
+                    'SlNo' => String.valueOf(itemList.size() + 1),
+                        'PrdDesc' => item.Product2.Name,
+                        'IsServc' => 'N',
+                        'HsnCd' => item.Product2.HSN_Code__c,
+                        'Qty' => item.Quantity,
+                        'Unit' => 'BAG',
+                        'UnitPrice' => item.UnitPrice,
+                        'TotAmt' => assAmt,
+                        'Discount' => discount,
+                        'AssAmt' => assAmt,
+                        'GstRt' => gstRate,
+                        'IgstAmt' => igstAmt,
+                        'CgstAmt' => 0,
+                        'SgstAmt' => 0,
+                        'OthChrg' => 0,
+                        'TotItemVal' => assAmt + igstAmt
+                        });
+                }
+            }
+
+        // Add totals to payload
+        transactionMap.put('ItemList', itemList);
+        transactionMap.put('ValDtls', new Map<String, Object>{
+            'AssVal' => totalAssVal.setScale(2),
+            'CgstVal' => totalCgst.setScale(2),
+            'SgstVal' => totalSgst.setScale(2),
+            'IgstVal' => totalIgst.setScale(2),
+            'TotInvVal' => (totalAssVal + totalCgst + totalSgst + totalIgst).setScale(2)
+        });
+
+        payloadList.add(new Map<String, Object>{ 'transaction' => transactionMap });
+        return JSON.serialize(payloadList);
+        }
+
+    // @AuraEnabled
+    // public static String generatePayloadForIRN(Id orderId) {
+    //     List<Map<String, Object>> payloadList = new List<Map<String, Object>>();
+    //     Map<String, String> stateCodeMap = new Map<String, String>();
+    //     for (State_Code_Mapping__mdt stateMapping : [SELECT MasterLabel, State_Code__c FROM State_Code_Mapping__mdt]) {
+    //         stateCodeMap.put(stateMapping.MasterLabel, stateMapping.State_Code__c);
+    //     }
+        
+    //     try {
+    //         Order orderRecord = [SELECT Id, Name, AccountId, Dealer__c, TotalAmount, Is_IGST_on_Intrastate__c, OrderNumber FROM Order WHERE Id = :orderId];
+    //         System.debug('orderRecord == >' + orderRecord);
+    //         if (orderRecord != null) {
+    //             Account buyer = [SELECT Id, Name, BillingStreet, BillingCity, BillingPostalCode, BillingState, BillingCountry, GSTIN_Number__c, Phone, Email__c FROM Account WHERE Id = :orderRecord.AccountId];
+    //             System.debug('buyer == >' + buyer);
+    //             Account seller = [SELECT Id, Name, BillingStreet, BillingCity, BillingPostalCode, BillingState, GSTIN_Number__c, Phone, Email__c, Center_Code__c FROM Account WHERE Id = :orderRecord.Dealer__c];
+    //             System.debug('seller == >' + seller);
+                
+    //             List<OrderItem> orderItems = [SELECT Product2.Name, Quantity, Product2.HSN_Code__c, UnitPrice, Discounted_Amount_on_Merchandise__c FROM OrderItem WHERE OrderId = :orderId];
+    //             System.debug('orderItems == >' + orderItems);
+                
+    //             // Determine if the transaction is intrastate
+    //             System.debug('buyer.BillingState == >' + buyer.BillingState);
+    //             System.debug('seller.BillingState == >' + seller.BillingState);
+    //             Boolean isIntrastate = buyer.BillingState == seller.BillingState;
+    //             System.debug('isIntrastate == >' + isIntrastate);
+    //             String IgstOnIntraValue;
+    //             if(isIntrastate){
+    //                 IgstOnIntraValue = 'Y';
+                    
+    //             }else{
+    //                 IgstOnIntraValue = 'N';
+    //             }
+    //             System.debug('IgstOnIntraValue == >' + IgstOnIntraValue);
+    //             // Create Transaction Map
+    //             Map<String, Object> transactionMap = new Map<String, Object>();
+    //             transactionMap.put('Version', '1.1');
+                
+    //             // Transaction Details
+    //             transactionMap.put('TranDtls', new Map<String, Object>{
+    //                 'TaxSch' => 'GST',
+    //                     'SupTyp' => 'B2B',
+    //                     'RegRev' => 'N',
+    //                     'EcmGstin' => null,
+    //                     'IgstOnIntra' => 'N' // IgstOnIntraValue   //isIntrastate ? 'N' : (orderRecord.Is_IGST_on_Intrastate__c ? 'Y' : 'N') // Ensure IGST is not applied for intrastate
+    //                     });
+                
+    //             // Document Details
+    //             String formattedDateTime = System.now().format('dd') + System.now().format('MM') + System.now().format('HH') + System.now().format('mm');
+                
+    //             Date today = System.today();
+    //             String formattedDate = (today.day() < 10 ? '0' + String.valueOf(today.day()) : String.valueOf(today.day())) + '/' + (today.month() < 10 ? '0' + String.valueOf(today.month()) : String.valueOf(today.month())) + '/' + today.year();
+    //             transactionMap.put('DocDtls', new Map<String, Object>{
+    //                 'Typ' => 'INV',
+    //                     'No' => 'INR' + orderRecord.OrderNumber.substring(Math.max(0, orderRecord.OrderNumber.length() - 4)) + formattedDateTime,
+    //                     'Dt' => formattedDate
+    //                     });
+                
+    //             transactionMap.put('SellerDtls', new Map<String, Object>{
+    //                 'Gstin' => seller.GSTIN_Number__c,
+    //                     'LglNm' => seller.Name,
+    //                     'TrdNm' => seller.Name,
+    //                     'Addr1' => seller.BillingStreet,
+    //                     'Loc' => seller.BillingCity,
+    //                     'Pin' => Integer.valueOf(seller.BillingPostalCode),
+    //                     'Stcd' => seller.Center_Code__c.substring(0, 2),
+    //                     'Ph' => seller.Phone,
+    //                     'Em' => seller.Email__c
+    //                     });
+                
+    //             Boolean isInternational = buyer.BillingCountry != 'India';
+    //             String buyerStateCode;
+    //             if (isInternational) {
+    //                 buyerStateCode = '96'; // POS for international transactions
+    //             } else {
+    //                 buyerStateCode = stateCodeMap.get(buyer.BillingState);
+    //             }
+    //             transactionMap.put('BuyerDtls', new Map<String, Object>{
+    //                 'Gstin' => buyer.GSTIN_Number__c,
+    //                     'LglNm' => buyer.Name,
+    //                     'TrdNm' => buyer.Name,
+    //                     'Addr1' => buyer.BillingStreet,
+    //                     'Pos' => seller.Center_Code__c.substring(0, 2),
+    //                     'Loc' => buyer.BillingCity,
+    //                     'Pin' => Integer.valueOf(buyer.BillingPostalCode),
+    //                     'Stcd' => seller.Center_Code__c.substring(0, 2), // As per Rivers State Code
+    //                     'Ph' => buyer.Phone,
+    //                     'Em' => buyer.Email__c
+    //                     });
+                
+    //             // Item List and Totals Calculation
+    //             List<Map<String, Object>> itemList = new List<Map<String, Object>>();
+    //             Decimal totalIgstAmt = 0;
+    //             Decimal totalCgstAmt = 0;
+    //             Decimal totalSgstAmt = 0;
+    //             Decimal sumTotItemVal = 0;
+    //             Decimal totalAmountOrderItem = 0;
+                
+    //             for (OrderItem item : orderItems) {
+    //                 Decimal totAmt = item.Quantity * item.UnitPrice;
+    //                 totalAmountOrderItem += totAmt;
+                    
+    //                 Decimal discount = item.Discounted_Amount_on_Merchandise__c != null ? item.Discounted_Amount_on_Merchandise__c : 0;
+    //                 Decimal gstRate = clearTaxDetails.GST_Rate__c; // Default GST Rate
+                    
+    //                 if (isIntrastate == false) {
+    //                     System.debug('Intrastate Transaction ===');
+    //                     // Intrastate: Split GST into CGST and SGST
+    //                     Decimal cgstAmt = (totAmt * (gstRate / 100)) / 2;
+    //                     Decimal sgstAmt = cgstAmt;
+    //                     totalCgstAmt += cgstAmt;
+    //                     totalSgstAmt += sgstAmt;
+    //                     itemList.add(new Map<String, Object>{
+    //                         'SlNo' => String.valueOf(itemList.size() + 1),
+    //                             'PrdDesc' => item.Product2.Name,
+    //                             'IsServc' => 'N',
+    //                             'HsnCd' => item.Product2.HSN_Code__c,
+    //                             'Qty' => item.Quantity,
+    //                             'Unit' => 'BAG',
+    //                             'UnitPrice' => item.UnitPrice,
+    //                             'TotAmt' => totAmt,
+    //                             'Discount' => discount,
+    //                             'AssAmt' => totAmt,
+    //                             'GstRt' => gstRate,
+    //                             'IgstAmt' => 0, // IGST should be 0 for intrastate
+    //                             'CgstAmt' => cgstAmt,
+    //                             'SgstAmt' => sgstAmt,
+    //                             'OthChrg' => 0,
+    //                             'TotItemVal' => totAmt + cgstAmt + sgstAmt
+    //                             });
+    //                 } else {
+    //                     System.debug('Interstate Transaction ===');
+    //                     // Interstate: Apply IGST
+    //                     Decimal igstAmt = totAmt * (gstRate / 100);
+    //                     totalIgstAmt += igstAmt;
+    //                     itemList.add(new Map<String, Object>{
+    //                         'SlNo' => String.valueOf(itemList.size() + 1),
+    //                             'PrdDesc' => item.Product2.Name,
+    //                             'IsServc' => 'N',
+    //                             'HsnCd' => item.Product2.HSN_Code__c,
+    //                             'Qty' => item.Quantity,
+    //                             'Unit' => 'BAG',
+    //                             'UnitPrice' => item.UnitPrice,
+    //                             'TotAmt' => totAmt,
+    //                             'Discount' => discount,
+    //                             'AssAmt' => totAmt,
+    //                             'GstRt' => gstRate,
+    //                             'IgstAmt' => igstAmt,
+    //                             'CgstAmt' => 0,
+    //                             'SgstAmt' => 0,
+    //                             'OthChrg' => 0,
+    //                             'TotItemVal' => totAmt + igstAmt
+    //                             });
+    //                 }
+    //                 sumTotItemVal += totAmt;
+    //             }
+                
+    //             // Corrected Total Invoice Value Calculation
+    //             Decimal totalInvoiceValue = sumTotItemVal + totalIgstAmt + totalCgstAmt + totalSgstAmt;
+    //             transactionMap.put('ItemList', itemList);
+    //             transactionMap.put('ValDtls', new Map<String, Object>{
+    //                 'AssVal' => totalAmountOrderItem,
+    //                     'CgstVal' => totalCgstAmt,
+    //                     'SgstVal' => totalSgstAmt,
+    //                     'IgstVal' => totalIgstAmt,
+    //                     'CesVal' => 0,
+    //                     'StCesVal' => 0,
+    //                     'Discount' => 0,
+    //                     'OthChrg' => 0,
+    //                     'RndOffAmt' => 0.3, // Consider dynamic rounding logic
+    //                     'TotInvVal' => totalInvoiceValue,
+    //                     'TotInvValFc' => totalInvoiceValue
+    //                     });
+                
+    //             payloadList.add(new Map<String, Object>{ 'transaction' => transactionMap });
+    //             return JSON.serialize(payloadList);
+    //         }
+    //     } catch (Exception e) {
+    //         ExceptionHelper.createExceptionLog(e);
+    //         System.debug('Error Message ==>' + e.getMessage() + ' && Error Line == >' + e.getLineNumber());
+    //     }
+    //     return null;
+    // }
     
     // =============================================================================================================================================================================================================
     
@@ -315,7 +457,7 @@ public with sharing class ClearTaxApiHelper {
                 }  
                 Attachment attachment = new Attachment(); 
                 attachment.ParentId = recordId; 
-                attachment.Name = 'E-invoice-'+ord.OrderNumber+'-'+Date.Today().Format()+' '+ System.now().format('h:mm a')+'.pdf';
+                attachment.Name = 'E-Invoice-'+ord.OrderNumber+'-'+Date.Today().Format()+' '+ System.now().format('h:mm a')+'.pdf';
                 attachment.Body = pdfBlob;
                 attachment.ContentType = 'application/pdf';
                 insert attachment;

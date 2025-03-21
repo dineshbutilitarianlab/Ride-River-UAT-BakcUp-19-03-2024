@@ -48,7 +48,7 @@
                         <p style="margin-top: 2px;">
                             
                             <apex:outputPanel rendered="{!storeType = 'DODO'}">
-                                <b><span style="font-size: 16px;"> {!dodoAccName} </span></b> <br/>
+                                <b><span style="font-size: 15px;"> {!dodoAccName} </span></b> <br/>
                                 <apex:outputText value="{!formattedBillingStreet}" escape="false"/>,
                                 {!order.Dealer__r.BillingCity}<br/>
                                 {!order.Dealer__r.BillingState}-{!order.Dealer__r.BillingPostalCode}
@@ -57,7 +57,7 @@
                             </apex:outputPanel>
                             
                             <apex:outputPanel rendered="{!storeType = 'COCO'}">
-                                <b><span style="font-size: 16px;"> {!dcPdf.CompanyName__c} </span></b> 
+                                <b><span style="font-size: 15px;"> {!dcPdf.CompanyName__c} </span></b> 
                                 <br /> <span style="font-size: 14px;"> No. 25/3, KIADB EPIP Zone, Seetharampalya–Hoodi Road, Mahadevapura, </span>
                                 <br /> <span style="font-size: 14px;"> Whitefield, Bengaluru, Bengaluru Urban, Karnataka, India 560048 </span>
                                 <br /> <span style="font-size: 14px;"> Email: {!cocoBillEmail}, &nbsp; Phone: +91 {!cocoPhone} </span>
@@ -83,7 +83,7 @@
         
         <hr />
         
-        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;" width="100%">
+        <table style="vertical-align: top; border-collapse:true; float:left; text-align:left; font-family: Arial, Helvetica, sans-serif;margin-top:4px;font-size:12px;" width="100%">
             <tr>
                 <td>
                     Invoice Date: &nbsp;
@@ -91,12 +91,12 @@
                         <apex:param value="{!currentDate}" />
                     </apex:outputText>
                     <br /><br />
-                    Invoice Number: <span style="white-space: nowrap;">{!invoiceId}</span><br /><br />
+                    Invoice No: <span style="white-space: nowrap;">{!invoiceId}</span><br /><br />
                     Order Id: <span style="white-space: nowrap;">{!order.Website_Order_Id__c}</span><br /><br />
                     Hypothecation: &nbsp;
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Yes', 'No')}" /> 
                     <apex:outputText value="{!IF(order.Approval_Status__c, 'Bank Name: ' + order.Finance__r.Name, '')}" /> <br /><br />
-                    Place of Supply: <span style="white-space: nowrap;">{!order.Account.BillingState}</span> 
+                    Place of Supply: <span style="white-space: nowrap;">{!order.Dealer__r.BillingState}</span> 
                 </td>
                 
                 <td style="padding:5px;vertical-align: top; margin-left:10px;">
@@ -160,7 +160,7 @@
             <apex:variable value="{!1}" var="rowNumber" />
             
             <apex:repeat value="{!orderItemList}" var="OrderItem">            
-                <tr style="border-collapse: collapse;height:170px;font-size:15px;page-break-inside:avoid; page-break-after:auto">  
+                <tr style="border-collapse: collapse;height:160px;font-size:13px;page-break-inside:avoid; page-break-after:auto">  
                     <!--1.Item description  -->
                     <td style="padding:7px;border-collapse: collapse;border-right:1px solid;border-left:1px solid;border-collapse:collapse;text-align:left;vertical-align: top;">{!order.Assigned_Vehicle__r.Name}<br/> 
                        <br/>VIN<br /> {!order.Assigned_Vehicle__r.VehicleIdentificationNumber} <br/>
@@ -298,7 +298,7 @@
         <div style="margin-top:15px;float:left;width:100%;font-family: Helvetica, sans-serif;">
             <span>Amount In Words: {!inWords}</span>
             <hr style="margin: 5px 0; border: 1px solid black;" />
-            <span>Whether tax is payable on reverse charge basis - No</span>
+            <span>Whether tax is payable on reverse charge basis - No</span> <br/>
             <br />  For River Mobility Private Limited
         </div>
         
@@ -313,31 +313,32 @@
            
          <div style="page-break-before: always;"></div>
 
-        <apex:outputPanel rendered="{!OR(NOT(ISBLANK(dodoTC.Terms_and_Condition__c)), NOT(ISBLANK(cocoTC.Terms_and_Condition__c)))}">
-            <table style="float:right;margin-Top:50px;text-align:left; font-family: Arial, Helvetica, sans-serif;font-style:Bold;" width="70%">
-                <td><strong>TERMS AND CONDITIONS:</strong></td>
-            </table>
-        </apex:outputPanel>
-       
+         <div style="text-align: center; width: 100%;">
+            <apex:outputPanel rendered="{!NOT(ISBLANK(cocoTC.DeveloperName))}">
+                <table style="margin: 50px auto; text-align: center; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" width="70%">
+                    <tr>
+                        <td><strong>TERMS AND CONDITIONS</strong></td>
+                    </tr>
+                </table>
+            </apex:outputPanel>
         
-       
-            <table style="display:inline-table; float:right;text-align:left; margin-top:5px; font-family: Arial, Helvetica, sans-serif;" width="70%">
+            <table style="display: inline-table; text-align: center; margin: 5px auto; font-family: Arial, Helvetica, sans-serif;" width="70%">
                 <tr>          
-                    <td width="2%" style="vertical-align: top; text-align: left;">
+                    <td width="100%" style="vertical-align: top; text-align: left;">
                         <apex:outputText value="{!cocoTC.Terms_and_Condition__c}" escape="false"/> <br/>
-                        <span>11. All disputes are subjected to the exclusive jurisdiction of courts of
-                             <apex:outputPanel rendered="{!storeType == 'COCO'}">
-                             Bengaluru.
-                               </apex:outputPanel>
-                               <apex:outputPanel rendered="{!storeType == 'DODO'}">
+                        <span>12. All disputes are subjected to the exclusive jurisdiction of courts of
+                            <apex:outputPanel rendered="{!storeType == 'COCO'}">
+                                Bengaluru.
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!storeType == 'DODO'}">
                                 {!dodoBillCityName}.
-                                  </apex:outputPanel>
-                            </span>
-                            
+                            </apex:outputPanel>
+                        </span>
                     </td>
                 </tr>
             </table>
-      
+        </div>
         
+    
     </body>
 </apex:page>

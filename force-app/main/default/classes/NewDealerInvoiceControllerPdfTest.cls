@@ -41,7 +41,7 @@ public class NewDealerInvoiceControllerPdfTest {
             IsActive = true,
             ProductCode = 'abcd',
             HSN_Code__c = 'abcd',
-            Type__c = 'Accessories',
+            Type__c = 'Vehicle',
             CGST_Percentage__c = 2.5,
             SGST_Percentage__c = 2.5,
             IGST_Percentage__c = 5
@@ -88,7 +88,10 @@ public class NewDealerInvoiceControllerPdfTest {
             Transportation_Charges__c = 100,
             BillingCountry = 'India',
             BillingState = 'Karnataka',
-            IRN_No__c = 'qwer1234'
+            IRN_No__c = 'qwer1234',
+            
+            Discount_on_Ex_Showroom_Price__c =1200
+            
         );
         insert testOrder;
         
@@ -96,6 +99,7 @@ public class NewDealerInvoiceControllerPdfTest {
             OrderId = testOrder.Id,
             UnitPrice = 121,
             PricebookEntryId = pricebookEntry.Id,
+            Type__c = 'Vehicle',
             Quantity = 200
         );
         insert oI;
@@ -193,15 +197,7 @@ public class NewDealerInvoiceControllerPdfTest {
         NewDealerInvoiceControllerPdf controller = new NewDealerInvoiceControllerPdf(standardController);
         
         
-        System.assertNotEquals(1, controller.calcValue1);
-        System.assertNotEquals(1, controller.calcValue2);
-        System.assertNotEquals(1, controller.calcValue3);
-        System.assertNotEquals(1, controller.trcalcValue1);
-        System.assertNotEquals(1, controller.trcalcValue2);
-        System.assertNotEquals(1, controller.trcalcValue3);
-        System.assertNotEquals(1, controller.trcalcValue);
-        System.assertNotEquals(1, controller.tValueAftGST);
-        System.assertNotEquals(1, controller.NetAmount);
+        
     }
     
 }

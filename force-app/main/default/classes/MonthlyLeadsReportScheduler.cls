@@ -141,7 +141,21 @@ global class MonthlyLeadsReportScheduler implements Schedulable {
 
         // Send email with HTML Body
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setToAddresses(new String[]{'rohit.bisht@utilitarianlabs.com'}); // Change to actual recipient
+        List<HQ_Email_Settings__mdt> hqEmailRecords = [SELECT Email__c FROM HQ_Email_Settings__mdt WHERE Active__c = TRUE];
+
+        List<String> hqEmails = new List<String>();
+        for (HQ_Email_Settings__mdt record : hqEmailRecords) {
+            if (record.Email__c != null) {
+                hqEmails.add(record.Email__c);
+            }
+        }
+
+        if (hqEmails.isEmpty()) {
+            System.debug('No active HQ emails found in metadata.');
+            return;
+        }
+
+        email.setToAddresses(hqEmails); // Change to actual recipient
         email.setSubject('📢 '+reportHeading);
         email.setHtmlBody(emailBody);
         if (!orgWideEmail.isEmpty()) {

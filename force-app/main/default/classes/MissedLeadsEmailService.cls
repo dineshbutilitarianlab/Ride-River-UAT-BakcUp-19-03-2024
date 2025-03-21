@@ -70,9 +70,18 @@ public class MissedLeadsEmailService implements Schedulable {
         }
 
         // Send Emails
-         sendEmails(storeLeads, 'Store');
-         sendEmails(asmLeads, 'ASM');
-        sendHQEmail(hqLeads);
+        if (Label.Enable_Store_Email == 'True') {
+            sendEmails(storeLeads, 'Team');
+        }
+        if (Label.Enable_ASM_Email == 'True') {
+            sendEmails(asmLeads, 'Team');
+        }
+        if (Label.Enable_HQ_Email == 'True') {
+            sendHQEmail(hqLeads);
+        }
+        // sendEmails(storeLeads, 'Team');
+        // sendEmails(asmLeads, 'Team');
+        // sendHQEmail(hqLeads);
     }
 
     private static void sendEmails(Map<String, List<Lead>> groupedLeads, String recipientType) {
@@ -97,7 +106,19 @@ public class MissedLeadsEmailService implements Schedulable {
 
     private static void sendHQEmail(List<Lead> hqLeads) {
         List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
-        List<String> hqEmails = new List<String>{'rohit.bisht@utilitarianlabs.com'}; 
+        List<HQ_Email_Settings__mdt> hqEmailRecords = [SELECT Email__c FROM HQ_Email_Settings__mdt WHERE Active__c = TRUE];
+
+        List<String> hqEmails = new List<String>();
+        for (HQ_Email_Settings__mdt record : hqEmailRecords) {
+            if (record.Email__c != null) {
+                hqEmails.add(record.Email__c);
+            }
+        }
+
+        if (hqEmails.isEmpty()) {
+            System.debug('No active HQ emails found in metadata.');
+            return;
+        }
 
         for (String email : hqEmails) {
             Messaging.SingleEmailMessage mail = prepareEmail(
@@ -120,7 +141,7 @@ public class MissedLeadsEmailService implements Schedulable {
         mail.setHtmlBody(htmlBody);
 
         // Set Org-Wide Email Address
-        OrgWideEmailAddress[] orgWideEmail = [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'support@rideriver.com' LIMIT 1];
+        OrgWideEmailAddress[] orgWideEmail = [SELECT Id FROM OrgWideEmailAddress WHERE Address = :System.Label.OrgWideEmailAddress LIMIT 1];
         if (!orgWideEmail.isEmpty()) {
             mail.setOrgWideEmailAddressId(orgWideEmail[0].Id);
         }

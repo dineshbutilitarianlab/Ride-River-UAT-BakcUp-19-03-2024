@@ -1,11 +1,83 @@
-.tile{
-	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-    border-radius: 7px;
-    padding: 5px 5px;
-    margin: 3px 0px;
-    cursor: pointer;
+/* Slide-in effect container */
+.slide-in-box {
     position: relative;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    background: linear-gradient(30.31deg, #f1f5f3 4.37%, #ffffff 70.19%);
-    height: auto;
+    background: white;
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.01);
+    opacity: 1;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Layout adjustments for a clean and aligned design */
+.form-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+/* Style for Lightning Layout Items */
+.slds-align_absolute-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Input Field Styles */
+.custom-input {
+    width: 100%;
+    padding: 5px;
+}
+
+/* Ensure uniform height to match the data table row height */
+.custom-input lightning-input,
+.custom-input lightning-combobox,
+.custom-input lightning-textarea {
+    height: 25px;
+}
+
+/* Styling for the Disabled Work Order field */
+.custom-input[disabled] {
+    background-color: #f3f3f3;
+    color: #888;
+    cursor: not-allowed;
+    border-radius: 5px;
+}
+
+/* Button Spacing */
+.slds-align_absolute-center lightning-button {
+    margin: 5px;
+}
+
+/* Animations for form open/close effect */
+.slide-in {
+    animation: slideIn 0.4s forwards;
+}
+
+.slide-out {
+    animation: slideOut 0.4s forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1.02);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: scale(1.02);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.95);
+        opacity: 0;
+    }
 }
